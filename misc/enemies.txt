@@ -1,0 +1,143 @@
+ENEMIES
+--------------------------
+Beast Patient
+Beast Claw Hunter
+Beast-possessed Soul
+Bloodlicker
+Bone Ash Hunter
+Brain of Mensis
+Brainsucker
+Cainhurst Hunter
+Cainhurst Servant
+Carrion Crow
+Celestial Larvae
+Chime Maiden
+Chapel Giant
+Church Servant
+Cramped Casket
+Crawler
+Executioner
+Evil Labyrinth Spirit
+Witch of Hemwick (Mob) and Eye Collector
+Cloaked Beast Patient
+Fluorescent Flower
+Silver Lady
+Garden of Eyes
+Blood Gel
+Giant Lost Child
+Gravekeeper Scorpion
+Hemwick Grave Woman
+Hunting Dog
+Huntsman
+Brick Troll
+Keeper of the Old Lords
+Keeper's Hunting Dog
+Snatcher
+Labyrinth Sage
+Labyrinth Mole
+Giant Rat
+Labyrinth Ritekeeper
+Tomb Guardian
+Pthumerian Undead (Group)
+Large Crawler
+Large Huntsman
+Large Nightmare Apostle
+Greater Viper Pit
+Loran Cleric
+Loran Silverbeast
+Cainhurst Gargoyle
+Mad One
+Maneater Boar
+Merciless Watcher
+Mergo's Attendant
+Mergo's Chief Attendant
+Nightmare Apostles
+Hateful Maggot
+Pilgrim
+Rabid Dog
+Rotted Corpse
+Slime Scholars
+Scourge Beast
+Shadow of Yharnam
+Skeletal Puppet
+Small Celestial Emissary
+Snake Ball
+Vermin Host
+Undead Giant
+Watcher's Gravedigger
+Wheel Hunter
+Wheelchair Huntsman
+Winter Lantern
+
+
+LINKS
+--------------------------
+https://bloodborne.wiki.fextralife.com/Old+Yharnam+Beast
+https://bloodborne.wiki.fextralife.com/Beast+Claw+Hunter
+https://bloodborne.wiki.fextralife.com/Beast-possessed+Soul+%28Mob%29
+https://bloodborne.wiki.fextralife.com/Bloodsucking+Beast
+https://bloodborne.wiki.fextralife.com/Bone+Ash+Hunter
+https://bloodborne.wiki.fextralife.com/Brain+of+Mensis
+https://bloodborne.wiki.fextralife.com/Brainsucker
+https://bloodborne.wiki.fextralife.com/Cainhurst+Hunter
+https://bloodborne.wiki.fextralife.com/Indentured+Chevalier
+https://bloodborne.wiki.fextralife.com/Carrion+Crow
+https://bloodborne.wiki.fextralife.com/Celestial+Larvae
+https://bloodborne.wiki.fextralife.com/Chime+Maiden
+https://bloodborne.wiki.fextralife.com/Chapel+Giant
+https://bloodborne.wiki.fextralife.com/Church+Doctor
+https://bloodborne.wiki.fextralife.com/Undead+Amalgam
+https://bloodborne.wiki.fextralife.com/Crawler
+https://bloodborne.wiki.fextralife.com/Executioner
+https://bloodborne.wiki.fextralife.com/Vengeful+Specter
+https://bloodborne.wiki.fextralife.com/Witch+of+Hemwick+%28Mob%29
+https://bloodborne.wiki.fextralife.com/Eye+Collector
+https://bloodborne.wiki.fextralife.com/Cloaked+Beast
+https://bloodborne.wiki.fextralife.com/Celestial+Centipede
+https://bloodborne.wiki.fextralife.com/Silver+Lady
+https://bloodborne.wiki.fextralife.com/Mi-Go+Zombie
+https://bloodborne.wiki.fextralife.com/Gel
+https://bloodborne.wiki.fextralife.com/Yeti
+https://bloodborne.wiki.fextralife.com/Gravekeeper+Scorpion
+https://bloodborne.wiki.fextralife.com/Graveyard+Hags
+https://bloodborne.wiki.fextralife.com/Hunting+Dog
+https://bloodborne.wiki.fextralife.com/Hunter+Mob
+https://bloodborne.wiki.fextralife.com/Brick+Troll
+https://bloodborne.wiki.fextralife.com/Keeper+of+the+Old+Lords
+https://bloodborne.wiki.fextralife.com/Keeper%27s+Hunting+Dog
+https://bloodborne.wiki.fextralife.com/Snatcher
+https://bloodborne.wiki.fextralife.com/Madman
+https://bloodborne.wiki.fextralife.com/Labyrinth+Mole
+https://bloodborne.wiki.fextralife.com/Rat
+https://bloodborne.wiki.fextralife.com/Ritual+Master
+https://bloodborne.wiki.fextralife.com/Tomb+Guardian
+https://bloodborne.wiki.fextralife.com/Pthumerian+Undead
+https://bloodborne.wiki.fextralife.com/Crawler
+https://bloodborne.wiki.fextralife.com/Large+Huntsman
+https://bloodborne.wiki.fextralife.com/Black+Widow
+https://bloodborne.wiki.fextralife.com/Greater+Viper+Pit
+https://bloodborne.wiki.fextralife.com/Loran+Cleric
+https://bloodborne.wiki.fextralife.com/Silverbeast
+https://bloodborne.wiki.fextralife.com/Gargoyle
+https://bloodborne.wiki.fextralife.com/Mad+One
+https://bloodborne.wiki.fextralife.com/Maneater+Boar+%28Mob%29
+https://bloodborne.wiki.fextralife.com/Merciless+Watcher+%28Mob%29
+https://bloodborne.wiki.fextralife.com/Mergo%27s+Attendant
+https://bloodborne.wiki.fextralife.com/Tormented+Nanny
+https://bloodborne.wiki.fextralife.com/Black+Widow
+https://bloodborne.wiki.fextralife.com/Hateful+Maggot
+https://bloodborne.wiki.fextralife.com/Sorrowful+Emissary
+https://bloodborne.wiki.fextralife.com/Rabid+Dog
+https://bloodborne.wiki.fextralife.com/Wretched+Undead
+https://bloodborne.wiki.fextralife.com/Slime+Scholar
+https://bloodborne.wiki.fextralife.com/Wolf+Beast
+https://bloodborne.wiki.fextralife.com/Shadow+of+Yharnam+%28Mob%29
+https://bloodborne.wiki.fextralife.com/Ethereal+Walker
+https://bloodborne.wiki.fextralife.com/Celestial+Mob
+https://bloodborne.wiki.fextralife.com/Snake+Ball
+https://bloodborne.wiki.fextralife.com/Vermin+Host
+https://bloodborne.wiki.fextralife.com/Undead+Giant+%28Mob%29
+https://bloodborne.wiki.fextralife.com/Watcher%27s+Gravedigger
+https://bloodborne.wiki.fextralife.com/Wheel+Hunter
+https://bloodborne.wiki.fextralife.com/Wheelchair+Mob
+https://bloodborne.wiki.fextralife.com/Brain+Trust
