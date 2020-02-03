@@ -33,9 +33,6 @@ router.post('/', (req, res) => {
                     res.status(400).send('User with that email already exists');
                     client.close(); 
                 } else {                                                // Create user using our user schema
-                    let data = fs.readFileSync('./../resources/generic-avatar.jpg', 'utf-8');
-                    //let encodedImage = new Buffer(data, 'binary').toString('base64');
-                    console.log('image encoded');
                     db.collection('users').insertOne({
                         user_name: username,                // string
                         password: hash,                     // string
