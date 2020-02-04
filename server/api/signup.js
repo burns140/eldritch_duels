@@ -31,14 +31,15 @@ router.post('/', (req, res) => {
                 if (result != 0) {                                      // Fail if the email already exists
                     console.log(`User with email ${email} already exists`);
                     res.status(400).send('User with that email already exists');
-                    client.close(); 
+                    client.close();
+                    return;
                 } else {                                                // Create user using our user schema
                     db.collection('users').insertOne({
                         user_name: username,                // string
                         password: hash,                     // string
                         email: email,                       // string
                         achievements: [],                   // int[]
-                        cards: [],                          // int[]
+                        cards: [],                          // Card[]
                         decks: [],                          // list<Tuple<string, int[]>>
                         avatar: [],                         // byte[]
                         level: 0,                           // int
@@ -50,16 +51,19 @@ router.post('/', (req, res) => {
                         console.log(`User with email ${email} successfully created`);
                         res.status(201).send('User successfully created');
                         client.close();
+                        return;
                     }).catch(err => {
                         console.log(err);
                         res.status(400).send(err);
                         clilent.close();
+                        return;
                     });
                 }
             });
         });
     } catch (err) {
         console.log(err);
+        res.status(400).send(err);
     }
 });
 

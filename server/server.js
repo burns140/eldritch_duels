@@ -4,6 +4,7 @@ const http = require('http').createServer(app);
 const signup = require('./api/signup.js');
 const login = require('./api/login.js');
 const decks = require('./api/decks.js');
+const collection = require('./api/collection.js');
 
 const port = process.env.PORT || 8000;
 
