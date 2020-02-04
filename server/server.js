@@ -11,7 +11,7 @@ const port = process.env.PORT || 8000;
 app.use('/signup', signup);
 app.use('/login', login);
 app.use('/decks', decks);
-app.use('/collection');
+app.use('/collection', collection);
 
 http.listen(port, () => {
     console.log(`Server running on port ${port}`);
