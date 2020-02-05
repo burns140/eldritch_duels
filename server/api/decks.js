@@ -10,3 +10,5 @@ router.use(verify);
 router.get('/', (req, res) => {
     
 })
+
+module.exports = router;
