@@ -1,0 +1,9 @@
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.csprojAssemblyReference.cache
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\tcpTest.exe.config
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\tcpTest.exe
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\tcpTest.pdb
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.exe
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.pdb
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\Newtonsoft.Json.dll
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\Newtonsoft.Json.xml
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.csproj.CopyComplete
