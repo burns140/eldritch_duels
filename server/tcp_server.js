@@ -1,4 +1,9 @@
+const MongoClient = require('mongodb').MongoClient;
+const dbconfig = require('../dbconfig.json');
+const assert = require('assert');
+const bcrypt = require('bcrypt');
 const net = require('net');
+const signup = require('./tcp_handling/signup.js');
 
 const host = 'localhost';
 const port = 8000;
@@ -12,10 +17,16 @@ server.listen(port, host, () => {
 function onClientConnected(sock) {
     let remoteAddress = `${sock.remoteAddress}:${sock.remotePort}`;
     console.log(`new client connectioned: ${remoteAddress}`);
-    sock.write('fuck you\r\n');
 
     sock.on('data', (data) => {
         console.log(data.toString('utf-8'));
-        sock.write(`\r\nchar received\r\n`);
     });
+
+    sock.on('error', (err) => {
+        console.log(err);
+    });
+
+    sock.on('close', () => {
+        console.log('connection closed');
+    })
 }
