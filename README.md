@@ -37,10 +37,10 @@ The following is an example of how to format a request to signup a user
 
 ```csharp
 public class User {
-    public string email;
-    public string password;
-    public string username;
-    public string cmd;
+    private string email;
+    private string password;
+    private string username;
+    private string cmd;
 
     public User(string cmd, string email, string username, string password) {
         this.email = email;
