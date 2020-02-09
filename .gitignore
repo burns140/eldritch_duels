@@ -105,3 +105,8 @@ dist
 
 # Database configuration
 server/dbconfig.json
+
+
+#unity temp files
+client/Eldritch\ Duels/Temp/
+client/Eldritch\ Duels/.vs/
