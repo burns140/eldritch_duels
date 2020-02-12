@@ -2,7 +2,8 @@ const assert = require('assert');
 const bcrypt = require('bcrypt');
 const net = require('net');
 const Signup = require('./tcp_handling/signup.js');
-const Login = require('./tcp_handling/login.js')
+const Login = require('./tcp_handling/login.js');
+const Decks = require('./tcp_handling/decks.js');
 
 /* Create server */
 const host = 'localhost';
@@ -20,15 +21,29 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done */
     sock.on('data', (data) => {
-        const obj = JSON.parse(data);       // Turn data into a JSON object
-        console.log(obj);
-        switch (obj.cmd) {
-            case "signup":
-                Signup.signup(obj, sock);
-                break;
-            case "login":
-                Login.login(obj, sock);
-                break;
+        var obj = NULL;
+        try {
+            obj = JSON.parse(data);       // Turn data into a JSON object
+            console.log(obj);
+            switch (obj.cmd) {
+                case "signup":
+                    Signup.signup(obj, sock);
+                    break;
+                case "login":
+                    Login.login(obj, sock);
+                    break;
+                case "getDecks":
+                    Decks.getAllDecks(obj, sock);
+                    break;
+                case "saveDeck":
+                    Decks.saveDeck(obj, sock);
+                    break;
+                case "deleteDeck":
+                    Decks.deleteDeck(obj, sock);
+                    break;
+            }
+        } catch (err) {
+            console.log(err);
         }
     });
 
