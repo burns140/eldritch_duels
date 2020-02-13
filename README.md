@@ -25,9 +25,15 @@ The server will parse requests that it receives into a JSON object. You can see 
 
 ### Data needed for requests
 
+Note: id always references the user's id, which is returned upon signup as the only value and login in the form "token:id"
+
 Signup: {cmd: "signup", email, username, password}
 
 Login: {cmd: "login", email, password}
+
+Get Collection: {cmd: "getCollection, token, id}
+
+Add Card to Collection: {cmd: "addCardToCollection", id, token, cardname}
 
 **More will be added as work is completed**
 
@@ -63,6 +69,20 @@ class Signup {
     Int32 bytes = stream.Read(data, 0, data.Length);
     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
     Console.WriteLine("Received: {0}", responseData);
+}
+```
+
+The following is an example of receiving a JSON object and treating it as a C# object. For input "{"testcard": 0} it will output "testcard: 0". 
+
+```csharp
+responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+Thread.Sleep(2500);
+
+var obj = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(responseData);
+foreach(var key in obj.Keys) {
+    string str = $"{key}: {obj[key]}";
+    Debug.WriteLine(str);
 }
 ```
 

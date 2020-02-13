@@ -30,7 +30,7 @@ const login = (data, sock) => {
                                 email: result.email
                             }
                         }, dbconfig.jwt_key, {expiresIn: '1d'});
-                        sock.write(token);
+                        sock.write(`${token}:${result._id.toString()}`);
                         console.log('login successful; token returned');
                         client.close();
                         return;
