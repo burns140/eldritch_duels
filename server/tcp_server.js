@@ -4,6 +4,7 @@ const net = require('net');
 const Signup = require('./tcp_handling/signup.js');
 const Login = require('./tcp_handling/login.js');
 const Decks = require('./tcp_handling/decks.js');
+const Collection = require('./tcp_handling/collection.js');
 
 /* Create server */
 const host = 'localhost';
@@ -21,9 +22,8 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done */
     sock.on('data', (data) => {
-        var obj = NULL;
-        try {
-            obj = JSON.parse(data);       // Turn data into a JSON object
+        const obj = JSON.parse(data);               // Turn data into a JSON object
+        try {       
             console.log(obj);
             switch (obj.cmd) {
                 case "signup":
@@ -40,6 +40,15 @@ function onClientConnected(sock) {
                     break;
                 case "deleteDeck":
                     Decks.deleteDeck(obj, sock);
+                    break;
+                case "getCollection":
+                    Collection.getCollection(obj, sock);
+                    break;
+                case "addCardToCollection":
+                    Collection.addCard(obj, sock);
+                    break;
+                case "removeCardFromCollection":
+                    Collection.removeCard(obj, sock);
                     break;
             }
         } catch (err) {

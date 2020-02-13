@@ -10,35 +10,64 @@ using Newtonsoft.Json;
 namespace tcpTest {
 
     public class User {
-        private string email;
-        private string password;
-        private string username;
-        private string cmd;
+        public string email;
+        public string password;
+        public string username;
+        public string cmd;
 
-        public User(string cmd) {
-            this.email = "testemail@email.edu";
+        public User(string cmd, string email, string password, string username) {
+            this.email = email;
             this.cmd = cmd;
-            this.password = "password";
-            this.username = "username";
+            this.password = password;
+            this.username = username;
+        }
+    }
+
+    public class UserInfo {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public UserInfo(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class AddCardRequest {
+        public string id;
+        public string token;
+        public string cardid;
+        public string cmd;
+
+        public AddCardRequest(string id, string token, string cardid, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cardid = cardid;
+            this.cmd = cmd;
         }
     }
 
     class Class1 {
 
         public static void Main() {
-            signupTest();
-            loginTest();
+            signup();
+            //login();
         }
 
-        static void signupTest() {
-            User user = new User("signup");
+        static void signup() {
+            User user = new User("signup", "testemail@email.edu", "password", "username");
             string json = JsonConvert.SerializeObject(user);
 
             Int32 port = 8000;
             TcpClient client = new TcpClient("localhost", port);
 
+            //Byte[] data = System.Text.Encoding.ASCII.GetBytes("{\"cmd\": \"signup\"}");
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             NetworkStream stream = client.GetStream();
+
+            Console.WriteLine(data);
 
             stream.Write(data, 0, data.Length);
             Console.WriteLine("Sent");
@@ -56,8 +85,8 @@ namespace tcpTest {
 
         }
 
-        static void loginTest() {
-            User user = new User("login");
+        static void login() {
+            User user = new User("login", "testemail@email.edu", "password", "username");
             string json = JsonConvert.SerializeObject(user);
 
             Int32 port = 8000;

@@ -30,8 +30,8 @@ const signup = (data, sock) => {
                         password: hash,                     // string
                         email: email,                       // string
                         achievements: [],                   // int[]
-                        cards: [],                          // Card[]
-                        decks: [],                          // list<Tuple<string, int[]>>
+                        collection: {"testcard": 0},        // Map<cardname, amount>
+                        decks: [],                          // list<Tuple<string, string[]>>
                         avatar: [],                         // byte[]
                         level: 0,                           // int
                         wins: 0,                            // int
@@ -39,8 +39,8 @@ const signup = (data, sock) => {
                         recent_games: [],                   // bool[]
                         currency: 500                       // int
                     }).then(result => {
-                        console.log(`User with email ${email} successfully created`);
-                        sock.write('User successfully created');
+                        console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
+                        sock.write(`User successfully created with id ${result.insertedId}`);
                         client.close();
                         return;
                     }).catch(err => {
