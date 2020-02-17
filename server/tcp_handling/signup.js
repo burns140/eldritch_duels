@@ -25,9 +25,11 @@ const signup = (data, sock) => {
                     client.close();
                     return;
                 } else {                                                // Create user using our user schema
+                    var temparr = [];
+                    temparr.push(hash);
                     db.collection('users').insertOne({
                         user_name: username,                // string
-                        password: hash,                     // string
+                        password: temparr,                  // string
                         email: email,                       // string
                         achievements: [],                   // int[]
                         collection: {"testcard": 0},        // Map<cardname, amount>
