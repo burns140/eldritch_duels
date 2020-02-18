@@ -15,8 +15,8 @@ namespace eldritch.cards
     }
     public abstract class Effect
     {
-        protected Card target = null;
-        public virtual void SetTarget(Card target)
+        protected GameObject target = null;
+        public virtual void SetTarget(GameObject target)
         {
             if (target != null && target.tag.Equals("targetable"))
             {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace eldritch.cards
 {
-
+    [System.Serializable]
     public enum CardType
     {
         CREATURE,
@@ -14,6 +14,7 @@ namespace eldritch.cards
         PLAYER,
         NULL
     }
+    [System.Serializable]
     public enum CardRarity
     {
         COMMON,
@@ -22,42 +23,44 @@ namespace eldritch.cards
         NULL
     }
 
-    public class Card : MonoBehaviour
+    [System.Serializable]
+    public class Card 
     {
         #region card_params
+        [SerializeField]
         private string cardName = "";
         public string CardName
         {
             get { return this.cardName; }
         }
-
+        [SerializeField]
         private int id = -1;
         public int CardID
         {
             get { return this.id; }
         }
-
+        [SerializeField]
         private int owned = 0;
         public int CopiesOwned
         {
             get { return this.owned; }
             set { if (value >= 0) { this.owned = value; } }
         }
-
+        [SerializeField]
         private int cost = 0;
         public int CardCost
         {
             get { return this.cost; }
             set { if (value >= 0) { this.cost = value; } }
         }
-
+        [SerializeField]
         private int power = 0;
         public int AttackPower
         {
             get { return this.power; }
             set { this.power = value; }
         }
-
+        [SerializeField]
         private int defence = 0;
         private int maxDef = -1;
         public int DefencePower
@@ -65,21 +68,21 @@ namespace eldritch.cards
             get { return this.defence; }
             set { this.defence = value; if (this.maxDef == -1) { maxDef = value; } }
         }
-
+        [SerializeField]
         private CardType type = CardType.NULL;
         public CardType SpellType
         {
             get { return this.type; }
             set { this.type = value; }
         }
-
+        [SerializeField]
         private CardRarity rartiy = CardRarity.NULL;
         public CardRarity SpellRarity
         {
             get { return this.rartiy; }
             set { this.rartiy = value; }
         }
-
+        [SerializeField]
         private Material cardImage = null;
         public Material CardImage
         {
