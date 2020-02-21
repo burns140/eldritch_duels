@@ -9,4 +9,4 @@ router.use(express.urlencoded({extended: false}));
 router.use(verify);
 router.get('/', (req, res) => {
     
-})
+});

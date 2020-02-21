@@ -105,3 +105,10 @@ dist
 
 # Database configuration
 server/dbconfig.json
+
+# Visual Studio files
+.vs/
+*.njsproj
+bin/
+obj/
+*.sln
