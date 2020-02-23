@@ -44,9 +44,10 @@ const login = (data, sock) => {
                         if (passwords.length > 1) {
                             var tempPass = [];
                             tempPass.push(rightpass);
+                            console.log(`${email}: ${tempPass}`)
                             db.collection('users').updateOne(
                                 { email: email },
-                                { password: tempPass }
+                                { $set: { password: tempPass } }
                             ).then(result => {
                                 if (result.modifiedCount != 0) {
                                     console.log('successfully removed bad password');

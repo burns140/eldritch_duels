@@ -51,9 +51,36 @@ namespace tcpTest {
 
     class Class1 {
 
+        const string id = "5e52dc3058e728656c254d01";
+        const string token = "token";
+
         public static void Main() {
-            signup();
-            //login();
+            //signup();
+            login();
+            //getCollectionArray();
+        }
+
+        static void getCollectionArray() {
+            UserInfo info = new UserInfo(id, token, "getCollection");
+            string json = JsonConvert.SerializeObject(info);
+
+            Int32 port = 8000;
+            TcpClient client = new TcpClient("localhost", port);
+
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            NetworkStream stream = client.GetStream();
+
+            stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Thread.Sleep(1000);
+            System.Console.WriteLine(responseData);
+            Thread.Sleep(2500);
+            client.Close();
         }
 
         static void signup() {
@@ -86,7 +113,7 @@ namespace tcpTest {
         }
 
         static void login() {
-            User user = new User("login", "testemail@email.edu", "password", "username");
+            User user = new User("login", "aphantomdolphin@gmail.com", "yU7&Ioj{.F", "username");
             string json = JsonConvert.SerializeObject(user);
 
             Int32 port = 8000;

@@ -27,12 +27,18 @@ const signup = (data, sock) => {
                 } else {                                                // Create user using our user schema
                     var temparr = [];
                     temparr.push(hash);
+                    var startCollection = {
+                        "testcard": 0,
+                        "realcard": 2,
+                        "testing": 1,
+                        "fake": 0
+                    };
                     db.collection('users').insertOne({
                         user_name: username,                // string
                         password: temparr,                  // string
                         email: email,                       // string
                         achievements: [],                   // int[]
-                        collection: {"testcard": 0},        // Map<cardname, amount>
+                        collection: startCollection,        // Map<cardname, amount>
                         decks: [],                          // list<Tuple<string, string[]>>
                         avatar: [],                         // byte[]
                         level: 0,                           // int

@@ -1,0 +1,97 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\UnitTestProject1\\UnitTestProject1.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj",
+        "projectName": "tcpTest",
+        "projectPath": "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj"
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
+    "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\UnitTestProject1\\UnitTestProject1.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\UnitTestProject1\\UnitTestProject1.csproj",
+        "projectName": "UnitTestProject1",
+        "projectPath": "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\UnitTestProject1\\UnitTestProject1.csproj",
+        "packagesPath": "C:\\Users\\steph\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\UnitTestProject1\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\steph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj": {
+                "projectPath": "C:\\Users\\steph\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.2.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
