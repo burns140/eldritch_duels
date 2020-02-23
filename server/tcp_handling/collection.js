@@ -15,14 +15,7 @@ const getCollection = (data, sock) => {
             db.collection('users').findOne({
                 _id: ObjectID(id)
             }).then(result => {
-                var temparr = [];
-                var coll = result.collection;
-                for (var key of Object.keys(coll)) {
-                    temparr.push(`${key}-${coll[key]}`);
-                }
-                console.log(temparr.toString());
-                sock.write(temparr.toString());
-                //sock.write(JSON.stringify(result.collection));
+                sock.write(JSON.stringify(result.collection));
                 client.close();
                 return;
             }).catch(err => {
@@ -37,34 +30,6 @@ const getCollection = (data, sock) => {
         sock.write(err);
     }
 }
-
-/*const getCollection = (data, sock) => {
-    const id = data.id;
-    console.log('called');
-
-    try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
-            const db = client.db('eldritch_data');
-            db.collection('users').findOne({
-                _id: ObjectID(id)
-            }).then(result => {
-                sock.write(result.collection.toString());
-                client.close();
-                return;
-            }).catch(err => {
-                console.log(err);
-                sock.write(err);
-                client.close();
-                return;
-            })
-        });
-    } catch (err) {
-        console.log(err);
-        sock.write(err);
-    }
-} */
 
 const addCard = (data, sock) => {
     const userid = data.id;

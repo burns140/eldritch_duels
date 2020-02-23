@@ -5,7 +5,6 @@ const Signup = require('./tcp_handling/signup.js');
 const Login = require('./tcp_handling/login.js');
 const Decks = require('./tcp_handling/decks.js');
 const Collection = require('./tcp_handling/collection.js');
-const ResetPass = require('./tcp_handling/sendemail.js');
 
 /* Create server */
 const host = 'localhost';
@@ -50,9 +49,6 @@ function onClientConnected(sock) {
                     break;
                 case "removeCardFromCollection":
                     Collection.removeCard(obj, sock);
-                    break;
-                case "resetPassword":
-                    ResetPass.resetPassword(obj, sock);
                     break;
             }
         } catch (err) {
