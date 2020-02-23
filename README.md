@@ -77,8 +77,6 @@ The following is an example of receiving a JSON object and treating it as a C# o
 ```csharp
 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-Thread.Sleep(2500);
-
 var obj = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(responseData);
 foreach(var key in obj.Keys) {
     string str = $"{key}: {obj[key]}";
