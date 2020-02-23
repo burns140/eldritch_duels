@@ -17,6 +17,8 @@ module.exports = class PlayerQueue {
         if (eloDiff == 0)
             eloDiff = 1; // Must allow some wiggle room
 
+        this.size = 0;
+
         // initial max difference between 2 players' elo in order to be matched
         this.eloDifference = eloDiff;
 
@@ -51,12 +53,14 @@ module.exports = class PlayerQueue {
         } else
             treeData[0].list.push(id);
 
+        this.size++;
         return true;
     }
 
     removePlayer(id) {
         if (this.queueData[id]) {
             delete this.queueData[id];
+            this.size--;
             return true;
         }
 
@@ -71,6 +75,7 @@ module.exports = class PlayerQueue {
         if (this.queueData[id]) {
             elo = this.queueData[id];
             delete this.queueData[id];
+            this.size--;
         }
 
         // remove id from queue
@@ -121,7 +126,7 @@ module.exports = class PlayerQueue {
 	// If no one is matched, resolve an empty array
 	matchPlayers() {
 		return new Promise((res, err) => {
-			if (this.queue.size() <= 1) {
+			if (this.size <= 1) {
 				res([]);
 				return;
             }
@@ -137,71 +142,74 @@ module.exports = class PlayerQueue {
                     continue;
                 }
 
-                break;
-            }
-                
-            let matchingPlayers = this.tree.betweenBounds({ $lte: elo + this.currentEloRange, $gte: elo - this.currentEloRange });
-            if (matchingPlayers.length != 0) {
-                // favor matching higher elo players, because the growth is unbounded
-                let emptyEloBins = [];
-                for (let i = matchingPlayers.length - 1; i >= 0; i--) {
-                    let data2 = matchingPlayers[i];
-                    let it2 = data2.list.it();
+                let matchingPlayers = this.tree.betweenBounds({ $lte: elo + this.currentEloRange, $gte: elo - this.currentEloRange });
+                if (matchingPlayers.length != 0) {
+                    // favor matching higher elo players, because the growth is unbounded
+                    let emptyEloBins = [];
+                    for (let i = matchingPlayers.length - 1; i >= 0; i--) {
+                        let data2 = matchingPlayers[i];
+                        let it2 = data2.list.it();
 
-                    while (it2.hasValue()) {
-                        let id2 = it2.value();
-                        let elo2 = this.queueData[id2];
-                        if (elo2 == undefined || elo2 != data2.elo) {
-                            it2.delete();
-                            continue;
-                        }
-
-                        if (id2 == id) {
-                            it2.next();
-                            continue;
-                        }
-
-                        // ids found
-                        // cleanup
-                        it.delete();
-                        it2.delete();
-
-                        if (data2.list.isEmpty())
-                            this.tree.delete(elo2);
-
-                        let firstPlayerTreeData = this.tree.search(elo);
-                        if (firstPlayerTreeData.length != 0) {
-                            firstPlayerTreeData = firstPlayerTreeData[0];
-                            if (firstPlayerTreeData.list.peekFirst() == id) {
-                                firstPlayerTreeData.list.dequeue();
-                                if (firstPlayerTreeData.list.isEmpty())
-                                    this.tree.delete(elo);
+                        while (it2.hasValue()) {
+                            let id2 = it2.value();
+                            let elo2 = this.queueData[id2];
+                            if (elo2 == undefined || elo2 != data2.elo) {
+                                it2.delete();
+                                continue;
                             }
+
+                            if (id2 == id) {
+                                it2.next();
+                                continue;
+                            }
+
+                            // ids found
+                            // cleanup
+                            it.delete();
+                            it2.delete();
+
+                            if (data2.list.isEmpty())
+                                this.tree.delete(elo2);
+
+                            let firstPlayerTreeData = this.tree.search(elo);
+                            if (firstPlayerTreeData.length != 0) {
+                                firstPlayerTreeData = firstPlayerTreeData[0];
+                                if (firstPlayerTreeData.list.peekFirst() == id) {
+                                    firstPlayerTreeData.list.dequeue();
+                                    if (firstPlayerTreeData.list.isEmpty())
+                                        this.tree.delete(elo);
+                                }
+                            }
+
+                            delete this.queueData[id];
+                            delete this.queueData[id2];
+
+                            for (let bin of emptyEloBins)
+                                this.tree.delete(bin);
+
+                            this.currentEloRange = this.eloDifference;
+
+                            this.size -= 2;
+
+                            // id2 and id will enter a match
+                            res([id, id2]);
+                            return;
                         }
 
-                        delete this.queueData[id];
-                        delete this.queueData[id2];
-
-                        for (let bin of emptyEloBins)
-                            this.tree.delete(bin);
-
-                        this.currentEloRange = this.eloDifference;
-
-                        // id2 and id will enter a match
-                        res([id, id2]);
-                        return;
+                        if (!it2.hasValue())
+                            emptyEloBins.push(data2.elo);
                     }
 
-                    if (!it2.hasValue())
-                        emptyEloBins.push(data2.elo);
+                    for (let bin of emptyEloBins)
+                        this.tree.delete(bin);
                 }
 
-                for (let bin of emptyEloBins)
-                    this.tree.delete(bin);
+                // no one matched
+                this.currentEloRange *= 2;
+                res(this.matchPlayers());
+                return;
             }
 
-            // no one matched
-            this.currentEloRange *= 2;
             res([]);
             return;
 		});

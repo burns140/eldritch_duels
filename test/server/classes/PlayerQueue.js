@@ -120,7 +120,11 @@ describe('Player Queue', function () {
         it('1 player in queue', async function () {
             this.slow(3);
             let queue = new Queue();
+
             queue.addPlayer(1, 20);
+            queue.addPlayer(0, 20);
+            queue.removePlayer(0);
+
             let res = await queue.matchPlayers();
             res.length.should.equal(0);
         });
@@ -179,9 +183,6 @@ describe('Player Queue', function () {
             queue.addPlayer(1, 21).should.be.true();
 
             let res = await queue.matchPlayers();
-            res.length.should.equal(0);
-
-            res = await queue.matchPlayers();
             res.should.arrayEqualUnordered([0, 1]);
         });
 
@@ -196,9 +197,12 @@ describe('Player Queue', function () {
             let matchesFound = 0;
             while (matchesFound != Math.floor(sz / 2)) {
                 let res = await queue.matchPlayers();
-                if (res.length == 2)
-                    matchesFound++;
+                res.length.should.equal(2);
+                matchesFound++;
             }
+
+            res = await queue.matchPlayers();
+            res.length.should.equal(0);
         });
 
         // more representative of real-world data, and it runs faster
@@ -213,9 +217,12 @@ describe('Player Queue', function () {
             let matchesFound = 0;
             while (matchesFound != Math.floor(sz / 2)) {
                 let res = await queue.matchPlayers();
-                if (res.length == 2)
-                    matchesFound++;
+                res.length.should.equal(2);
+                matchesFound++;
             }
+
+            res = await queue.matchPlayers();
+            res.length.should.equal(0);
         });
     });
 });
