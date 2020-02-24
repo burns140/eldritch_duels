@@ -77,6 +77,14 @@ namespace tcpTest {
         }
     }
 
+    public class PassRequest : Request {
+        public string email;
+
+        public PassRequest(string email, string cmd) : base(cmd) {
+            this.email = email;
+        }
+    }
+
     public class Deck {
         public string cmd;
         public string name;

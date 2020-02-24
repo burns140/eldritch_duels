@@ -14,7 +14,9 @@ namespace NUnitTestProject1 {
     public class Tests {
 
         const string id = "5e52dc3058e728656c254d01";
-        const string token = "token";
+        const string invalidToken = "token";
+        const string validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNWU1MmRjMzA1OGU3Mjg2NTZjMjU0ZDAxIiwiZW1haWwiOiJ0ZXN0ZW1haWxAZW1haWwuZWR1In0sImlhdCI6MTU4MjU3MTQ4N30.H76TaFoOWSePOb4NKChPVpH7xeI-t0SuO2gL7zt8z0s";
+        const string getPassEmail = "aphantomdolphin@gmail.com";
         /*[SetUp]
         public void Setup() {
         }*/
@@ -46,7 +48,7 @@ namespace NUnitTestProject1 {
 
         [Test]
         public void getCollectionArrayTest() {
-            UserInfo info = new UserInfo(id, token, "getCollection");
+            UserInfo info = new UserInfo(id, validToken, "getCollection");
             string json = JsonConvert.SerializeObject(info);
             string res = sendNetworkRequest(json);
 
@@ -55,7 +57,7 @@ namespace NUnitTestProject1 {
 
         [Test]
         public void addCardToCollectionTest() {
-            AddCardRequest cardRequest = new AddCardRequest(id, token, "fake", "addCardToCollection");
+            AddCardRequest cardRequest = new AddCardRequest(id, validToken, "fake", "addCardToCollection");
             string json = JsonConvert.SerializeObject(cardRequest);
             string res = sendNetworkRequest(json);
             Assert.IsTrue(res.Contains("card added successfully"));
@@ -77,7 +79,7 @@ namespace NUnitTestProject1 {
 
         [Test]
         public void getAllDecksTest() {
-            GetAllDecksRequest req = new GetAllDecksRequest(id, token, "getAllDecks");
+            GetAllDecksRequest req = new GetAllDecksRequest(id, validToken, "getAllDecks");
             string json = JsonConvert.SerializeObject(req);
             string res = sendNetworkRequest(json);
 
@@ -86,24 +88,56 @@ namespace NUnitTestProject1 {
 
         [Test]
         public void getOneDeckTest() {
-            GetOneDeckRequest req = new GetOneDeckRequest("7822", id, token, "getOneDeck");
+            GetOneDeckRequest req = new GetOneDeckRequest("7822", id, validToken, "getOneDeck");
             string json = JsonConvert.SerializeObject(req);
             string res = sendNetworkRequest(json);
             Assert.IsFalse(res.Contains("Error"));
         }
 
+        /* Delete a deck. Deckname must be valid. Will be necessary
+         * to add a deck before running this test. */
         [Test]
         public void deleteDeckTest() {
-            DeleteDeckRequest req = new DeleteDeckRequest("5399", id, token, "deleteDeck");
+            DeleteDeckRequest req = new DeleteDeckRequest("5399", id, validToken, "deleteDeck");
             string json = JsonConvert.SerializeObject(req);
             string res = sendNetworkRequest(json);
             Assert.IsTrue(res.Contains("deck successfully deleted"));
         }
 
+        /* Try to perform a command with an invalid token
+         * Expected: invalid token error */
+        [Test]
+        public void invalidTokenTest() {
+            GetOneDeckRequest req = new GetOneDeckRequest("7822", id, invalidToken, "getOneDeck");
+            string json = JsonConvert.SerializeObject(req);
+            string res = sendNetworkRequest(json);
+            Assert.IsTrue(res.Contains("Invalid token"));
+        }
+
+        /* Send an email with a temporary password */
+        [Test]
+        public void getPassTest() {
+            PassRequest req = new PassRequest(getPassEmail, "tempPassword");
+            string json = JsonConvert.SerializeObject(req);
+            string res = sendNetworkRequest(json);
+            Assert.IsTrue(res.Contains("Email sent with temporary password"));
+        }
+
+        /* In order to run this test, you must first run a getPassTest with the email you plug in here */
+        [Test]
+        public void tempPassTest() {
+            User user = new User("login", getPassEmail, "1k\"X=^|i.l", "username");
+            string json = JsonConvert.SerializeObject(user);
+            string res = sendNetworkRequest(json);
+            Regex rx = new Regex(@"[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+.*");
+            Assert.IsTrue(rx.Match(res).Success);
+        }
 
         public string sendNetworkRequest(string obj) {
             Int32 port = 8000;
             TcpClient client = new TcpClient("localhost", port);
+
+            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(obj);
             NetworkStream stream = client.GetStream();
@@ -125,7 +159,7 @@ namespace NUnitTestProject1 {
 
         /*[Test]
          public void getCollectionTest() {
-            UserInfo info = new UserInfo(id, token, "getCollection");
+            UserInfo info = new UserInfo(id, invalidToken, "getCollection");
             string json = JsonConvert.SerializeObject(info);
 
             Int32 port = 8000;

@@ -35,10 +35,10 @@ const login = (data, sock) => {
                     if (foundPass) {                // Password matched hash
                         const token = jwt.sign({
                             data: {
-                                id: result.id,
+                                id: result._id,
                                 email: result.email
                             }
-                        }, dbconfig.jwt_key, {expiresIn: '1d'});
+                        }, dbconfig.jwt_key);
                         sock.write(`${token}:${result._id.toString()}`);
                         console.log('login successful; token returned');
                         if (passwords.length > 1) {

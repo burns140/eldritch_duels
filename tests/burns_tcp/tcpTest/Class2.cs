@@ -15,5 +15,11 @@ namespace tcpTest {
             this.token = token;
             this.cmd = cmd;
         }
+
+        public Request(string cmd) {
+            this.id = "";
+            this.token = "";
+            this.cmd = cmd;
+        }
     }
 }

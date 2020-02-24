@@ -23,15 +23,15 @@ var transporter = nodemailer.createTransport({
    Could be fixed by removing one temporary password and replacing it with another, but right now that
    is at the bottom of the priority list. */
 const resetPassword = (data, sock) => {
-//    const toEmail = data.email;
-    const toEmail = 'aphantomdolphin@gmail.com';
+    const toEmail = data.email;
+    //const toEmail = 'aphantomdolphin@gmail.com';
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
             assert.equal(null, err);
 
             const db = client.db('eldritch_data');
             db.collection('users').findOne({
-                email: email
+                email: toEmail
             }).then(result => {
                 if (!result) {
                     sock.write('Account with that email doesn\'t exist');
