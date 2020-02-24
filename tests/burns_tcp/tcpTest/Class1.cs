@@ -49,11 +49,112 @@ namespace tcpTest {
         }
     }
 
+    public class GetAllDecksRequest {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public GetAllDecksRequest(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class GetOneDeckRequest : Request {
+        public string name;
+
+        public GetOneDeckRequest(string deckname, string id, string token, string cmd) : base(id, token, cmd) {
+            this.name = deckname;
+        }
+    }
+
+    public class DeleteDeckRequest : Request {
+        public string name;
+
+        public DeleteDeckRequest(string name, string id, string token, string cmd) : base(id, token, cmd) {
+            this.name = name;
+        }
+    }
+
+    public class Deck {
+        public string cmd;
+        public string name;
+        public string id;
+        public string[] deck;
+
+        public Deck(string cmd, string name, string id, string[] deck) {
+            this.cmd = cmd;
+            this.name = name;
+            this.id = id;
+            this.deck = deck;
+        }
+    }
+
     class Class1 {
 
+        const string id = "5e52dc3058e728656c254d01";
+        const string token = "token";
+
         public static void Main() {
-            signup();
+            //signup();
             //login();
+            //getCollectionArray();
+            newSignupTest();
+        }
+
+        static void getCollectionArray() {
+            UserInfo info = new UserInfo(id, token, "getCollection");
+            string json = JsonConvert.SerializeObject(info);
+
+            Int32 port = 8000;
+            TcpClient client = new TcpClient("localhost", port);
+
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            NetworkStream stream = client.GetStream();
+
+            stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Thread.Sleep(1000);
+            System.Console.WriteLine(responseData);
+            Thread.Sleep(2500);
+            client.Close();
+        }
+
+        static void newSignupTest() {
+            Random rnd = new Random();
+            int val = rnd.Next(10000);
+
+            User user1 = new User("signup", val.ToString() + "@test.edu", "password", val.ToString());
+            string json = JsonConvert.SerializeObject(user1);
+
+            Console.WriteLine("json: " + json);
+
+            Int32 port = 8000;
+            TcpClient client = new TcpClient("localhost", port);
+
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            NetworkStream stream = client.GetStream();
+
+            stream.Write(data, 0, data.Length);
+
+            data = new byte[256];
+            string responseData = string.Empty;
+
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            
+            Console.WriteLine("response: " + responseData);
+            Thread.Sleep(2500);
+
+            client.Close();
+
+
         }
 
         static void signup() {
@@ -86,7 +187,7 @@ namespace tcpTest {
         }
 
         static void login() {
-            User user = new User("login", "testemail@email.edu", "password", "username");
+            User user = new User("login", "aphantomdolphin@gmail.com", "yU7&Ioj{.F", "username");
             string json = JsonConvert.SerializeObject(user);
 
             Int32 port = 8000;
