@@ -89,6 +89,7 @@ namespace userCommands
             string json = JsonConvert.SerializeObject(user);
             Int32 port = 8000;
             TcpClient client = new TcpClient("localhost", port);
+            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
