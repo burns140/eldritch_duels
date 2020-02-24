@@ -27,29 +27,9 @@ namespace NUnitTestProject1 {
 
             User user1 = new User("signup", val.ToString() + "@test.edu", "password", val.ToString());
             string json = JsonConvert.SerializeObject(user1);
+            string res = sendNetworkRequest(json);
 
-            Console.WriteLine(json);
-
-            Int32 port = 8000;
-            TcpClient client = new TcpClient("localhost", port);
-
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            NetworkStream stream = client.GetStream();
-
-            stream.Write(data, 0, data.Length);
-
-            data = new byte[256];
-            string responseData = string.Empty;
-
-            Int32 bytes = stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Thread.Sleep(2500);
-            client.Close();
-
-            Debug.WriteLine(responseData);
-
-
-            Assert.IsTrue(responseData.Contains("User successfully created"));
+            Assert.IsTrue(res.Contains("User successfully created"));
             
         }
 
@@ -57,32 +37,94 @@ namespace NUnitTestProject1 {
         public void loginTest() {
             User user = new User("login", "testemail@email.edu", "password", "username");
             string json = JsonConvert.SerializeObject(user);
+            string res = sendNetworkRequest(json);
+            Regex rx = new Regex(@"[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+.*");
+            Assert.IsTrue(rx.Match(res).Success);
+        }
 
+        
+
+        [Test]
+        public void getCollectionArrayTest() {
+            UserInfo info = new UserInfo(id, token, "getCollection");
+            string json = JsonConvert.SerializeObject(info);
+            string res = sendNetworkRequest(json);
+
+            Assert.IsFalse(res.Contains("Error"));
+        }
+
+        [Test]
+        public void addCardToCollectionTest() {
+            AddCardRequest cardRequest = new AddCardRequest(id, token, "fake", "addCardToCollection");
+            string json = JsonConvert.SerializeObject(cardRequest);
+            string res = sendNetworkRequest(json);
+            Assert.IsTrue(res.Contains("card added successfully"));
+        }
+
+        [Test]
+        public void addDeckTest() {
+            Random rnd = new Random();
+            int val = rnd.Next(10000);
+
+            string[] deckArr = { "card1-1", "card2-1", "card3-4", "card4-2" };
+
+            Deck deck = new Deck("saveDeck", val.ToString(), id, deckArr);
+            string json = JsonConvert.SerializeObject(deck);
+            string res = sendNetworkRequest(json);
+
+            Assert.IsTrue(res.Contains("Deck added successfully"));
+        }
+
+        [Test]
+        public void getAllDecksTest() {
+            GetAllDecksRequest req = new GetAllDecksRequest(id, token, "getAllDecks");
+            string json = JsonConvert.SerializeObject(req);
+            string res = sendNetworkRequest(json);
+
+            Assert.IsFalse(res.Contains("Error"));
+        }
+
+        [Test]
+        public void getOneDeckTest() {
+            GetOneDeckRequest req = new GetOneDeckRequest("7822", id, token, "getOneDeck");
+            string json = JsonConvert.SerializeObject(req);
+            string res = sendNetworkRequest(json);
+            Assert.IsFalse(res.Contains("Error"));
+        }
+
+        [Test]
+        public void deleteDeckTest() {
+            DeleteDeckRequest req = new DeleteDeckRequest("5399", id, token, "deleteDeck");
+            string json = JsonConvert.SerializeObject(req);
+            string res = sendNetworkRequest(json);
+            Assert.IsTrue(res.Contains("deck successfully deleted"));
+        }
+
+
+        public string sendNetworkRequest(string obj) {
             Int32 port = 8000;
             TcpClient client = new TcpClient("localhost", port);
 
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(obj);
             NetworkStream stream = client.GetStream();
 
             stream.Write(data, 0, data.Length);
-
             data = new Byte[256];
             string responseData = string.Empty;
 
             Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Debug.WriteLine(responseData);
-
-            Regex rx = new Regex(@"[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+.*");
+            Console.WriteLine(responseData);
 
             Thread.Sleep(2500);
-            
+
             client.Close();
-            Assert.IsTrue(rx.Match(responseData).Success);
+
+            return responseData;
         }
 
-        [Test]
-        public void getCollectionTest() {
+        /*[Test]
+         public void getCollectionTest() {
             UserInfo info = new UserInfo(id, token, "getCollection");
             string json = JsonConvert.SerializeObject(info);
 
@@ -108,57 +150,7 @@ namespace NUnitTestProject1 {
             }
                         
             client.Close();
-        }
-
-        [Test]
-        public static void getCollectionArrayTest() {
-            UserInfo info = new UserInfo(id, token, "getCollection");
-            string json = JsonConvert.SerializeObject(info);
-
-            Int32 port = 8000;
-            TcpClient client = new TcpClient("localhost", port);
-
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            NetworkStream stream = client.GetStream();
-
-            stream.Write(data, 0, data.Length);
-            data = new Byte[256];
-            string responseData = string.Empty;
-
-            Int32 bytes = stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-
-            Thread.Sleep(1000);
-            System.Console.WriteLine(responseData);
-            Thread.Sleep(2500);
-            client.Close();
-        }
-
-        [Test]
-        public void addCardToCollectionTest() {
-            AddCardRequest cardRequest = new AddCardRequest(id, token, "fake", "addCardToCollection");
-            string json = JsonConvert.SerializeObject(cardRequest);
-
-            Int32 port = 8000;
-            TcpClient client = new TcpClient("localhost", port);
-
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            NetworkStream stream = client.GetStream();
-
-            stream.Write(data, 0, data.Length);
-            data = new Byte[256];
-            string responseData = string.Empty;
-
-            Int32 bytes = stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            //Debug.WriteLine("Received: {0}", responseData);
-            Debug.WriteLine(responseData);
-
-            Thread.Sleep(2500);
-
-            client.Close();
-            Assert.IsTrue(responseData.Contains("card added successfully"));
-        }
+        } */
     }
 
 }

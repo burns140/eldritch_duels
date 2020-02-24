@@ -32,7 +32,7 @@ function onClientConnected(sock) {
                 case "login":
                     Login.login(obj, sock);
                     break;
-                case "getDecks":
+                case "getAllDecks":
                     Decks.getAllDecks(obj, sock);
                     break;
                 case "saveDeck":
@@ -40,6 +40,9 @@ function onClientConnected(sock) {
                     break;
                 case "deleteDeck":
                     Decks.deleteDeck(obj, sock);
+                    break;
+                case "getOneDeck":
+                    Decks.getDeck(obj, sock);
                     break;
                 case "getCollection":
                     Collection.getCollection(obj, sock);

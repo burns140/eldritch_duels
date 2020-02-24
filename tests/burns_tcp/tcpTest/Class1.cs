@@ -49,6 +49,48 @@ namespace tcpTest {
         }
     }
 
+    public class GetAllDecksRequest {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public GetAllDecksRequest(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class GetOneDeckRequest : Request {
+        public string name;
+
+        public GetOneDeckRequest(string deckname, string id, string token, string cmd) : base(id, token, cmd) {
+            this.name = deckname;
+        }
+    }
+
+    public class DeleteDeckRequest : Request {
+        public string name;
+
+        public DeleteDeckRequest(string name, string id, string token, string cmd) : base(id, token, cmd) {
+            this.name = name;
+        }
+    }
+
+    public class Deck {
+        public string cmd;
+        public string name;
+        public string id;
+        public string[] deck;
+
+        public Deck(string cmd, string name, string id, string[] deck) {
+            this.cmd = cmd;
+            this.name = name;
+            this.id = id;
+            this.deck = deck;
+        }
+    }
+
     class Class1 {
 
         const string id = "5e52dc3058e728656c254d01";

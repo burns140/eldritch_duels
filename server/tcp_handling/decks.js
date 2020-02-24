@@ -19,7 +19,7 @@ const getAllDecks = (data, sock) => {
                 var temparr = [];
                 var decks = result.decks;
                 for (var el of decks) {
-                    temparr.push(el.name);
+                    temparr.push(el.deckname);
                 }
                 console.log(temparr.toString());
                 sock.write(temparr.toString());
@@ -52,10 +52,10 @@ const getDeck = (data, sock) => {
                 var decks = result.decks;
 
                 for (var el of decks) {
-                    if (el.name = deckname) {
+                    if (el.deckname == deckname) {
                         for (var key of Object.keys(el)) {
                             if (key != deckname) {
-                                temparr.push(`${key}-${coll[key]}`);
+                                temparr.push(`${key}-${el[key]}`);
                             }
                         }
                     }
@@ -93,9 +93,10 @@ const saveDeck = (data, sock) => {
             }).then(result => {
                 resDecks = result.decks;
                 
-                for (var i = 0; i < decks.length; i++) {
+                for (var i = 0; i < resDecks.length; i++) {
                     if (resDecks[i].name == deckname) {
                         resDecks.splice(i, 1);
+                        break;
                     }
                 }
 
@@ -118,7 +119,7 @@ const saveDeck = (data, sock) => {
                     }
                 ).then(result => {
                     console.log(`Deck w/ name ${deckname} added successfully`);
-                    sock.write('Deck added succesfully');
+                    sock.write('Deck added successfully');
                     client.close();
                     return;
                 }).catch(err => {
@@ -142,7 +143,7 @@ const saveDeck = (data, sock) => {
 
 const deleteDeck = (data, sock) => {
     const id = data.id;
-    const deckname = data.deckname;
+    const deckname = data.name;
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -152,7 +153,7 @@ const deleteDeck = (data, sock) => {
             db.collection('users').updateOne(
                 { _id: ObjectID(id) },
                 {
-                    $pull: { decks: { name: deckname } }
+                    $pull: { decks: { deckname: deckname } }
                 }
             ).then(result => {
                 console.log(`Deck ${deckname} successfully deleted`);
@@ -175,3 +176,4 @@ const deleteDeck = (data, sock) => {
 exports.getAllDecks = getAllDecks;
 exports.saveDeck = saveDeck;
 exports.deleteDeck = deleteDeck;
+exports.getDeck = getDeck;
