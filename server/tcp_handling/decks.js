@@ -16,11 +16,13 @@ const getAllDecks = (data, sock) => {
             db.collection('users').findOne({
                 _id: ObjectID(id)
             }).then(result => {
-                console.log(result.decks);
-                let obj = {
-                    "decks": result.decks
+                var temparr = [];
+                var decks = result.decks;
+                for (var el of decks) {
+                    temparr.push(el.name);
                 }
-                sock.write(obj);
+                console.log(temparr.toString());
+                sock.write(temparr.toString());
                 client.close();
             }).catch(err => {
                 console.log(err);
@@ -34,9 +36,52 @@ const getAllDecks = (data, sock) => {
     }
 }
 
+const getDeck = (data, sock) => {
+    const id = data.id;
+    const deckname = data.name;
+
+    try {
+        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+            assert.equal(null, err);
+            
+            const db = client.db('eldritch_data');
+            db.collection('users').findOne({
+                _id: ObjectID(id)
+            }).then(result => {
+                var temparr = [];
+                var decks = result.decks;
+
+                for (var el of decks) {
+                    if (el.name = deckname) {
+                        for (var key of Object.keys(el)) {
+                            if (key != deckname) {
+                                temparr.push(`${key}-${coll[key]}`);
+                            }
+                        }
+                    }
+                }
+                
+                console.log(temparr.toString());
+                sock.write(temparr.toString());
+                client.close();
+                return;
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
+                client.close();
+                return;
+            });
+        });
+    } catch(err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
 const saveDeck = (data, sock) => {
     const id = data.id;
-    const deck = data.deck;
+    const newdeck = data.deck;
+    const deckname = data.name;
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -46,24 +91,33 @@ const saveDeck = (data, sock) => {
             db.collection('users').findOne({
                 _id: ObjectID(id)
             }).then(result => {
-                /* Confirm that this deck doesn't have the same name as another on this account */
-                for (el of result.decks) {
-                    if (el.name == deck.name) {
-                        console.log(`Deck with name ${el.name} already exists for id ${id}`);
-                        sock.write('Deck with that name already exists');
-                        client.close();
-                        return;
+                resDecks = result.decks;
+                
+                for (var i = 0; i < decks.length; i++) {
+                    if (resDecks[i].name == deckname) {
+                        resDecks.splice(i, 1);
                     }
                 }
+
+                var obj = {
+                    deckname: deckname
+                }
+
+                for (el of newdeck) {
+                    let temparr = el.split("-");
+                    obj[temparr[0]] = temparr[1];
+                }
+
+                resDecks.push(obj);
 
                 /* Add the deck */
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
-                        $push: { decks: deck }
+                        $set: { decks: resDecks }
                     }
                 ).then(result => {
-                    console.log(`Deck w/ name ${deck.name} added successfully`);
+                    console.log(`Deck w/ name ${deckname} added successfully`);
                     sock.write('Deck added succesfully');
                     client.close();
                     return;

@@ -52,13 +52,13 @@ function onClientConnected(sock) {
                     break;
             }
         } catch (err) {
-            console.log(err);
+            console.log(`tcp: ${err}`);
         }
     });
 
     /* There was a problem */
     sock.on('error', (err) => {
-        console.log(err);
+        console.log(`sock: ${err}`);
     });
 
     /* Connection closed gracefully */
