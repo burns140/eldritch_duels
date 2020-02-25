@@ -78,9 +78,14 @@ namespace eldritch.editor
                         if (cardName != null || cardName != "")
                         {
                             Card c;
+                            bool isNew = false;
+                            //c = GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetCard(cardName);
                             c = GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetCard(cardName);
-                            if(c == null)
+                            if (c == null)
+                            {
                                 c = new Card(Library.GetNextID(), this.cardName);
+                                isNew = true;
+                            }
                             c.CardCost = int.Parse(this.cost);
                             c.AttackPower = int.Parse(this.attack);
                             c.DefencePower = int.Parse(this.defence);
@@ -90,6 +95,7 @@ namespace eldritch.editor
                             Library.AddCard(c);
                             EditorUtility.SetDirty(this);
                             EditorSceneManager.MarkSceneDirty(GameObject.Find("ContentManager").scene);
+                            PrefabUtility.ApplyPrefabInstance(GameObject.Find("ContentManager"), InteractionMode.AutomatedAction);
                         }
                         else
                         {

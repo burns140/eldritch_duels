@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 namespace eldritch {
 
 
@@ -76,18 +77,16 @@ namespace eldritch {
             }
         }
 
+        public void LoadScene(string sceneName)
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+
         private void testCardCollection()
         {
             Debug.Log("Running collection test...");
             if(Global.userCards.Count == 0)
-            {
-                //create dummy cards
-                for(int i = 0; i < 15; i++)
-                {
-                    Card c = new Card(i, "c" + i);
-                    Global.userCards.Add(c);
-                }
-            }
+                Global.InitUserCards("0-20,1-25");
         }
     }
 }

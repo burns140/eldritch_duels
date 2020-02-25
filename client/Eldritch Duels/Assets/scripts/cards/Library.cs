@@ -12,28 +12,28 @@ namespace eldritch.cards
         private static Hashtable _cardID = new Hashtable();
         public static void AddCard(Card card)
         {
-            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().AddCard(card);
+            Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().AddCard(card);
         }
 
         public static Card GetCard(int cardID)
         {
-            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetCard(cardID);
+            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetCard(cardID);
         }
         public static Card GetCard(string cardName)
         {
-            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetCard(cardName);
+            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetCard(cardName);
         }
         public static List<Card> GetAllCards()
         {
-            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetAllCards();
+            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetAllCards();
         }
         public static void RemoveCard(string cardName)
         {
-            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().RemoveCard(cardName);
+            Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().RemoveCard(cardName);
         }
         public static int GetNextID()
         {
-            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetNextID();
+            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetNextID();
         }
         #endregion
 

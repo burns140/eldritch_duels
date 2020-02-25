@@ -66,6 +66,10 @@
     <Compile Include="Assets\scripts\cards\CardEnlarge.cs" />
     <Compile Include="Assets\scripts\cards\CollectionUI.cs" />
     <Compile Include="Assets\scripts\cards\ContentLibrary.cs" />
+    <Compile Include="Assets\scripts\cards\Deck.cs" />
+    <Compile Include="Assets\scripts\cards\DeckControl.cs" />
+    <Compile Include="Assets\scripts\cards\DeckMenuUI.cs" />
+    <Compile Include="Assets\scripts\cards\DeckUI.cs" />
     <Compile Include="Assets\scripts\cards\Effect.cs" />
     <Compile Include="Assets\scripts\cards\Library.cs" />
     <Compile Include="Assets\scripts\Global.cs" />

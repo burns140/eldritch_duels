@@ -29,10 +29,10 @@ namespace eldritch.cards
                 if (_cards[i].CardID > card.CardID)
                 {
                     _cards.Insert(i, card);
-                    
+                    return;
                 }
             }
-
+            _cards.Add(card);
 
         }
 
@@ -58,6 +58,9 @@ namespace eldritch.cards
             }
             return null;
         }
+
+
+
         public List<Card> GetAllCards()
         {
             return _cards;
