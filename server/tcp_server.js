@@ -7,6 +7,7 @@ const Decks = require('./tcp_handling/decks.js');
 const Collection = require('./tcp_handling/collection.js');
 const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
+const Profile = require('./tcp_handling/editprofile.js');
 
 const noTokenNeeded = ["signup", "login", "tempPassword"];
 
@@ -61,6 +62,9 @@ function onClientConnected(sock) {
                         break;
                     case "tempPassword":
                         Email.resetPassword(obj, sock);
+                        break;
+                    case "editProfile":
+                        Profile.editProfile(obj, sock);
                         break;
                 }
             }
