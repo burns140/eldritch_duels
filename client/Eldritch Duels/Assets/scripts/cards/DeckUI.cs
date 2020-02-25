@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace eldritch.cards {
     public struct CardContainer
@@ -24,17 +25,16 @@ namespace eldritch.cards {
         private void Start()
         {
             if (Global.selectedDeck == null)
-                Global.selectedDeck = new List<Card>();
+                Global.selectedDeck = new List<CardContainer>();
 #if DEBUG
             testDeck();
 #endif
         
             //get deck
-            foreach(Card c in Global.selectedDeck)
+            foreach(CardContainer c in Global.selectedDeck)
             {
-                CardContainer cc;
-                cc.c = c;
-                cc.count = c.CopiesOwned;
+                CardContainer cc = c;
+                cc.count = c.c.CopiesOwned;
                 inDeck.Add(cc);
             }
             foreach (Card c in Global.userCards)
@@ -122,7 +122,7 @@ namespace eldritch.cards {
             {
                 return;
             }
-            deckSize++;
+            
             for(int i = 0; i < inCollection.Count; i++)
             {
                 if(inCollection[i].c.CardID == c.CardID && inCollection[i].count > 0)
@@ -139,6 +139,7 @@ namespace eldritch.cards {
                             inCollection[i] = temp;
                             this.maxDeckPage = inDeck.Count / 8;
                             this.maxCollectPage = inCollection.Count / 8;
+                            deckSize++;
                             updateUI();
                             return;
                         }
@@ -150,6 +151,7 @@ namespace eldritch.cards {
                     di.c = c;
                     di.count = 1;
                     inDeck.Add(di);
+                    deckSize++;
                     this.maxDeckPage = inDeck.Count / 8;
                     this.maxCollectPage = inCollection.Count / 8;
                     updateUI();
@@ -159,7 +161,7 @@ namespace eldritch.cards {
         }
         public void RemoveCard(Card c)
         {
-            deckSize--;
+            
             for (int i = 0; i < inCollection.Count; i++)
             {
                 if (inCollection[i].c.CardID == c.CardID)
@@ -180,6 +182,7 @@ namespace eldritch.cards {
                             inCollection[i] = temp;
                             this.maxDeckPage = inDeck.Count / 8;
                             this.maxCollectPage = inCollection.Count / 8;
+                            deckSize--;
                             updateUI();
                             return;
                         }
@@ -192,9 +195,15 @@ namespace eldritch.cards {
 
         public void SaveDeck()
         {
+            if (DeckNameInput.transform.GetChild(1).gameObject.GetComponent<UnityEngine.UI.Text>().text.Trim().Equals(""))
+            {
+                UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Deck Name Cannot Be Empty";
+                UIError.SetActive(true);
+                return;
+            }
             if(deckSize != Constants.MIN_DECK_SIZE)
             {
-                UIError.transform.GetChild(0).GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Not Enough Cards In Deck!";
+                UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Not Enough Cards In Deck!";
                 UIError.SetActive(true);
                 return;
             }
@@ -203,9 +212,10 @@ namespace eldritch.cards {
             {
                 if(DeckNameInput == null || DeckNameInput.transform.GetChild(1).gameObject.GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
                 {
-                    UIError.transform.GetChild(0).GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Name Already Used!";
-                    UIError.SetActive(true);
-                    return;
+                    Deck updatedDeck = Global.userDecks[i];
+                    updatedDeck.CardsInDeck = inDeck;
+                    Global.userDecks[i] = updatedDeck;
+                    SceneManager.LoadScene("Decks");
                 }
 
             }
@@ -214,6 +224,7 @@ namespace eldritch.cards {
             newDeck.DeckName = DeckNameInput.transform.GetChild(1).gameObject.GetComponent<UnityEngine.UI.Text>().text;
             newDeck.CardsInDeck = inDeck;
             Global.AddDeck(newDeck);
+            SceneManager.LoadScene("Decks");
         }
 
         void testDeck()

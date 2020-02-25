@@ -19,7 +19,7 @@ namespace eldritch {
         public static int userID = 0;
         public static List<Card> userCards = new List<Card>();
         public static int usercredits = 0;
-        public static List<Card> selectedDeck = new List<Card>();
+        public static List<CardContainer> selectedDeck = new List<CardContainer>();
         public static List<Deck> userDecks = new List<Deck>();
 
 
