@@ -513,7 +513,7 @@ GameObject:
   - component: {fileID: 88800617}
   - component: {fileID: 88800616}
   m_Layer: 5
-  m_Name: Text
+  m_Name: SignupEmailText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -590,7 +590,7 @@ GameObject:
   - component: {fileID: 286954300}
   - component: {fileID: 286954299}
   m_Layer: 5
-  m_Name: Text
+  m_Name: SignupPasswordText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -693,7 +693,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -61.99994}
+  m_AnchoredPosition: {x: 0.000061035156, y: -62}
   m_SizeDelta: {x: -968.3999, y: -390.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &306690101
@@ -1103,6 +1103,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 654044611}
   m_CullTransparentMesh: 0
+--- !u!1 &721742026
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 721742027}
+  - component: {fileID: 721742028}
+  m_Layer: 5
+  m_Name: LoginScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &721742027
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721742026}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 914750840}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &721742028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721742026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6516d67c74c8d0d4ab359719481851fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EmailLoginInput: {fileID: 1291242640}
+  PswlLoginInput: {fileID: 1945847089}
+  login: {fileID: 914750841}
 --- !u!1 &780757464
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,8 +1427,9 @@ GameObject:
   - component: {fileID: 914750843}
   - component: {fileID: 914750842}
   - component: {fileID: 914750841}
+  - component: {fileID: 914750844}
   m_Layer: 5
-  m_Name: login
+  m_Name: LoginButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1395,6 +1447,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1174804107}
+  - {fileID: 721742027}
   m_Father: {fileID: 341953538}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1445,7 +1498,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 914750842}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 721742028}
+        m_MethodName: Start
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &914750842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,6 +1546,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914750839}
   m_CullTransparentMesh: 0
+--- !u!114 &914750844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914750839}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6516d67c74c8d0d4ab359719481851fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EmailLoginInput: {fileID: 1174804108}
+  PswlLoginInput: {fileID: 0}
+  login: {fileID: 0}
 --- !u!1 &988181724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1885,7 +1964,7 @@ GameObject:
   - component: {fileID: 1174804109}
   - component: {fileID: 1174804108}
   m_Layer: 5
-  m_Name: Text
+  m_Name: LoginText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2178,7 +2257,7 @@ GameObject:
   - component: {fileID: 1291242641}
   - component: {fileID: 1291242640}
   m_Layer: 5
-  m_Name: Text
+  m_Name: LoginInputText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2462,6 +2541,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407523770}
   m_CullTransparentMesh: 0
+--- !u!1 &1486710173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1486710174}
+  - component: {fileID: 1486710175}
+  m_Layer: 5
+  m_Name: SignupScript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1486710174
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486710173}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1737017011}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1486710175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486710173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7600d7f859c7b3345b3bf36027831b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EmailLoginInput: {fileID: 88800616}
+  PswlLoginInput: {fileID: 286954299}
+  signup: {fileID: 1737017012}
 --- !u!1 &1737017010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2475,7 +2605,7 @@ GameObject:
   - component: {fileID: 1737017013}
   - component: {fileID: 1737017012}
   m_Layer: 5
-  m_Name: create
+  m_Name: SignupButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2493,6 +2623,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1407523771}
+  - {fileID: 1486710174}
   m_Father: {fileID: 306690100}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2543,7 +2674,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1737017013}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1486710175}
+        m_MethodName: Start
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1737017013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2916,7 +3058,7 @@ GameObject:
   - component: {fileID: 1945847090}
   - component: {fileID: 1945847089}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PasswordInputText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
