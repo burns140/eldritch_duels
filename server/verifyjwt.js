@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken')
-const config = require('./db_config.json')
+const dbconfig = require('./dbconfig.json')
 
-module.exports = (req,res,next) => {
-    //do stuff
-    if(!req.header('Authorization')) {
-        res.status(401).json({err:'Not logged in'})
-        return;
-    }
-    const token = req.header('Authorization').substr(req.header('Authorization').indexOf(' ') + 1)
+const verify = (token, sock) => {
     try {
-        const decoded = jwt.verify(token, config.jwt_key)
-        req.token = decoded.data
-        next()
+        const decoded = jwt.verify(token, dbconfig.jwt_key);
+        token = decoded.data
+        console.log(token);
+        return true;
     } catch(err) {
-        res.status(401).json({err:'Invalid token'})
-    }
+        console.log(err);
+        sock.write('Invalid token');
+        return false;
+    } 
 }
+
+exports.verify = verify;

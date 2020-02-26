@@ -44,10 +44,12 @@ router.post('/', (req, res) => {
             }).catch(err => {
                 console.log(err);
                 client.close();
+                return;
             })
         });
     } catch (err) {
         console.log(err);
+        res.status(400).send(err);
     }
 });
 
