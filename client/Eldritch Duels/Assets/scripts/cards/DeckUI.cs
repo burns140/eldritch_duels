@@ -24,19 +24,17 @@ namespace eldritch.cards {
         // Update is called once per frame
         private void Start()
         {
+            
+           if(Global.selectedDeck != null)
+                DeckNameInput.GetComponent<UnityEngine.UI.InputField>().text = Global.selectedDeck.DeckName;
             if (Global.selectedDeck == null)
-                Global.selectedDeck = new List<CardContainer>();
+                Global.selectedDeck = new Deck();
 #if DEBUG
             testDeck();
 #endif
         
             //get deck
-            foreach(CardContainer c in Global.selectedDeck)
-            {
-                CardContainer cc = c;
-                cc.count = c.c.CopiesOwned;
-                inDeck.Add(cc);
-            }
+            
             foreach (Card c in Global.userCards)
             {
                 CardContainer cc;
@@ -44,11 +42,24 @@ namespace eldritch.cards {
                 cc.count = c.CopiesOwned;
                 inCollection.Add(cc);
             }
+            
+            foreach (CardContainer c in Global.selectedDeck.CardsInDeck)
+            {
+                for(int i = 0; i < c.count; i++)
+                {
+                    AddCard(c.c);
+                }
+            }
             this.maxDeckPage = inDeck.Count / 8;
             this.maxCollectPage = inCollection.Count / 8;
             
 
             updateUI();
+            
+        }
+        public void LoadScene(string sceneName)
+        {
+            SceneManager.LoadScene(sceneName);
         }
         private void updateUI()
         {
@@ -195,7 +206,7 @@ namespace eldritch.cards {
 
         public void SaveDeck()
         {
-            if (DeckNameInput.transform.GetChild(1).gameObject.GetComponent<UnityEngine.UI.Text>().text.Trim().Equals(""))
+            if (GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Trim().Equals(""))
             {
                 UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Deck Name Cannot Be Empty";
                 UIError.SetActive(true);
@@ -210,18 +221,19 @@ namespace eldritch.cards {
             //check if name taken
             for(int i = 0; i < Global.userDecks.Count; i++)
             {
-                if(DeckNameInput == null || DeckNameInput.transform.GetChild(1).gameObject.GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
+                if(GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
                 {
                     Deck updatedDeck = Global.userDecks[i];
                     updatedDeck.CardsInDeck = inDeck;
                     Global.userDecks[i] = updatedDeck;
                     SceneManager.LoadScene("Decks");
+                    return;
                 }
 
             }
 
             Deck newDeck = new Deck();
-            newDeck.DeckName = DeckNameInput.transform.GetChild(1).gameObject.GetComponent<UnityEngine.UI.Text>().text;
+            newDeck.DeckName = GameObject.Find("Deck Name Text").gameObject.GetComponent<UnityEngine.UI.Text>().text;
             newDeck.CardsInDeck = inDeck;
             Global.AddDeck(newDeck);
             SceneManager.LoadScene("Decks");

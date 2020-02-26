@@ -1,9 +1,5 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/DeckBuilder.unity
-=======
-- path: Assets/Scenes/MainScene.unity
->>>>>>> 0f6feb2949237708bb2cd16b7f8ec12ce99ae684
+- path: Assets/Scenes/Decks.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

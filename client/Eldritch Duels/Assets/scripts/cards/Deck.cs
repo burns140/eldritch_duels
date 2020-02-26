@@ -12,7 +12,7 @@ namespace eldritch.cards {
             set { this.name = value; }
         }
 
-        private List<CardContainer> deck;
+        private List<CardContainer> deck = new List<CardContainer>();
         public List<CardContainer> CardsInDeck
         {
             get { return this.deck; }
@@ -21,7 +21,7 @@ namespace eldritch.cards {
 
         public int DeckSize
         {
-            get { return this.deck.Count; }
+            get { int c = 0; foreach (CardContainer cc in CardsInDeck) { c += cc.count; } return c; }
         }
 
     }

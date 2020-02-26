@@ -19,7 +19,7 @@ namespace eldritch {
         public static int userID = 0;
         public static List<Card> userCards = new List<Card>();
         public static int usercredits = 0;
-        public static List<CardContainer> selectedDeck = new List<CardContainer>();
+        public static Deck selectedDeck = new Deck();
         public static List<Deck> userDecks = new List<Deck>();
 
 
@@ -133,6 +133,7 @@ namespace eldritch {
                 string[] first = s.Split(new char[] { ',' },2);
                 Deck d = new Deck();
                 d.DeckName = first[0];
+                Debug.Log(first[1]);
                 d.CardsInDeck = StringToDeck(first[1]);
                 Global.userDecks.Add(d);
 
