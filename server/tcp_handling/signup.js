@@ -25,19 +25,28 @@ const signup = (data, sock) => {
                     client.close();
                     return;
                 } else {                                                // Create user using our user schema
+                    var temparr = [];
+                    temparr.push(hash);
+                    var startCollection = {
+                        "testcard": 0,
+                        "realcard": 2,
+                        "testing": 1,
+                        "fake": 0
+                    };
                     db.collection('users').insertOne({
-                        user_name: username,                // string
-                        password: hash,                     // string
+                        username: username,                // string
+                        password: temparr,                  // string
                         email: email,                       // string
                         achievements: [],                   // int[]
-                        collection: {"testcard": 0},        // Map<cardname, amount>
+                        collection: startCollection,        // Map<cardname, amount>
                         decks: [],                          // list<Tuple<string, string[]>>
                         avatar: [],                         // byte[]
                         level: 0,                           // int
                         wins: 0,                            // int
                         losses: 0,                          // int
                         recent_games: [],                   // bool[]
-                        currency: 500                       // int
+                        currency: 500,                       // int
+                        bio: ""
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}`);

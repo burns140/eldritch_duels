@@ -108,6 +108,7 @@ server/dbconfig.json
 
 # Visual Studio files
 .vs/
+.vscode/
 *.njsproj
 bin/
 obj/

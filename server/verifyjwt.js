@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken')
-const config = require('./dbconfig.json')
+const dbconfig = require('./dbconfig.json')
 
 const verify = (token, sock) => {
     try {
-        const decoded = jwt.verify(token, config.jwt_key);
+        const decoded = jwt.verify(token, dbconfig.jwt_key);
         token = decoded.data
-        next();
+        console.log(token);
+        return true;
     } catch(err) {
+        console.log(err);
         sock.write('Invalid token');
+        return false;
     } 
 }
 

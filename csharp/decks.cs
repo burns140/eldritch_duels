@@ -29,9 +29,9 @@ namespace deckCommands
         private string id;
         private string cmd;
         private string name;
-        private int[] deck;
+        private string[] deck;
 
-        public Deck(string cmd, string id, int[] deck, string name)
+        public Deck(string cmd, string id, string[] deck, string name)
         {
             this.id = id;
             this.cmd = cmd;
@@ -77,7 +77,7 @@ namespace deckCommands
             client.Close();
         }
 
-        static void saveDeck(string id, int[] deck, string name)
+        static void saveDeck(string id, string[] deck, string name)
         {
             Deck deck = new Deck("saveDeck", id, deck, name);
             string json = JsonConvert.SerializeObject(user);
