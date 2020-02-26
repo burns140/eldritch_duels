@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -18,14 +18,17 @@
   "homepage": "https://github.com/aPhantomDolphin/eldritch_duels#readme",
   "dependencies": {
     "bcrypt": "^3.0.7",
+    "binary-search-tree": "^0.2.6",
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
     "generate-password": "^1.5.1",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^7.0.1",
     "mongodb": "^3.5.2",
     "nodemailer": "^6.4.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
+    "should": "^13.2.3",
     "socket.io": "^2.3.0"
   }
 }
