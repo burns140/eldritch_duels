@@ -105,3 +105,5 @@ dist
 
 # Database configuration
 server/dbconfig.json
+
+.vscode/

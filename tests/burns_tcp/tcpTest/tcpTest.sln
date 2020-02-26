@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tcpTest", "tcpTest.csproj", "{6E8EA995-FF57-4641-ADC8-9B22C3753A16}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NUnitTestProject1", "..\NUnitTestProject1\NUnitTestProject1.csproj", "{F9DCAF21-FEB7-4186-9ACD-4231E3A1CB71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E8EA995-FF57-4641-ADC8-9B22C3753A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8EA995-FF57-4641-ADC8-9B22C3753A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8EA995-FF57-4641-ADC8-9B22C3753A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8EA995-FF57-4641-ADC8-9B22C3753A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9DCAF21-FEB7-4186-9ACD-4231E3A1CB71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9DCAF21-FEB7-4186-9ACD-4231E3A1CB71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9DCAF21-FEB7-4186-9ACD-4231E3A1CB71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9DCAF21-FEB7-4186-9ACD-4231E3A1CB71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28217D83-F390-4991-A732-588776080B5E}
+	EndGlobalSection
+EndGlobal
