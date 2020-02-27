@@ -33,9 +33,7 @@ namespace eldritch.cards
         public GameObject previewPanel;
         private void Start()
         {
-#if DEBUG
-            testDeckUI();
-#endif
+
             alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken());
             string json = JsonConvert.SerializeObject(saved);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
@@ -45,10 +43,31 @@ namespace eldritch.cards
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             string[] temp = responseData.Split(',');
+            Debug.Log("Getting deck cards");
             for(int i = 0; i < temp.Length; i++)
             {
-                //TODO: POPULATE DECK NAMES IN UI
-                //TODO: ADD SCRIPT TO DECK UI FOR RETRIEVING DECK INFO
+                string deckName = temp[i];
+                if (!Global.ContainsDeck(deckName))
+                {
+                    string[] cards = Global.GetDeckByNameFromServer(temp[i]);
+                    Deck d = new Deck();
+                    d.CardsInDeck = new List<CardContainer>();
+                    d.DeckName = deckName;
+                    if (cards != null && cards.Length > 1)
+                    {
+                        for (int j = 1; j < cards.Length; j++)
+                        {
+                            //add cards
+                            string[] pair = cards[j].Split('-');
+                            Card c = Library.GetCard(pair[0]);
+                            CardContainer cc;
+                            cc.c = c;
+                            cc.count = int.Parse(pair[1]);
+                            d.CardsInDeck.Add(cc);
+                        }
+                    }
+                    Global.AddDeck(d);
+                }
             }
             Thread.Sleep(2500);
             Debug.Log("Number of Decks: " + Global.userDecks.Count);
@@ -121,7 +140,7 @@ namespace eldritch.cards
         private void testDeckUI()
         {
             if (Global.userCards.Count == 0)
-                Global.InitUserCards("0-20,1-25");
+                Global.InitUserCards("0-20,1-25",0);
             Global.InitNewPlayer();
         }
     }

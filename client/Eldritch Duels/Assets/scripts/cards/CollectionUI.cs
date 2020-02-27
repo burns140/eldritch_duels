@@ -83,7 +83,7 @@ namespace eldritch {
         {
             Debug.Log("Running collection test...");
             if(Global.userCards.Count == 0)
-                Global.InitUserCards("0-20,1-25");
+                Global.InitUserCards("0-20,1-25",0);
         }
     }
 }

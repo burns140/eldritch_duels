@@ -76,6 +76,8 @@ public class Login : MonoBehaviour
         {
             Debug.Log("Login successful! Temp file is: " + result);
             Global.tokenfile = result;
+            string tmp = Global.GetCollection();
+            Global.InitUserCards(tmp, 1);
             SceneManager.LoadScene("Lobby");
         } else
         {

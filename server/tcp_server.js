@@ -29,8 +29,9 @@ function onClientConnected(sock) {
     /* Determine what needs to be done */
     sock.on('data', (data) => {
         console.log(data);
-        const obj = JSON.parse(data);               // Turn data into a JSON object
-        try {       
+        
+        try {     
+			const obj = JSON.parse(data);               // Turn data into a JSON object		
             console.log(obj);
             console.log(noTokenNeeded.includes(obj.cmd));
             if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {

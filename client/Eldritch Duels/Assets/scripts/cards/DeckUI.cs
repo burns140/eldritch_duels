@@ -49,31 +49,26 @@ namespace eldritch.cards {
         // Update is called once per frame
         private void Start()
         {
-            
-           if(Global.selectedDeck != null)
+
+            if (Global.selectedDeck != null)
+            {
                 DeckNameInput.GetComponent<UnityEngine.UI.InputField>().text = Global.selectedDeck.DeckName;
+                if(Global.selectedDeck.CardsInDeck.Count == 0)
+                {
+                    Debug.Log(Global.GetDeckByNameFromServer(Global.selectedDeck.DeckName).Length);
+                }
+            }
             if (Global.selectedDeck == null)
                 Global.selectedDeck = new Deck();
-#if DEBUG
-            testDeck();
-#endif
-            string[] useless = new string[1];
-            deckupload saved = new deckupload("getOneDeck", Global.getID(), Global.getToken(), useless, Global.selectedDeck.DeckName);
-            string json = JsonConvert.SerializeObject(saved);
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
-            data = new Byte[256];
-            string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            string[] temp = responseData.Split(',');
-            foreach (string s in temp)
+
+            
+            /*foreach (string s in temp)
             {
                 string[] temp2 = s.Split('-');
                 string cardsomething = temp2[0];
                 string amount = temp2[1];
                 //TODO: POPULATE UI WITH THIS
-            }
+            }*/
 
             foreach (Card c in Global.userCards)
             {
@@ -259,21 +254,38 @@ namespace eldritch.cards {
                 return;
             }
             //check if name taken
-                for (int i = 0; i < Global.userDecks.Count; i++)
+            Deck newDeck = new Deck();
+            for (int i = 0; i < Global.userDecks.Count; i++)
+            {
+                if (GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
                 {
-                    if (GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
+                    Debug.Log("if this is printed we're trying to edit a deck with the same name and it's not working lmao");
+                    Deck updatedDeck = Global.userDecks[i];
+                    updatedDeck.CardsInDeck = inDeck;
+                    Global.userDecks[i] = updatedDeck;
+                    try
                     {
-                        Debug.Log("if this is printed we're trying to edit a deck with the same name and it's not working lmao");
-                        Deck updatedDeck = Global.userDecks[i];
-                        updatedDeck.CardsInDeck = inDeck;
-                        Global.userDecks[i] = updatedDeck;
-                        SceneManager.LoadScene("Decks");
-                        return;
+                        deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(updatedDeck), updatedDeck.DeckName);
+                        string json = JsonConvert.SerializeObject(saved);
+                        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                        Global.stream.Write(data, 0, data.Length);
+                        data = new Byte[256];
+                        string responseData = string.Empty;
+                        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                        Thread.Sleep(2500);
                     }
+                    catch (Exception)
+                    {
 
+                    }
+                    SceneManager.LoadScene("Decks");
+                    return;
                 }
 
-            Deck newDeck = new Deck();
+            }
+
+            
             newDeck.DeckName = GameObject.Find("Deck Name Text").gameObject.GetComponent<UnityEngine.UI.Text>().text;
             newDeck.CardsInDeck = inDeck;
             Debug.Log(newDeck);

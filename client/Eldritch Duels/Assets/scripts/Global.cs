@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿//#define DEBUG
 
 
 using System;
@@ -11,12 +11,26 @@ using System.Threading;
 using UnityEngine;
 using eldritch.cards;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace eldritch {
     public static class Constants
     {
         public const int MAX_DECK_SIZE = 32;
         public const int MIN_DECK_SIZE = 32;
+    }
+    public class getCollection
+    {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public getCollection(string cmd, string id, string token)
+        {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
     }
 
     public static class Global
@@ -58,6 +72,35 @@ namespace eldritch {
                     Application.Quit();
                 }
             }
+        }
+
+        public static string[] GetDeckByNameFromServer(string deckName)
+        {
+            Debug.Log(deckName);
+            try
+            {
+                string[] useless = new string[1];
+                deckupload saved = new deckupload("getOneDeck", Global.getID(), Global.getToken(), useless, deckName);
+                string json = JsonConvert.SerializeObject(saved);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Debug.Log("Deck resp: " + responseData);
+                string[] temp = responseData.Split(',');
+                return temp;
+            }catch (Exception)
+            {
+
+            }
+            return null;
+        }
+
+        public static bool SaveDeckToServer()
+        {
+            return false;
         }
 
         public static string getToken()
@@ -120,6 +163,31 @@ namespace eldritch {
             return cards;
 
         }
+        private static List<Card> StringToCardsByName(string toParse)
+        {
+            List<Card> cards = new List<Card>();
+            string[] pairs = toParse.Split(',');
+            foreach (string s in pairs)
+            {
+                string[] tuple = s.Split('-');
+
+                
+                int amount = int.Parse(tuple[1]);
+                GameObject g = GameObject.Find("ContentManager");
+                if (g != null)
+                {
+                    Card c = g.GetComponent<ContentLibrary>().GetCard(tuple[0]);
+                    if (c != null)
+                    {
+                        c.CopiesOwned = amount;
+                        cards.Add(c);
+                    }
+                }
+
+            }
+            return cards;
+
+        }
 
         private static List<CardContainer>StringToDeck(string cards)
         {
@@ -149,9 +217,12 @@ namespace eldritch {
         }
 
         //format of user card string: "id-#,id2-#..."
-        public static void InitUserCards(string userCards)
+        public static void InitUserCards(string userCards, int mode)
         {
-            Global.userCards = StringToCards(userCards);
+            if (mode == 0)
+                Global.userCards = StringToCards(userCards);
+            else if (mode == 1)
+                Global.userCards = StringToCardsByName(userCards);
         }
         //user has destroyed a card in crafting
         public static void RemoveCard(string cardName)
@@ -190,7 +261,7 @@ namespace eldritch {
         {
             if (userCards.Count == 0)
             {
-                InitUserCards("0-32");
+                InitUserCards("0-32",0);
             }
             if (userDecks.Count == 0)
             {
@@ -213,7 +284,26 @@ namespace eldritch {
         }
         public static void AddDeck(Deck d)
         {
+            for(int i = 0; i < userDecks.Count; i++)
+            {
+                if (d.DeckName.Equals(userDecks[i].DeckName))
+                {
+                    userDecks[i] = d;
+                    return;
+                }
+            }
             userDecks.Add(d);
+        }
+        public static bool ContainsDeck(string name)
+        {
+            foreach(Deck d in userDecks)
+            {
+                if (d.DeckName.Equals(name))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         public static void RemoveDeck(string deckName)
         {
@@ -224,6 +314,27 @@ namespace eldritch {
                     userDecks.RemoveAt(i);
                 }
             }
+        }
+
+        public static string GetCollection()
+        {
+            try
+            {
+                getCollection saved = new getCollection("getCollection", Global.getID(), Global.getToken());
+                string json = JsonConvert.SerializeObject(saved);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                return responseData;
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
     }
