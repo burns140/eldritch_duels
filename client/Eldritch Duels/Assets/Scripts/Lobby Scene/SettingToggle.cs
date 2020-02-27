@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SettingToggle : MonoBehaviour
 {
@@ -9,10 +10,6 @@ public class SettingToggle : MonoBehaviour
 
     public void ToggleButton() 
     {
-        if (Panel != null) 
-        {
-            bool isActive = Panel.activeSelf;
-            Panel.SetActive(!isActive);
-        }
+        SceneManager.LoadScene(2);
     }
 }
