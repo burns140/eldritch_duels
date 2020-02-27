@@ -65,7 +65,7 @@ public class EditProfilePicScript : MonoBehaviour
     private void displayPic(){
         // Display original pic on frontend
 
-        int originalPic = 0; // TODO - Get picnum from global variable
+        int originalPic = Global.avatar; // TODO - Get picnum from global variable
 
         var dropdownInstance = dropdown.GetComponent<Dropdown>();
         dropdownInstance.value = originalPic; // Select option on frontend
@@ -76,7 +76,7 @@ public class EditProfilePicScript : MonoBehaviour
     private void displayBio(){
         // Display original bio on frontend
 
-        string originalBio = "Enter Bio"; // TODO Get bio from global variable
+        string originalBio = Global.bio; // TODO Get bio from global variable
 
         var bioInstance = bioInput.GetComponent<InputField>();
         bioInstance.text = originalBio;
@@ -85,7 +85,7 @@ public class EditProfilePicScript : MonoBehaviour
     private void displayScreenName(){
         // Display original screenName on frontend
 
-        string originalScreenname = "Enter Screenname"; // TODO - Get screenname from global variable
+        string originalScreenname = Global.username; // TODO - Get screenname from global variable
 
         var screennameInstance = screenNameInput.GetComponent<InputField>();
         screennameInstance.text = originalScreenname;
@@ -99,8 +99,13 @@ public class EditProfilePicScript : MonoBehaviour
         public string avatar;
         public string username;
 
-        EditProfile (string cmd, string id, string token, string bio, string avatar, string username) {
-            // constructor
+        EditProfileRequest (string cmd, string id, string token, string bio, string avatar, string username) {
+            this.cmd = cmd;
+            this.id = id;
+            this.token = token;
+            this.bio = bio;
+            this.avatar = avatar;
+            this.username = username;
         }
     }
 
