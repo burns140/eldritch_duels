@@ -7,6 +7,6 @@ public class GotoDeckBuilder : MonoBehaviour
 {
     public void MoveToDeckBuilder()
     {
-        SceneManager.LoadScene("CardCollection");
+        SceneManager.LoadScene("Decks");
     }
 }

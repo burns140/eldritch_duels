@@ -30,20 +30,33 @@ namespace eldritch {
         public static TcpClient client;
         public static NetworkStream stream;
         public static string tokenfile = "";
+        private static string hostIP = "66.253.158.241";
 
         public static void SetUpConnection()
         {
             try
             {
                 //Connects to server and sets global variables, change localhost and port if connecting remotely.
-                Global.client = new TcpClient("localhost", 8000);
+                Global.client = new TcpClient(hostIP, 8000);
                 Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                 Global.stream = Global.client.GetStream();
+                Debug.Log("Connected to: " + hostIP);
             } catch(Exception e)
             {
-                Debug.Log("Error connecting to server.");
-                Debug.Log(e.Message);
-                Application.Quit();
+                try
+                {
+                    //Connects to server and sets global variables, change localhost and port if connecting remotely.
+                    Global.client = new TcpClient("localhost", 8000);
+                    Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    Global.stream = Global.client.GetStream();
+                    Debug.Log("Connected to: " + "LocalHost");
+                }
+                catch (Exception e2)
+                {
+                    Debug.Log("Error connecting to server.");
+                    Debug.Log(e.Message);
+                    Application.Quit();
+                }
             }
         }
 
