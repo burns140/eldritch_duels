@@ -5,7 +5,7 @@ const dbconfig = require('../dbconfig.json');
 const ObjectID = require('mongodb').ObjectID;
 
 
-const editProfile = (obj, sock) => {
+const editProfile = (data, sock) => {
     const username = data.username;
     const avatar = data.avatar;
     const bio = data.bio;
@@ -45,4 +45,38 @@ const editProfile = (obj, sock) => {
     }
 }
 
+const deleteAccount = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+            assert.equal(null, err);
+            const db = client.db('eldritch_data');
+
+            db.collections('users').remove(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result.nRemoved != 1) {
+                    console.log('account not found');
+                    sock.write(`Failed to delete profile`);
+                } else {
+                    console.log('successfully deleted');
+                    sock.write('Profile successfully deleted');
+                }
+                client.close();
+                return;
+            }).catch(err => {
+                console.log(err);
+                sock.write(`Failed to delete profile`);
+                client.close();
+                return;
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
+exports.deleteAccount = deleteAccount;
 exports.editProfile = editProfile;
