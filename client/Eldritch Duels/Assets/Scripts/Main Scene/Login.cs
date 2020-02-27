@@ -8,6 +8,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
+using eldritch;
 
 public class User
 {
@@ -65,6 +66,10 @@ public class Login : MonoBehaviour
     public void Start()
     {
         login.onClick.AddListener(clicked);
+        //Connects to server and sets global variables, change localhost and port if connecting remotely.
+        Global.client = new TcpClient("localhost", 8000);
+        Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+        Global.stream = Global.client.GetStream();
     }
 
     public void clicked()
@@ -91,22 +96,17 @@ public class Login : MonoBehaviour
         Debug.Log("Inputted: " + email + " | " + password);
         login user = new login("login", email, password);
         string json = JsonConvert.SerializeObject(user);
-        Int32 port = 8000;
-        TcpClient client = new TcpClient("localhost", port);
-        client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-        NetworkStream stream = client.GetStream();
-        stream.Write(data, 0, data.Length);
+        Global.stream.Write(data, 0, data.Length);
         Console.WriteLine("Sent");
         data = new Byte[256];
         string responseData = string.Empty;
-        Int32 bytes = stream.Read(data, 0, data.Length);
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
         Console.WriteLine("Received: {0}", responseData);
         Thread.Sleep(2500);
         if (String.Equals(responseData, "Incorrect password"))
         {
-            client.Close();
             return String.Empty;
         }
         string tempFile = "LoginTemp";
@@ -127,20 +127,17 @@ public class Login : MonoBehaviour
                 streamWriter.Close();
 
                 Console.WriteLine("Temporary login file updated.");
-                client.Close();
                 return tempFile;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error writing to login file: " + e.Message);
-                client.Close();
                 return String.Empty;
             }
         }
         catch (Exception e)
         {
             Console.WriteLine("Unable to create login file or set its attributes: " + e.Message);
-            client.Close();
             return String.Empty;
         }
     }
