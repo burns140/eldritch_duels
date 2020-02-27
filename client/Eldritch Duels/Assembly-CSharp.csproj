@@ -55,8 +55,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ApplySettingsScript.cs" />
-     <Compile Include="Assets\Scripts\CancelButtonScript.cs" />
      <Compile Include="Assets\Scripts\cards\Card.cs" />
      <Compile Include="Assets\Scripts\cards\CardEnlarge.cs" />
      <Compile Include="Assets\Scripts\cards\CollectionUI.cs" />
@@ -68,16 +66,20 @@
      <Compile Include="Assets\Scripts\cards\DeckUI.cs" />
      <Compile Include="Assets\Scripts\cards\Effect.cs" />
      <Compile Include="Assets\Scripts\cards\Library.cs" />
-     <Compile Include="Assets\Scripts\EditProfilePicScript.cs" />
+     <Compile Include="Assets\Scripts\EditProfile\EditProfileCancelButton.cs" />
+     <Compile Include="Assets\Scripts\EditProfile\EditProfilePicScript.cs" />
      <Compile Include="Assets\Scripts\Global.cs" />
      <Compile Include="Assets\Scripts\Lobby Scene\ChangePsw.cs" />
+     <Compile Include="Assets\Scripts\Lobby Scene\GotoProfile.cs" />
      <Compile Include="Assets\Scripts\Lobby Scene\GotoSetting.cs" />
      <Compile Include="Assets\Scripts\Lobby Scene\Logout.cs" />
      <Compile Include="Assets\Scripts\Lobby Scene\SettingToggle.cs" />
      <Compile Include="Assets\Scripts\Main Scene\Login.cs" />
      <Compile Include="Assets\Scripts\Main Scene\Quit.cs" />
      <Compile Include="Assets\Scripts\Main Scene\Signup.cs" />
-     <Compile Include="Assets\Scripts\ScreenToggleScript.cs" />
+     <Compile Include="Assets\Scripts\Setting Scene\ApplySettingsScript.cs" />
+     <Compile Include="Assets\Scripts\Setting Scene\CancelButtonScript.cs" />
+     <Compile Include="Assets\Scripts\Setting Scene\ScreenToggleScript.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
