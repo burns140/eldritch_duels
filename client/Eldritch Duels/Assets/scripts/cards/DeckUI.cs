@@ -1,5 +1,11 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +15,23 @@ namespace eldritch.cards {
         public Card c;
         public int count;
     }
+
+    public class deckupload
+    {
+        private string id;
+        private string cmd;
+        private string name;
+        private string[] deck;
+
+        public deckupload(string cmd, string id, string[] deck, string name)
+        {
+            this.id = id;
+            this.cmd = cmd;
+            this.deck = deck;
+            this.name = name;
+        }
+    }
+
     public class DeckUI : MonoBehaviour
     {
         private int collectPage = 0;
@@ -236,7 +259,32 @@ namespace eldritch.cards {
             newDeck.DeckName = GameObject.Find("Deck Name Text").gameObject.GetComponent<UnityEngine.UI.Text>().text;
             newDeck.CardsInDeck = inDeck;
             Global.AddDeck(newDeck);
+
+            deckupload saved = new deckupload("saveDeck", Global.userID.ToString(), deckToString(newDeck), newDeck.DeckName);
+            string json = JsonConvert.SerializeObject(saved);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            Console.WriteLine("Sent");
+            data = new Byte[256];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            Console.WriteLine("Received: {0}", responseData);
+            Thread.Sleep(2500);
+
             SceneManager.LoadScene("Decks");
+        }
+
+        string[] deckToString(Deck d)
+        {
+            List<CardContainer> cards = d.CardsInDeck;
+            string[] temp = new string[cards.Count];
+            for(int i = 0; i < cards.Count; i++)
+            {
+                temp[i] = cards.ElementAt(i).c.CardName + "-" + cards.ElementAt(i).count;
+                Debug.Log(temp[i]);
+            }
+            return temp;
         }
 
         void testDeck()
