@@ -14,8 +14,8 @@ public class Signup : MonoBehaviour
 {
     public static string email = "";
     public static string pass = "";
-    public UnityEngine.UI.Text EmailLoginInput;
-    public UnityEngine.UI.Text PswlLoginInput;
+    public UnityEngine.UI.InputField EmailLoginInput;
+    public UnityEngine.UI.InputField PswlLoginInput;
     public UnityEngine.UI.Button signup;
     // Start is called before the first frame update
     public void Start()
