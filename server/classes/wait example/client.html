@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>example</title>
+	</head>
+
+	<body>
+	<h1 id="idtext"></h1>
+	<p id="output">In matchmaking queue...</p>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	
+	<script>
+		// This should be unique most of the time
+		let id = Math.floor(Math.random()*1000);
+		$("#idtext").text("Player ID: " + id);
+		
+		$.ajax({
+			url: "/match/" + id,
+			success: (res) => {
+				console.log(res);
+				$("#output").text("Matched with player " + res);
+			}, error: (err) => {
+				$("#output").text(err.responseText);
+			}
+		});
+	</script>
+	</body>
+</html>

@@ -12,9 +12,7 @@ You will need Unity version 2019.2.18f1. Download [Unity Hub](https://unity3d.co
 
 Install using NPM.
 ```
-npm install assert
-npm install bcrypt
-npm install mongodb
+npm install
 ```
 
 ## Sending Requests to server
