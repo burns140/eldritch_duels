@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using eldritch;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using System.IO;
+using UnityEngine.SceneManagement;
 
 public class EditProfilePicScript : MonoBehaviour
 {
@@ -32,7 +42,7 @@ public class EditProfilePicScript : MonoBehaviour
         
         // TODO - Update these on the database: bio, screenname, picnum
 
-        EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, avatar, username);
+        EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, picnum, screenname);
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         
@@ -40,7 +50,7 @@ public class EditProfilePicScript : MonoBehaviour
         data = new Byte[256];
         string responseData = string.Empty;
 
-        Int32 bytes = stream.Read(data, 0, data.Length);
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
     }
@@ -96,10 +106,10 @@ public class EditProfilePicScript : MonoBehaviour
         public string id;
         public string token;
         public string bio;
-        public string avatar;
+        public int avatar;
         public string username;
 
-        public EditProfileRequest (string cmd, string id, string token, string bio, string avatar, string username) {
+        public EditProfileRequest (string cmd, string id, string token, string bio, int avatar, string username) {
             this.cmd = cmd;
             this.id = id;
             this.token = token;
