@@ -8,6 +8,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using eldritch;
 
 public class User
@@ -75,6 +76,7 @@ public class Login : MonoBehaviour
         {
             Debug.Log("Login successful! Temp file is: " + result);
             Global.tokenfile = result;
+            SceneManager.LoadScene("Lobby");
         } else
         {
             Debug.Log("Login failed!");

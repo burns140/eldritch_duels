@@ -18,14 +18,16 @@ namespace eldritch.cards {
 
     public class deckupload
     {
-        private string id;
-        private string cmd;
-        private string name;
-        private string[] deck;
+        public string id;
+        public string token;
+        public string cmd;
+        public string name;
+        public string[] deck;
 
-        public deckupload(string cmd, string id, string[] deck, string name)
+        public deckupload(string cmd, string id, string token, string[] deck, string name)
         {
             this.id = id;
+            this.token = token;
             this.cmd = cmd;
             this.deck = deck;
             this.name = name;
@@ -55,9 +57,24 @@ namespace eldritch.cards {
 #if DEBUG
             testDeck();
 #endif
-        
-            //get deck
-            
+            string[] useless = new string[1];
+            deckupload saved = new deckupload("getOneDeck", Global.getID(), Global.getToken(), useless, Global.selectedDeck.DeckName);
+            string json = JsonConvert.SerializeObject(saved);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            string[] temp = responseData.Split(',');
+            foreach (string s in temp)
+            {
+                string[] temp2 = s.Split('-');
+                string cardsomething = temp2[0];
+                string amount = temp2[1];
+                //TODO: POPULATE UI WITH THIS
+            }
+
             foreach (Card c in Global.userCards)
             {
                 CardContainer cc;
@@ -242,18 +259,19 @@ namespace eldritch.cards {
                 return;
             }
             //check if name taken
-            for(int i = 0; i < Global.userDecks.Count; i++)
-            {
-                if(GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
+                for (int i = 0; i < Global.userDecks.Count; i++)
                 {
-                    Deck updatedDeck = Global.userDecks[i];
-                    updatedDeck.CardsInDeck = inDeck;
-                    Global.userDecks[i] = updatedDeck;
-                    SceneManager.LoadScene("Decks");
-                    return;
-                }
+                    if (GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Equals(Global.userDecks[i].DeckName))
+                    {
+                        Debug.Log("if this is printed we're trying to edit a deck with the same name and it's not working lmao");
+                        Deck updatedDeck = Global.userDecks[i];
+                        updatedDeck.CardsInDeck = inDeck;
+                        Global.userDecks[i] = updatedDeck;
+                        SceneManager.LoadScene("Decks");
+                        return;
+                    }
 
-            }
+                }
 
             Deck newDeck = new Deck();
             newDeck.DeckName = GameObject.Find("Deck Name Text").gameObject.GetComponent<UnityEngine.UI.Text>().text;
@@ -262,7 +280,7 @@ namespace eldritch.cards {
             Global.AddDeck(newDeck);
             try
             {
-                deckupload saved = new deckupload("saveDeck", Global.userID.ToString(), deckToString(newDeck), newDeck.DeckName);
+                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(newDeck), newDeck.DeckName);
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);

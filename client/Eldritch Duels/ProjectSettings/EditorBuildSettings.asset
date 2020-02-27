@@ -17,4 +17,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EditProfileScene.unity
     guid: a092ccbe6f8874acca7c2d8b44503dde
+  - enabled: 1
+    path: Assets/Scenes/ProfileScene.unity
+    guid: 2be9aec87daf0496f98fe2ccb8688372
+  - enabled: 1
+    path: Assets/Scenes/DeckBuilder.unity
+    guid: 5722b9d407c7c3c4b951bebc00f37fbd
+  - enabled: 1
+    path: Assets/Scenes/Decks.unity
+    guid: a8360047b249b4d4dbf7211d9da06730
+  - enabled: 1
+    path: Assets/Scenes/CardCollection.unity
+    guid: 2c774e09178816f4881f8b14fbae6b9b
   m_configObjects: {}

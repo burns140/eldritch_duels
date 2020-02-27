@@ -78,10 +78,12 @@
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\ChangePsw.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\Delete.cs" />
+    <Compile Include="Assets\Scripts\Lobby Scene\GotoDeckBuilder.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\GotoProfile.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\GotoSetting.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\Logout.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\SettingToggle.cs" />
+    <Compile Include="Assets\Scripts\Main Scene\ForgotPassword.cs" />
     <Compile Include="Assets\Scripts\Main Scene\LoadGameSettings.cs" />
     <Compile Include="Assets\Scripts\Main Scene\Login.cs" />
     <Compile Include="Assets\Scripts\Main Scene\Quit.cs" />

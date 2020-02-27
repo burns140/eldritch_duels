@@ -1,10 +1,31 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace eldritch.cards
 {
+    public class alldeckretrieval
+    {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public alldeckretrieval(string cmd, string id, string token)
+        {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
     public class DeckMenuUI : MonoBehaviour
     {
         int deckPage = 0;
@@ -15,6 +36,21 @@ namespace eldritch.cards
 #if DEBUG
             testDeckUI();
 #endif
+            alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken());
+            string json = JsonConvert.SerializeObject(saved);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            string[] temp = responseData.Split(',');
+            for(int i = 0; i < temp.Length; i++)
+            {
+                //TODO: POPULATE DECK NAMES IN UI
+                //TODO: ADD SCRIPT TO DECK UI FOR RETRIEVING DECK INFO
+            }
+            Thread.Sleep(2500);
             Debug.Log("Number of Decks: " + Global.userDecks.Count);
             updateUI();
         }
