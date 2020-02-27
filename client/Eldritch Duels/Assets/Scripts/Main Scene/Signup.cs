@@ -50,12 +50,10 @@ public class Signup : MonoBehaviour
         string json = JsonConvert.SerializeObject(user);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);
-        Console.WriteLine("Sent");
         data = new Byte[256];
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Console.WriteLine("Received: {0}", responseData);
         Thread.Sleep(2500);
 
         return responseData;

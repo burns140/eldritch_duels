@@ -82,12 +82,6 @@ namespace eldritch {
             }
         }
 
-
-        public static void SetUpConnection()
-        {
-            client = new TcpClient("localhost", 8000);
-            stream =  client.GetStream(); 
-        }
         private static List<Card> StringToCards(string toParse)
         {
             List<Card> cards = new List<Card>();
