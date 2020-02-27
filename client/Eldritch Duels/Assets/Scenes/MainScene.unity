@@ -2938,8 +2938,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Email: {fileID: 652929150}
-  Password: {fileID: 1289420064}
+  Password: {fileID: 2031298484}
   Username: {fileID: 962549767}
+  UserPanel: {fileID: 0}
+  quitbutton: {fileID: 0}
+  loginbutton: {fileID: 0}
+  signupbutton: {fileID: 0}
   signup: {fileID: 1737017012}
 --- !u!1 &1737017010
 GameObject:

@@ -44,6 +44,5 @@ public class ForgotPassword : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
         //TODO: maybe add display message to show message, not needed
-        Thread.Sleep(2500);
     }
 }
