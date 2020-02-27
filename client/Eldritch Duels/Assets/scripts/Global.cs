@@ -59,6 +59,8 @@ namespace eldritch {
         public static TcpClient client;
         public static NetworkStream stream;
         public static string tokenfile = "";
+        public static int avatar = 0;
+        public static string bio = "";
         private static string hostIP = "66.253.158.241";
 
         public static void SetUpConnection()
@@ -84,6 +86,7 @@ namespace eldritch {
                 {
                     Debug.Log("Error connecting to server.");
                     Debug.Log(e.Message);
+                    Debug.Log(e2.Message);
                     Application.Quit();
                 }
             }

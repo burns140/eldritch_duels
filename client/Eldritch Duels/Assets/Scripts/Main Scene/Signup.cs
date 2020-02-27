@@ -14,8 +14,10 @@ public class Signup : MonoBehaviour
 {
     public static string email = "";
     public static string pass = "";
-    public UnityEngine.UI.InputField EmailLoginInput;
-    public UnityEngine.UI.InputField PswlLoginInput;
+    public static string user = "";
+    public UnityEngine.UI.InputField Email;
+    public UnityEngine.UI.InputField Password;
+    public UnityEngine.UI.InputField Username;
     public UnityEngine.UI.Button signup;
     // Start is called before the first frame update
     public void Start()
@@ -25,7 +27,7 @@ public class Signup : MonoBehaviour
 
     public void clicked()
     {
-        string result = ServerSignup(email, pass);
+        string result = ServerSignup(email, pass, user);
         //if(String.Equals(result,"User with that email already exists"))
         //{
         //    Debug.Log(result);
@@ -40,13 +42,14 @@ public class Signup : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        email = EmailLoginInput.text;
-        pass = PswlLoginInput.text;
+        email = Email.text;
+        pass = Password.text;
+        user = Username.text;
     }
 
-    static string ServerSignup(string email, string password)
+    static string ServerSignup(string email, string password, string username)
     {
-        User user = new User("signup", email, password, "temp");
+        User user = new User("signup", email, password, username);
         string json = JsonConvert.SerializeObject(user);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);

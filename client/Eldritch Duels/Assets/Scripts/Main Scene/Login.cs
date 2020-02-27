@@ -129,6 +129,9 @@ public class Login : MonoBehaviour
                 streamWriter.Close();
 
                 Console.WriteLine("Temporary login file updated.");
+                Global.avatar = Int32.Parse(loginstuff[2]);
+                Global.username = loginstuff[3];
+                Global.bio = loginstuff[4];
                 return tempFile;
             }
             catch (Exception e)
