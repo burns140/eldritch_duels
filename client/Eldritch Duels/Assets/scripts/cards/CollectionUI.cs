@@ -19,7 +19,7 @@ namespace eldritch {
         void Start()
         {
 #if DEBUG
-            testCardCollection();
+            //testCardCollection();
 #endif
             updateCardUI();
         }

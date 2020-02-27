@@ -47,7 +47,7 @@ namespace eldritch.cards
             for(int i = 0; i < temp.Length; i++)
             {
                 string deckName = temp[i];
-                if (!Global.ContainsDeck(deckName))
+                if (!Global.ContainsDeck(deckName) && !deckName.Equals("no decks"))
                 {
                     string[] cards = Global.GetDeckByNameFromServer(temp[i]);
                     Deck d = new Deck();

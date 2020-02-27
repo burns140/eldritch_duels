@@ -32,6 +32,21 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+    public class deleteDeck
+    {
+        public string id;
+        public string token;
+        public string cmd;
+        public string name;
+
+        public deleteDeck(string cmd, string id, string token, string name)
+        {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+            this.name = name;
+        }
+    }
 
     public static class Global
     {
@@ -51,19 +66,19 @@ namespace eldritch {
             try
             {
                 //Connects to server and sets global variables, change localhost and port if connecting remotely.
-                Global.client = new TcpClient(hostIP, 8000);
+                Global.client = new TcpClient("localhost", 8000);
                 Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                 Global.stream = Global.client.GetStream();
-                Debug.Log("Connected to: " + hostIP);
+                Debug.Log("Connected to: " + "localhost");
             } catch(Exception e)
             {
                 try
                 {
                     //Connects to server and sets global variables, change localhost and port if connecting remotely.
-                    Global.client = new TcpClient("localhost", 8000);
+                    Global.client = new TcpClient(hostIP, 8000);
                     Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                     Global.stream = Global.client.GetStream();
-                    Debug.Log("Connected to: " + "LocalHost");
+                    Debug.Log("Connected to: " + hostIP);
                 }
                 catch (Exception e2)
                 {
@@ -77,6 +92,10 @@ namespace eldritch {
         public static string[] GetDeckByNameFromServer(string deckName)
         {
             Debug.Log(deckName);
+            if(deckName.Equals("no decks"))
+            {
+                return null;
+            }
             try
             {
                 string[] useless = new string[1];
@@ -311,6 +330,21 @@ namespace eldritch {
             {
                 if (userDecks[i].DeckName.Equals(deckName))
                 {
+                    try
+                    {
+                        deleteDeck saved = new deleteDeck("deleteDeck", Global.getID(), Global.getToken(), deckName);
+                        string json = JsonConvert.SerializeObject(saved);
+                        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                        Global.stream.Write(data, 0, data.Length);
+                        data = new Byte[256];
+                        string responseData = string.Empty;
+                        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                     userDecks.RemoveAt(i);
                 }
             }
@@ -328,6 +362,7 @@ namespace eldritch {
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Debug.Log(responseData);
                 return responseData;
             }
             catch (Exception)

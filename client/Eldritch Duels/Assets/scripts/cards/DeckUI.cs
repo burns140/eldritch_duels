@@ -247,7 +247,13 @@ namespace eldritch.cards {
                 UIError.SetActive(true);
                 return;
             }
-            if(deckSize != Constants.MIN_DECK_SIZE)
+            if (GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Trim().Equals("no decks"))
+            {
+                UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Invalid Deck Name";
+                UIError.SetActive(true);
+                return;
+            }
+            if (deckSize != Constants.MIN_DECK_SIZE)
             {
                 UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Not Enough Cards In Deck!";
                 UIError.SetActive(true);
