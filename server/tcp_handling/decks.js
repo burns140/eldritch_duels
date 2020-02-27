@@ -22,7 +22,11 @@ const getAllDecks = (data, sock) => {
                     temparr.push(el.deckname);
                 }
                 console.log(temparr.toString());
-                sock.write(temparr.toString());
+                if (temparr.toString() == "") {
+                    sock.write("no decks");
+                } else {
+                    sock.write(temparr.toString());
+                }
                 client.close();
             }).catch(err => {
                 console.log(err);

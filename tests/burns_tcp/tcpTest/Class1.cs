@@ -101,17 +101,27 @@ namespace tcpTest {
 
     class Class1 {
 
-        const string id = "5e52dc3058e728656c254d01";
+        const string id = "5e58196bc424443f28445126";
         const string token = "token";
+        const string validToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNWU1MmRjMzA1OGU3Mjg2NTZjMjU0ZDAxIiwiZW1haWwiOiJ0ZXN0ZW1haWxAZW1haWwuZWR1In0sImlhdCI6MTU4MjU3MTQ4N30.H76TaFoOWSePOb4NKChPVpH7xeI-t0SuO2gL7zt8z0s";
 
         public static void Main() {
             //signup();
-            login();
+            //login();
             //getCollectionArray();
             //newSignupTest();
             //createUsers();
+            getAllDecksTest();
+            newSignupTest();
         }
 
+        static void getAllDecksTest()
+        {
+            GetAllDecksRequest req = new GetAllDecksRequest(id, validToken, "getAllDecks");
+            string json = JsonConvert.SerializeObject(req);
+            string res = sendNetworkRequestClass(json);
+
+        }
         static void createUsers()
         {
 
@@ -252,6 +262,31 @@ namespace tcpTest {
             Thread.Sleep(2500);
 
             client.Close();
+        }
+
+        public static string sendNetworkRequestClass(string obj)
+        {
+            Int32 port = 8000;
+            TcpClient client = new TcpClient("localhost", port);
+
+            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(obj);
+            NetworkStream stream = client.GetStream();
+
+            stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            Console.WriteLine(responseData);
+
+            Thread.Sleep(2500);
+
+            client.Close();
+
+            return responseData;
         }
 
     }
