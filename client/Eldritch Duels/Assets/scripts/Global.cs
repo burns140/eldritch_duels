@@ -26,8 +26,8 @@ namespace eldritch {
         public static int usercredits = 0;
         public static Deck selectedDeck = new Deck();
         public static List<Deck> userDecks = new List<Deck>();
-        public static TcpClient client = new TcpClient("localhost", 8000);
-        public static NetworkStream stream = client.GetStream();
+        public static TcpClient client;
+        public static NetworkStream stream;
 
 
         private static List<Card> StringToCards(string toParse)

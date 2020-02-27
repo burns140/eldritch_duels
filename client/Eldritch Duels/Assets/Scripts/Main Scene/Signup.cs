@@ -8,6 +8,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
+using eldritch;
 
 public class Signup : MonoBehaviour
 {
@@ -47,20 +48,15 @@ public class Signup : MonoBehaviour
     {
         User user = new User("signup", email, password, "temp");
         string json = JsonConvert.SerializeObject(user);
-        Int32 port = 8000;
-        TcpClient client = new TcpClient("localhost", port);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-        NetworkStream stream = client.GetStream();
-        stream.Write(data, 0, data.Length);
+        Global.stream.Write(data, 0, data.Length);
         Console.WriteLine("Sent");
         data = new Byte[256];
         string responseData = string.Empty;
-        Int32 bytes = stream.Read(data, 0, data.Length);
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
         Console.WriteLine("Received: {0}", responseData);
         Thread.Sleep(2500);
-        
-        client.Close();
 
         return responseData;
     }
