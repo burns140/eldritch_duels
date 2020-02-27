@@ -74,6 +74,7 @@
      <Compile Include="Assets\Scripts\Lobby Scene\GotoSetting.cs" />
      <Compile Include="Assets\Scripts\Lobby Scene\Logout.cs" />
      <Compile Include="Assets\Scripts\Lobby Scene\SettingToggle.cs" />
+     <Compile Include="Assets\Scripts\Main Scene\LoadGameSettings.cs" />
      <Compile Include="Assets\Scripts\Main Scene\Login.cs" />
      <Compile Include="Assets\Scripts\Main Scene\Quit.cs" />
      <Compile Include="Assets\Scripts\Main Scene\Signup.cs" />

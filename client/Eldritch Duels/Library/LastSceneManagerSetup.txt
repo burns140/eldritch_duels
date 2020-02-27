@@ -1,5 +1,9 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/Lobby.unity
+=======
+- path: Assets/Scenes/CardCollection.unity
+>>>>>>> 33bb4b1ba13faaf31861e1a61d4bdd37f4e6cf23
   isLoaded: 1
   isActive: 1
   isSubScene: 0

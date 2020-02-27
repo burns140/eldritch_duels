@@ -258,6 +258,7 @@ namespace eldritch.cards {
             Deck newDeck = new Deck();
             newDeck.DeckName = GameObject.Find("Deck Name Text").gameObject.GetComponent<UnityEngine.UI.Text>().text;
             newDeck.CardsInDeck = inDeck;
+            Debug.Log(newDeck);
             Global.AddDeck(newDeck);
             try
             {

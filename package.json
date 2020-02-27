@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/aPhantomDolphin/eldritch_duels#readme",
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^3.0.8",
     "binary-search-tree": "^0.2.6",
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",

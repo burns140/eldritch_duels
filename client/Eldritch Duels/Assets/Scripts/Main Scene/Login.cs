@@ -12,33 +12,33 @@ using eldritch;
 
 public class User
 {
-    private string useremail;
-    private string userpassword;
-    private string name;
-    private string tcpcmd;
+    public string email;
+    public string password;
+    public string name;
+    public string cmd;
 
     public User(string cmd)
     {
-        this.useremail = "testemail@email.edu";
-        this.tcpcmd = cmd;
-        this.userpassword = "password";
+        this.email = "testemail@email.edu";
+        this.cmd = cmd;
+        this.password = "password";
         this.name = "username";
     }
 
     public User(string cmd, string email, string password, string username)
     {
-        this.useremail = email;
-        this.tcpcmd = cmd;
-        this.userpassword = password;
+        this.email = email;
+        this.cmd = cmd;
+        this.password = password;
         this.name = username;
     }
 }
 
 public class login
-{
-    private string email;
-    private string password;
-    private string cmd;
+{   
+    public string email;
+    public string password;
+    public string cmd;
 
     public login(string cmd)
     {
@@ -59,17 +59,13 @@ public class Login : MonoBehaviour
 {
     public static string email = "";
     public static string pass = "";
-    public UnityEngine.UI.Text EmailLoginInput;
-    public UnityEngine.UI.Text PswlLoginInput;
+    public UnityEngine.UI.InputField EmailLoginInput;
+    public UnityEngine.UI.InputField PswlLoginInput;
     public UnityEngine.UI.Button login;
     // Start is called before the first frame update
     public void Start()
     {
         login.onClick.AddListener(clicked);
-        //Connects to server and sets global variables, change localhost and port if connecting remotely.
-        Global.client = new TcpClient("localhost", 8000);
-        Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-        Global.stream = Global.client.GetStream();
     }
 
     public void clicked()
@@ -78,6 +74,7 @@ public class Login : MonoBehaviour
         if(result.Length > 0)
         {
             Debug.Log("Login successful! Temp file is: " + result);
+            Global.tokenfile = result;
         } else
         {
             Debug.Log("Login failed!");
@@ -93,17 +90,18 @@ public class Login : MonoBehaviour
 
     public static string ServerLogin(string email, string password)
     {
-        Debug.Log("Inputted: " + email + " | " + password);
+        //Debug.Log("Inputted: " + email + " | " + password);
         login user = new login("login", email, password);
+        //Debug.Log(user);
         string json = JsonConvert.SerializeObject(user);
+        //Debug.Log(json);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        //Debug.Log(data);
         Global.stream.Write(data, 0, data.Length);
-        Console.WriteLine("Sent");
         data = new Byte[256];
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Console.WriteLine("Received: {0}", responseData);
         Thread.Sleep(2500);
         if (String.Equals(responseData, "Incorrect password"))
         {

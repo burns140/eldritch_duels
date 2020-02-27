@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 using eldritch.cards;
+using System.IO;
 
 namespace eldritch {
     public static class Constants
@@ -28,6 +29,58 @@ namespace eldritch {
         public static List<Deck> userDecks = new List<Deck>();
         public static TcpClient client;
         public static NetworkStream stream;
+        public static string tokenfile = "";
+
+        public static void SetUpConnection()
+        {
+            try
+            {
+                //Connects to server and sets global variables, change localhost and port if connecting remotely.
+                Global.client = new TcpClient("localhost", 8000);
+                Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                Global.stream = Global.client.GetStream();
+            } catch(Exception e)
+            {
+                Debug.Log("Error connecting to server.");
+                Debug.Log(e.Message);
+                Application.Quit();
+            }
+        }
+
+        public static string getToken()
+        {
+            try
+            {
+                // Read from the temp file.
+                StreamReader myReader = File.OpenText(tokenfile);
+                string token = myReader.ReadLine();
+                myReader.Close();
+                return token;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error reading token file: " + ex.Message);
+                return String.Empty;
+            }
+        }
+
+        public static string getID()
+        {
+            try
+            {
+                // Read from the temp file.
+                StreamReader myReader = File.OpenText(tokenfile);
+                myReader.ReadLine();
+                string id = myReader.ReadLine();
+                myReader.Close();
+                return id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error reading token file: " + ex.Message);
+                return String.Empty;
+            }
+        }
 
 
         public static void SetUpConnection()

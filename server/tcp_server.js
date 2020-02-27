@@ -28,6 +28,7 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done */
     sock.on('data', (data) => {
+        console.log(data);
         const obj = JSON.parse(data);               // Turn data into a JSON object
         try {       
             console.log(obj);
