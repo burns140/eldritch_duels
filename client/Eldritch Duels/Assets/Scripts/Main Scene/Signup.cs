@@ -18,6 +18,10 @@ public class Signup : MonoBehaviour
     public UnityEngine.UI.InputField Email;
     public UnityEngine.UI.InputField Password;
     public UnityEngine.UI.InputField Username;
+    public UnityEngine.UI.Image UserPanel;
+    public UnityEngine.UI.Button quitbutton;
+    public UnityEngine.UI.Button loginbutton;
+    public UnityEngine.UI.Button signupbutton;
     public UnityEngine.UI.Button signup;
     // Start is called before the first frame update
     public void Start()
@@ -36,7 +40,12 @@ public class Signup : MonoBehaviour
         //    string[] temp = result.Split(' ');
 
         //}
+        UserPanel.gameObject.SetActive(false);
+        quitbutton.gameObject.SetActive(true);
+        loginbutton.gameObject.SetActive(true);
+        signupbutton.gameObject.SetActive(true);
         Debug.Log(result);
+
     }
 
     // Update is called once per frame
@@ -57,7 +66,6 @@ public class Signup : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Thread.Sleep(2500);
 
         return responseData;
     }

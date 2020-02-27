@@ -106,7 +106,6 @@ public class Login : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Thread.Sleep(2500);
         if (String.Equals(responseData, "Incorrect password"))
         {
             return String.Empty;
@@ -128,7 +127,6 @@ public class Login : MonoBehaviour
                 streamWriter.Flush();
                 streamWriter.Close();
 
-                Console.WriteLine("Temporary login file updated.");
                 Global.avatar = Int32.Parse(loginstuff[2]);
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
