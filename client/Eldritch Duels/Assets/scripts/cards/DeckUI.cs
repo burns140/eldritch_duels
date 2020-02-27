@@ -331,7 +331,7 @@ namespace eldritch.cards {
         void testDeck()
         {
             return;
-            for(int i = 0; i < 10; i++)
+            /*for(int i = 0; i < 10; i++)
             {
                 Card c = new Card(i, "test card " + i);
                 c.AttackPower = 100;
@@ -341,7 +341,7 @@ namespace eldritch.cards {
                 c.CardImage = testMat;
                 Global.userCards.Add(c);
 
-            }
+            }*/
         }
 
 
