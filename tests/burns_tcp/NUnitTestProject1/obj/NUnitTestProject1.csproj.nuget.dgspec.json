@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj": {}
+    "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj": {
+    "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj",
+        "projectUniqueName": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj",
         "projectName": "NUnitTestProject1",
-        "projectPath": "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj",
+        "projectPath": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\NUnitTestProject1.csproj",
         "packagesPath": "C:\\Users\\steve\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\obj\\",
+        "outputPath": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\NUnitTestProject1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\steve\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -27,8 +27,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj": {
-                "projectPath": "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj"
+              "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj": {
+                "projectPath": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj"
               }
             }
           }
@@ -80,12 +80,19 @@
         }
       }
     },
-    "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj": {
+    "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj",
+        "projectUniqueName": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj",
         "projectName": "tcpTest",
-        "projectPath": "C:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj"
+        "projectPath": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\tcpTest.csproj",
+        "projectStyle": "PackagesConfig",
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        },
+        "packagesConfigPath": "c:\\Users\\steve\\Desktop\\eldritch_duels\\tests\\burns_tcp\\tcpTest\\packages.config"
       },
       "frameworks": {
         "net472": {}
