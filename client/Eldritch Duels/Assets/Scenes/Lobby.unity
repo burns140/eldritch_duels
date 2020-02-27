@@ -766,6 +766,7 @@ GameObject:
   - component: {fileID: 425341471}
   - component: {fileID: 425341470}
   - component: {fileID: 425341469}
+  - component: {fileID: 425341472}
   m_Layer: 5
   m_Name: ManageDecks
   m_TagString: Untagged
@@ -835,7 +836,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 425341470}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 425341472}
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Decks
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &425341470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -872,6 +884,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425341467}
   m_CullTransparentMesh: 0
+--- !u!114 &425341472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425341467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc4e9c5b269a0744ae797c49c38ee27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &481517575
 GameObject:
   m_ObjectHideFlags: 0
