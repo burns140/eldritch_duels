@@ -67,6 +67,12 @@ function onClientConnected(sock) {
                     case "editProfile":
                         Profile.editProfile(obj, sock);
                         break;
+                    case "changePassword":
+                        Profile.changePassword(obj, sock);
+                        break;
+                    case "changeEmail":
+                        Profile.changeEmail(obj, sock);
+                        break;
                 }
             }
         } catch (err) {

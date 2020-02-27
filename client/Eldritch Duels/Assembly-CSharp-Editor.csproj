@@ -57,37 +57,37 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\Cards\CardCreator.cs" />
  <Reference Include="UnityEditor.TestRunner">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline.Editor">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VSCode.Editor">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.CollabProxy.Editor">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -275,11 +275,14 @@
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.18f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.Android.Extensions">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.18f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+ </Reference>
  <Reference Include="Newtonsoft.Json">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Assets/external/Newtonsoft.Json.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Assets/external/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>C:/Dev/Eldritch Duels/eldritch_duels/client/Eldritch Duels/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
+ <HintPath>C:/Users/steve/Desktop/eldritch_duels/client/Eldritch Duels/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.18f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
