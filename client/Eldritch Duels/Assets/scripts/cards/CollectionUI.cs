@@ -15,15 +15,12 @@ namespace eldritch {
         public int totalPages = 0;
         public GameObject CardPanel;
 
-        private void Awake()
+
+        void Start()
         {
 #if DEBUG
             testCardCollection();
 #endif
-        }
-
-        void Start()
-        {
             updateCardUI();
         }
 

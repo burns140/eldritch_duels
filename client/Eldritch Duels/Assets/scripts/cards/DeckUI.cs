@@ -260,18 +260,24 @@ namespace eldritch.cards {
             newDeck.CardsInDeck = inDeck;
             Debug.Log(newDeck);
             Global.AddDeck(newDeck);
+            try
+            {
+                deckupload saved = new deckupload("saveDeck", Global.userID.ToString(), deckToString(newDeck), newDeck.DeckName);
+                string json = JsonConvert.SerializeObject(saved);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                Console.WriteLine("Sent");
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Console.WriteLine("Received: {0}", responseData);
+                Thread.Sleep(2500);
+            }
+            catch (Exception)
+            {
 
-            deckupload saved = new deckupload("saveDeck", Global.userID.ToString(), deckToString(newDeck), newDeck.DeckName);
-            string json = JsonConvert.SerializeObject(saved);
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
-            Console.WriteLine("Sent");
-            data = new Byte[256];
-            string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Console.WriteLine("Received: {0}", responseData);
-            Thread.Sleep(2500);
+            }
 
             SceneManager.LoadScene("Decks");
         }

@@ -106,9 +106,44 @@ namespace tcpTest {
 
         public static void Main() {
             //signup();
-            //login();
+            login();
             //getCollectionArray();
-            newSignupTest();
+            //newSignupTest();
+            //createUsers();
+        }
+
+        static void createUsers()
+        {
+
+            for (int i = 0; i < 6; i++)
+            {
+                Random rnd = new Random();
+                int val = rnd.Next(10000);
+
+                User user1 = new User("signup", val.ToString() + "@test.edu", "password", val.ToString());
+                string json = JsonConvert.SerializeObject(user1);
+
+                Console.WriteLine("json: " + json);
+
+                Int32 port = 8000;
+                TcpClient client = new TcpClient("localhost", port);
+
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                NetworkStream stream = client.GetStream();
+
+                stream.Write(data, 0, data.Length);
+
+                data = new byte[256];
+                string responseData = string.Empty;
+
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                Console.WriteLine("response: " + responseData);
+                Thread.Sleep(2500);
+
+                client.Close();
+            }
         }
 
         static void getCollectionArray() {
@@ -195,7 +230,7 @@ namespace tcpTest {
         }
 
         static void login() {
-            User user = new User("login", "aphantomdolphin@gmail.com", "yU7&Ioj{.F", "username");
+            User user = new User("login", "954@test.edu", "password", "username");
             string json = JsonConvert.SerializeObject(user);
 
             Int32 port = 8000;
