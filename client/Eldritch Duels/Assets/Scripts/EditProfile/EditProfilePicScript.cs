@@ -99,7 +99,7 @@ public class EditProfilePicScript : MonoBehaviour
         public string avatar;
         public string username;
 
-        EditProfileRequest (string cmd, string id, string token, string bio, string avatar, string username) {
+        public EditProfileRequest (string cmd, string id, string token, string bio, string avatar, string username) {
             this.cmd = cmd;
             this.id = id;
             this.token = token;
