@@ -74,6 +74,9 @@ function onClientConnected(sock) {
                     case "changeEmail":
                         Profile.changeEmail(obj, sock);
                         break;
+                    case "deleteAccount":
+                        Profile.deleteAccount(obj, sock);
+                        break;
                 }
             }
         } catch (err) {
