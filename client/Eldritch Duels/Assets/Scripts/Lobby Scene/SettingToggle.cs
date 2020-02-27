@@ -10,6 +10,11 @@ public class SettingToggle : MonoBehaviour
 
     public void ToggleButton() 
     {
-        SceneManager.LoadScene(2);
+        //SceneManager.LoadScene(2);
+        if (Panel != null)
+        {
+            bool isActive = Panel.activeSelf;
+            Panel.SetActive(!isActive);
+        }
     }
 }
