@@ -127,28 +127,45 @@ const changeEmail = (data, sock) => {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
-
-            db.collection('users').updateOne(
-                { _id: ObjectID(id) },
-                {
-                    $set: { email: newemail }
-                }
-            ).then(result => {
-                if (result.modifiedCount != 1) {
-                    console.log('modified not 1');
-                    sock.write(`failed to update email`);
+            db.collection('users').find({
+                _id: ObjectID(id)
+            }).limit(1).count().then(result => {
+                if (result != 0) {
+                    console.log(`User with email ${newemail} already exists`);
+                    sock.write('User with that email already exists');
+                    client.close();
+                    return;
                 } else {
-                    console.log('successfully updated');
-                    sock.write('Email updated successfully');
+                    db.collection('users').updateOne(
+                        { _id: ObjectID(id) },
+                        {
+                            $set: { email: newemail }
+                        }
+                    ).then(result => {
+                        if (result.modifiedCount != 1) {
+                            console.log('modified not 1');
+                            sock.write(`failed to update email`);
+                        } else {
+                            console.log('successfully updated');
+                            sock.write('Email updated successfully');
+                        }
+                        client.close();
+                        return;
+                    }).catch(err => {
+                        console.log(err);
+                        sock.write(`Failed to update email`);
+                        client.close();
+                        return;
+                    });
                 }
-                client.close();
-                return;
             }).catch(err => {
                 console.log(err);
-                sock.write(`Failed to update email`);
+                sock.write('Failed to update email');
                 client.close();
                 return;
-            });
+            })
+
+            
         });
     } catch (err) {
         console.log(err);
