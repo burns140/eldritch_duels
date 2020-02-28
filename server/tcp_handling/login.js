@@ -39,7 +39,7 @@ const login = (data, sock) => {
                                 email: result.email
                             }
                         }, dbconfig.jwt_key);
-                        sock.write(`${token}:${result._id.toString()}:${result.avatar},${result.username},${result.bio}`);
+                        sock.write(`${token}:${result._id.toString()}:${result.avatar}:${result.username}:${result.bio}`);
                         console.log('login successful; token returned');
                         if (passwords.length > 1) {
                             var tempPass = [];

@@ -27,9 +27,7 @@ function onClientConnected(sock) {
     sock.setKeepAlive(true, 60000);
 
     /* Determine what needs to be done */
-    sock.on('data', (data) => {
-        console.log(data);
-        
+    sock.on('data', (data) => {        
         try {     
 			const obj = JSON.parse(data);               // Turn data into a JSON object		
             console.log(obj);

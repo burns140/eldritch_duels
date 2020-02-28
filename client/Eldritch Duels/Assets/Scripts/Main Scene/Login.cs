@@ -106,6 +106,7 @@ public class Login : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+        Debug.Log(responseData);
         Thread.Sleep(2500);
         if (String.Equals(responseData, "Incorrect password"))
         {
@@ -136,12 +137,14 @@ public class Login : MonoBehaviour
             }
             catch (Exception e)
             {
+                Debug.Log(e);
                 Console.WriteLine("Error writing to login file: " + e.Message);
                 return String.Empty;
             }
         }
         catch (Exception e)
         {
+            Debug.Log(e);
             Console.WriteLine("Unable to create login file or set its attributes: " + e.Message);
             return String.Empty;
         }

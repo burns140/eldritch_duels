@@ -28,18 +28,27 @@ const signup = (data, sock) => {
                     var temparr = [];
                     temparr.push(hash);
                     var startCollection = {
-                        "testcard": 0,
-                        "realcard": 2,
-                        "testing": 1,
-                        "fake": 0
+                        "Test 0": 30,
+                        "Test 1": 30,
+                        //"testing": 1,
+                        //"fake": 0
                     };
+
+                    var startDecks = [
+                        {
+                            deckname: "First Deck",
+                            "Test 0": 20,
+                            "Test 1": 12
+                        }
+                    ];
+                    
                     db.collection('users').insertOne({
                         username: username,                // string
                         password: temparr,                  // string
                         email: email,                       // string
                         achievements: [],                   // int[]
                         collection: startCollection,        // Map<cardname, amount>
-                        decks: [],                          // list<Tuple<string, string[]>>
+                        decks: startDecks,                          // list<Tuple<string, string[]>>
                         avatar: 0,                         // int
                         level: 0,                           // int
                         wins: 0,                            // int
