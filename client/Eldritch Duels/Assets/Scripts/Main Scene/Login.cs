@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
@@ -96,11 +90,8 @@ public class Login : MonoBehaviour
     {
         Debug.Log("Inputted: " + email + " | " + password);
         login user = new login("login", email, password);
-        //Debug.Log(user);
         string json = JsonConvert.SerializeObject(user);
-        //Debug.Log(json);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-        //Debug.Log(data);
         Global.stream.Write(data, 0, data.Length);
         data = new Byte[256];
         string responseData = string.Empty;

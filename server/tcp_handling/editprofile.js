@@ -127,7 +127,6 @@ const changeEmail = (data, sock) => {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
-
             db.collection('users').find({
                 _id: ObjectID(id)
             }).limit(1).count().then(result => {
