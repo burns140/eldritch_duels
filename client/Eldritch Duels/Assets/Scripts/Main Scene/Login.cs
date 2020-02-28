@@ -94,7 +94,7 @@ public class Login : MonoBehaviour
 
     public static string ServerLogin(string email, string password)
     {
-        //Debug.Log("Inputted: " + email + " | " + password);
+        Debug.Log("Inputted: " + email + " | " + password);
         login user = new login("login", email, password);
         //Debug.Log(user);
         string json = JsonConvert.SerializeObject(user);

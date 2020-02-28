@@ -1563,7 +1563,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 721742028}
-        m_MethodName: Start
+        m_MethodName: clicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1621,8 +1621,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6516d67c74c8d0d4ab359719481851fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EmailLoginInput: {fileID: 0}
-  PswlLoginInput: {fileID: 0}
+  EmailLoginInput: {fileID: 28660445}
+  PswlLoginInput: {fileID: 1289420064}
   login: {fileID: 0}
 --- !u!1 &962549765
 GameObject:
