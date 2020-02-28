@@ -14,12 +14,21 @@ namespace tcpTest {
         public string password;
         public string username;
         public string cmd;
+        public string token;
 
         public User(string cmd, string email, string password, string username) {
             this.email = email;
             this.cmd = cmd;
             this.password = password;
             this.username = username;
+        }
+
+        public User(string cmd, string email, string password, string username, string token) {
+            this.email = email;
+            this.cmd = cmd;
+            this.password = password;
+            this.username = username;
+            this.token = token;
         }
     }
 
@@ -111,8 +120,17 @@ namespace tcpTest {
             //getCollectionArray();
             //newSignupTest();
             //createUsers();
-            getAllDecksTest();
-            newSignupTest();
+            //getAllDecksTest();
+            //newSignupTest();
+            addQueueTest();
+        }
+
+        public static void addQueueTest() {
+            User user1 = new User("enterQueue", "aphantomdolphin@gmail.com", "a", "rand", validToken);
+            string json = JsonConvert.SerializeObject(user1);
+            string res = sendNetworkRequestClass(json);
+            Console.WriteLine(res);
+            Thread.Sleep(5000);
         }
 
         static void getAllDecksTest()

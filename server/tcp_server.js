@@ -8,8 +8,10 @@ const Collection = require('./tcp_handling/collection.js');
 const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/editprofile.js');
+const PlayerQueue = require('./classes/PlayerQueue.js');
+var queue = new PlayerQueue();
 
-const noTokenNeeded = ["signup", "login", "tempPassword"];
+const noTokenNeeded = ["signup", "login", "tempPass"];
 
 /* Create server */
 const host = 'localhost';
@@ -61,7 +63,7 @@ function onClientConnected(sock) {
                     case "removeCardFromCollection":
                         Collection.removeCard(obj, sock);
                         break;
-                    case "tempPassword":
+                    case "tempPass":
                         Email.resetPassword(obj, sock);
                         break;
                     case "editProfile":
@@ -75,6 +77,17 @@ function onClientConnected(sock) {
                         break;
                     case "deleteAccount":
                         Profile.deleteAccount(obj, sock);
+                        break;
+                    case "enterQueue":
+                        if (queue.addPlayer(obj.id, 5)) {
+                            sock.write('added to queue');
+                            queue.matchPlayers();
+                        } else {
+                            sock.write('failed to add to queue');
+                        };
+                        break;
+                    default:
+                        sock.write('Not a valid command');
                         break;
                 }
             }

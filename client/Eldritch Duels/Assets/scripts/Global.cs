@@ -61,6 +61,7 @@ namespace eldritch {
         public static string tokenfile = "";
         public static int avatar = 0;
         public static string bio = "";
+        public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
 
         public static void SetUpConnection()
