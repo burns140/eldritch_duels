@@ -1595,6 +1595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1747948748}
+  newEmailInput: {fileID: 742821441}
 --- !u!114 &559672915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3250,6 +3251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 768228533}
+  newPassInput: {fileID: 1374039117}
 --- !u!114 &1442378684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4208,7 +4210,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Submit
+  m_Text: Verify
 --- !u!222 &2038828703
 CanvasRenderer:
   m_ObjectHideFlags: 0

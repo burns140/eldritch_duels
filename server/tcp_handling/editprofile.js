@@ -53,7 +53,7 @@ const deleteAccount = (data, sock) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
-            db.collections('users').remove(
+            db.collection('users').deleteOne(
                 { _id: ObjectID(id) }
             ).then(result => {
                 if (result.nRemoved != 1) {
@@ -80,7 +80,9 @@ const deleteAccount = (data, sock) => {
 
 const changePassword = (data, sock) => {
     const id = data.id;
-    const newPass = data.newPass;
+    var newPass = data.pass;
+    newPass = bcrypt.hashSync(newPass, 10);     // Hash password
+
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -89,7 +91,7 @@ const changePassword = (data, sock) => {
 
             var pass = [`${newPass}`];
 
-            db.collections('users').updateOne(
+            db.collection('users').updateOne(
                 { _id: ObjectID(id) },
                 {
                     $set: { password: pass }
@@ -119,14 +121,14 @@ const changePassword = (data, sock) => {
 
 const changeEmail = (data, sock) => {
     const id = data.id;
-    const newemail = data.newemail;
+    const newemail = data.email;
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
-            db.collections('users').updateOne(
+            db.collection('users').updateOne(
                 { _id: ObjectID(id) },
                 {
                     $set: { email: newemail }
