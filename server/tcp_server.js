@@ -9,7 +9,7 @@ const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/editprofile.js');
 
-const noTokenNeeded = ["signup", "login", "tempPassword"];
+const noTokenNeeded = ["signup", "login", "tempPass"];
 
 /* Create server */
 const host = 'localhost';
@@ -61,7 +61,7 @@ function onClientConnected(sock) {
                     case "removeCardFromCollection":
                         Collection.removeCard(obj, sock);
                         break;
-                    case "tempPassword":
+                    case "tempPass":
                         Email.resetPassword(obj, sock);
                         break;
                     case "editProfile":
@@ -75,6 +75,9 @@ function onClientConnected(sock) {
                         break;
                     case "deleteAccount":
                         Profile.deleteAccount(obj, sock);
+                        break;
+                    default:
+                        sock.write('Not a valid command');
                         break;
                 }
             }

@@ -24,6 +24,7 @@ var transporter = nodemailer.createTransport({
    is at the bottom of the priority list. */
 const resetPassword = (data, sock) => {
     const toEmail = data.email;
+    console.log('in temp pass');
     //const toEmail = 'aphantomdolphin@gmail.com';
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -34,6 +35,7 @@ const resetPassword = (data, sock) => {
                 email: toEmail
             }).then(result => {
                 if (!result) {
+                    console.log('account with that email doesn\'t exist')
                     sock.write('Account with that email doesn\'t exist');
                     client.close();
                     return;
