@@ -98,7 +98,7 @@ const saveDeck = (data, sock) => {
                 resDecks = result.decks;
                 
                 for (var i = 0; i < resDecks.length; i++) {
-                    if (resDecks[i].name == deckname) {
+                    if (resDecks[i].deckname == deckname) {
                         resDecks.splice(i, 1);
                         break;
                     }

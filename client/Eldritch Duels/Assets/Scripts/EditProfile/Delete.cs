@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using eldritch;
 
 public class deleted
@@ -43,8 +44,16 @@ public class delete : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Thread.Sleep(2500);
         Debug.Log(responseData);
+        SceneManager.LoadScene("MainScene");
+        Global.username = "";
+        Global.userID = 0;
+        Global.userCards.Clear();
+        Global.usercredits = 0;
+        Global.selectedDeck = new eldritch.cards.Deck();
+        Global.userDecks.Clear();
+        Global.avatar = 0;
+        Global.bio = "";
     }
 
     // Update is called once per frame

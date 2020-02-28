@@ -17,7 +17,7 @@ const editProfile = (data, sock) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
-            db.collections('users').updateOne(
+            db.collection('users').updateOne(
                 { _id: ObjectID(id) },
                 {
                     $set: { username: username, avatar: avatar, bio: bio }

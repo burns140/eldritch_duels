@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoadingScene.unity
     guid: b43d4decd7c539947a7cc4dc4a751253
+  - enabled: 1
+    path: Assets/Scenes/DuelScene.unity
+    guid: a2d5b4231b920a140aae0d199733c52b
   m_configObjects: {}

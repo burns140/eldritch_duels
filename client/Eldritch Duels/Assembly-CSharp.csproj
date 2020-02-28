@@ -74,12 +74,14 @@
     <Compile Include="Assets\Scripts\cards\DeckUI.cs" />
     <Compile Include="Assets\Scripts\cards\Effect.cs" />
     <Compile Include="Assets\Scripts\cards\Library.cs" />
+    <Compile Include="Assets\Scripts\EditProfile\Delete.cs" />
     <Compile Include="Assets\Scripts\EditProfile\EditProfileCancelButton.cs" />
     <Compile Include="Assets\Scripts\EditProfile\EditProfilePicScript.cs" />
     <Compile Include="Assets\Scripts\Global.cs" />
+    <Compile Include="Assets\Scripts\Loading Scene\GotoDuel.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\ChangeEmail.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\ChangePsw.cs" />
-    <Compile Include="Assets\Scripts\Lobby Scene\Delete.cs" />
+    <Compile Include="Assets\Scripts\Lobby Scene\EnterMatchmaking.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\GotoDeckBuilder.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\GotoLoading.cs" />
     <Compile Include="Assets\Scripts\Lobby Scene\GotoProfile.cs" />
