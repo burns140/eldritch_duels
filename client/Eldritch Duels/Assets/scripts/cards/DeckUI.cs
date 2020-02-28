@@ -278,10 +278,8 @@ namespace eldritch.cards {
                         string responseData = string.Empty;
                         Int32 bytes = Global.stream.Read(data, 0, data.Length);
                         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-<<<<<<< HEAD
                         Debug.Log(responseData);
-=======
->>>>>>> d0d03ffe533497c83f0cd08b8a7fbebfea77ec8d
+
                     }
                     catch (Exception)
                     {
