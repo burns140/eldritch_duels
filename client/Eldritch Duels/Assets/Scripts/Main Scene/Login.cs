@@ -94,23 +94,16 @@ public class Login : MonoBehaviour
 
     public static string ServerLogin(string email, string password)
     {
-        //Debug.Log("Inputted: " + email + " | " + password);
+        Debug.Log("Inputted: " + email + " | " + password);
         login user = new login("login", email, password);
-        //Debug.Log(user);
         string json = JsonConvert.SerializeObject(user);
-        //Debug.Log(json);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-        //Debug.Log(data);
         Global.stream.Write(data, 0, data.Length);
         data = new Byte[256];
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-<<<<<<< HEAD
-        Debug.Log(responseData);
-        Thread.Sleep(2500);
-=======
->>>>>>> d0d03ffe533497c83f0cd08b8a7fbebfea77ec8d
+
         if (String.Equals(responseData, "Incorrect password"))
         {
             return String.Empty;

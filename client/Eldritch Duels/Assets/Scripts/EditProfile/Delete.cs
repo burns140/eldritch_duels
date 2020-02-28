@@ -25,17 +25,18 @@ public class deleted
     }
 }
 
-public class delete : MonoBehaviour
+public class Delete : MonoBehaviour
 {
     public UnityEngine.UI.Button deletebutton;
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         deletebutton.onClick.AddListener(clicked);
     }
 
     public void clicked()
     {
+        Debug.Log("in clicked");
         deleted user = new deleted("deleteAccount", Global.getToken(), Global.getID());
         string json = JsonConvert.SerializeObject(user);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);

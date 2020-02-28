@@ -7,7 +7,7 @@ const signup = (data, sock) => {
 
     /* Parse data */
     const email = data.email;
-    const username = data.username;
+    const username = data.name;
     const password = data.password;
     const hash = bcrypt.hashSync(password, 10);     // Hash password
 
