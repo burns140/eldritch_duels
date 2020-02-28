@@ -38,6 +38,14 @@ namespace NUnitTestProject1 {
         }
 
         [Test]
+        public void addQueueTest() {
+            User user1 = new User("enterQueue", "aphantomdolphin@gmail.com", "a", "rand");
+            string json = JsonConvert.SerializeObject(user1);
+            string res = sendNetworkRequest(json);
+            Debug.WriteLine(res);
+        }
+
+        [Test]
         public void loginTest() {
             User user = new User("login", "testemail@email.edu", "password", "username");
             string json = JsonConvert.SerializeObject(user);

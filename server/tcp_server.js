@@ -8,6 +8,8 @@ const Collection = require('./tcp_handling/collection.js');
 const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/editprofile.js');
+const PlayerQueue = require('./classes/PlayerQueue.js');
+var queue = new PlayerQueue();
 
 const noTokenNeeded = ["signup", "login", "tempPass"];
 
@@ -75,6 +77,14 @@ function onClientConnected(sock) {
                         break;
                     case "deleteAccount":
                         Profile.deleteAccount(obj, sock);
+                        break;
+                    case "enterQueue":
+                        if (queue.addPlayer(obj.id, 5)) {
+                            sock.write('added to queue');
+                            if (queue.size % 2 == 0) {
+                                queue.matchPlayers();
+                            }
+                        };
                         break;
                     default:
                         sock.write('Not a valid command');
