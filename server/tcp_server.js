@@ -81,9 +81,7 @@ function onClientConnected(sock) {
                     case "enterQueue":
                         if (queue.addPlayer(obj.id, 5)) {
                             sock.write('added to queue');
-                            if (queue.size % 2 == 0) {
-                                queue.matchPlayers();
-                            }
+                            queue.matchPlayers();
                         };
                         break;
                     default:
