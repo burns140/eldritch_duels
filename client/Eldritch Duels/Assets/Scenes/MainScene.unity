@@ -2940,10 +2940,10 @@ MonoBehaviour:
   Email: {fileID: 652929150}
   Password: {fileID: 2031298484}
   Username: {fileID: 962549767}
-  UserPanel: {fileID: 0}
-  quitbutton: {fileID: 0}
-  loginbutton: {fileID: 0}
-  signupbutton: {fileID: 0}
+  UserPanel: {fileID: 306690101}
+  quitbutton: {fileID: 1335365300}
+  loginbutton: {fileID: 1822631312}
+  signupbutton: {fileID: 36033554}
   signup: {fileID: 1737017012}
 --- !u!1 &1737017010
 GameObject:
