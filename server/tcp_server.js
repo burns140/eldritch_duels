@@ -82,6 +82,8 @@ function onClientConnected(sock) {
                         if (queue.addPlayer(obj.id, 5)) {
                             sock.write('added to queue');
                             queue.matchPlayers();
+                        } else {
+                            sock.write('failed to add to queue');
                         };
                         break;
                     default:
