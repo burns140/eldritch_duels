@@ -128,7 +128,7 @@ const changeEmail = (data, sock) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
             db.collection('users').find({
-                _id: ObjectID(id)
+                email: newemail
             }).limit(1).count().then(result => {
                 if (result != 0) {
                     console.log(`User with email ${newemail} already exists`);
