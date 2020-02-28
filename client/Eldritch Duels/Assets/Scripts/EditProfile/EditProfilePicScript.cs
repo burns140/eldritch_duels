@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> e89febe58b444beabcddb7fbdd22260671de834a
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -12,7 +15,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using eldritch;
 using UnityEngine.SceneManagement;
+<<<<<<< HEAD
 
+=======
+>>>>>>> e89febe58b444beabcddb7fbdd22260671de834a
 using System.Collections.Generic;
 
 public class EditProfilePicScript : MonoBehaviour
@@ -44,8 +50,12 @@ public class EditProfilePicScript : MonoBehaviour
         
         // TODO - Update these on the database: bio, screenname, picnum
 
+<<<<<<< HEAD
 
         EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, Global.avatar, Global.username);
+=======
+        EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, picnum, screenname);
+>>>>>>> e89febe58b444beabcddb7fbdd22260671de834a
 
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
