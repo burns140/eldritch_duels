@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\Cards\CardCreator.cs" />
+    <Compile Include="Assets\Editor\Cards\RecipeCreator.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>F:/repos/eldritch_duels/client/Eldritch Duels/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>

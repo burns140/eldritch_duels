@@ -29,7 +29,8 @@ namespace eldritch.editor
         [MenuItem("Card Creator", menuItem = "Eldritch Duels/Card Creator")]
         public static void init()
         {
-            EditorWindow.GetWindow(typeof(CardCreator));
+            EditorWindow win = EditorWindow.GetWindow(typeof(CardCreator));
+            win.titleContent.text = "Card Editor";
         }
 
         public CardCreator()
@@ -115,6 +116,9 @@ namespace eldritch.editor
                 if (GUI.Button(new Rect(190, 5, 50, 15), "Delete"))
                 {
                     Library.RemoveCard(this.cardName);
+                    EditorUtility.SetDirty(this);
+                    EditorSceneManager.MarkSceneDirty(GameObject.Find("ContentManager").scene);
+                    PrefabUtility.ApplyPrefabInstance(GameObject.Find("ContentManager"), InteractionMode.AutomatedAction);
                     this.cardName = "";
                     this.attack = 0 + "";
                     this.defence = 0 + "";

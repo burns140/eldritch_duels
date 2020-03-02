@@ -62,6 +62,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Card Crafting\CardCrafter.cs" />
+    <Compile Include="Assets\Scripts\Card Crafting\CardSelector.cs" />
+    <Compile Include="Assets\Scripts\Card Crafting\RecipePanel.cs" />
+    <Compile Include="Assets\Scripts\Card Crafting\RecipeViewer.cs" />
+    <Compile Include="Assets\Scripts\Card Crafting\ShowRecipe.cs" />
     <Compile Include="Assets\Scripts\cards\Card.cs" />
     <Compile Include="Assets\Scripts\cards\CardEnlarge.cs" />
     <Compile Include="Assets\Scripts\cards\CollectionUI.cs" />

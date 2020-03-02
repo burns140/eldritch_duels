@@ -121,10 +121,6 @@ namespace eldritch {
             return null;
         }
 
-        public static bool SaveDeckToServer()
-        {
-            return false;
-        }
 
         public static string getToken()
         {
@@ -161,6 +157,7 @@ namespace eldritch {
             }
         }
 
+        //converts a tring into a list of cards
         private static List<Card> StringToCards(string toParse)
         {
             List<Card> cards = new List<Card>();
