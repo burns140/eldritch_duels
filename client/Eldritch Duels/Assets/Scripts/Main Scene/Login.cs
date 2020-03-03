@@ -118,8 +118,7 @@ public class Login : MonoBehaviour
                 streamWriter.WriteLine(loginstuff[1]); // ID
                 streamWriter.Flush();
                 streamWriter.Close();
-
-                Global.avatar = Int32.Parse(loginstuff[2]);
+                Global.avatar = (loginstuff[2] == null || loginstuff[2] == "")? 0 : Int32.Parse(loginstuff[2]);
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
                 return tempFile;
