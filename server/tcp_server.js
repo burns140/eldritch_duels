@@ -80,7 +80,10 @@ function onClientConnected(sock) {
                     case "deleteAccount":               // Delete a user's account
                         Profile.deleteAccount(obj, sock);
                         break;
-                    case "enterQueue":                  // Enter the matchmaking queue
+                    case "resendVerify":                // resend verification email
+                        Email.resendVerification(obj, sock);
+                        break;
+                    case "enterQueue":
                         
                         break;
                     default:                            // Command was invalid

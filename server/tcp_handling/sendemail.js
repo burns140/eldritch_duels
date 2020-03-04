@@ -1,11 +1,11 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const dbconfig = require('../dbconfig.json');
-const verify = require('../verifyjwt');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';             // Account I created specifically for this project
 const generator = require('generate-password');
 const bcrypt = require('bcrypt');
+const ObjectID = require('mongodb').ObjectID;
 
 
 var transporter = nodemailer.createTransport({
@@ -109,4 +109,64 @@ const resetPassword = (data, sock) => {
     }
 }
 
+const resendVerification = (data, sock) => {
+    const toEmail = data.email;
+    const id = data.id;
+    const host = "localhost:7999";
+
+
+    try {
+        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+            assert.equal(null, err);
+            const db = client.db('eldritch_data');
+            
+            db.collection('users').find({
+                _id: ObjectID(id)
+            }).limit(1).toArray().then(result => {
+                if (result.length != 1) {
+                    console.log("failed to find that id");
+                    sock.write("failed to find that id");
+                    client.close();
+                    return;
+                } else {
+                    var emailText = `<h1>Email Verification</h1>` +
+                                    `<p>You have requested a link to verify your account. Before you can ` +
+                                    `access matchmaking, you must verify your account by clicking on the link below.</p>` +
+                                    `<a href="http://${host}/verify/${result[0].verifyStr}">Verify Account</a>`;
+
+                    var mailOptions = {
+                        from: myEmail,
+                        to: toEmail,
+                        subject: 'Verify Account',
+                        html: emailText
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            console.log(err);
+                        } else {
+                            console.log('Email send: ' + info.response);
+                        }
+                    });
+                    
+                    sock.write('Verification email resent');
+                    console.log('Verification email resent');
+                    client.close();
+                    return;
+                }
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
+                client.close();
+                return;
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write("failed to send verification email");
+        return;
+    }
+}
+
 exports.resetPassword = resetPassword;
+exports.resendVerification = resendVerification;

@@ -6,6 +6,11 @@ const generator = require('generate-password');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';
 
+var startCollection = {
+    "Test 0": 30,
+    "Test 1": 30
+};
+
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -62,7 +67,7 @@ const signup = (data, sock) => {
                     var str = generator.generate({  // The random string that will be appended to their verification link
                         length: 30,
                         numbers: true,
-                        symbols: true
+                        symbols: false
                     });
                     
                     db.collection('users').insertOne({
@@ -90,7 +95,7 @@ const signup = (data, sock) => {
                         var emailText = `<h1>Email Verification</h1>` +
                                     `<p>You have created an account for Eldritch Duels. Before you can ` +
                                     `access matchmaking, you must verify your account by clicking on the link below.</p>` +
-                                    `<p>${host}/verify/${str}</p>`;
+                                    `<a href="http://${host}/verify/${str}">Verify Account</a>`;
 
                         var mailOptions = {             // Options for verification email
                             from: myEmail,
