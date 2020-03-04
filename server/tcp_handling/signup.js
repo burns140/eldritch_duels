@@ -58,7 +58,7 @@ const signup = (data, sock) => {
                     var str = generator.generate({
                         length: 30,
                         numbers: true,
-                        symbols: true
+                        symbols: false
                     });
                     
                     db.collection('users').insertOne({
@@ -84,7 +84,7 @@ const signup = (data, sock) => {
                         var emailText = `<h1>Email Verification</h1>` +
                                     `<p>You have created an account for Eldritch Duels. Before you can ` +
                                     `access matchmaking, you must verify your account by clicking on the link below.</p>` +
-                                    `<p>${host}/verify/${str}</p>`;
+                                    `<a href="http://${host}/verify/${str}">Verify Account</a>`;
 
                         var mailOptions = {
                             from: myEmail,

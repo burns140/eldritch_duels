@@ -78,6 +78,9 @@ function onClientConnected(sock) {
                     case "deleteAccount":
                         Profile.deleteAccount(obj, sock);
                         break;
+                    case "resendVerify":
+                        Email.resendVerification(obj, sock);
+                        break;
                     case "enterQueue":
                         
                         break;
