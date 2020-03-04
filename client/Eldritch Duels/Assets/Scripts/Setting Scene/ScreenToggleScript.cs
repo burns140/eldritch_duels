@@ -6,22 +6,21 @@ using System.Linq;
 
 public class ScreenToggleScript : MonoBehaviour
 {
-	public ToggleGroup toggleGroupInstance;
-	public Dropdown dropdownInstance;
-	private const string WINDOW_PREF_KEY = "window";
-    private const string RESOLUTION_PREF_KEY = "resolution";
-	private string window = "fullScreen";
-
+	public ToggleGroup toggleGroupInstance; // Window Mode Toggle Group on the UI
+	public Dropdown dropdownInstance; // Resolutio Dropdown on the UI
+	private const string WINDOW_PREF_KEY = "window"; // PLAYER PREF KEY to store window mode settings
+    private const string RESOLUTION_PREF_KEY = "resolution"; // PLAYER PREF KEY to store resolution settings
+	private string window = "fullScreen"; // Default screen mode is full screen
 
 	void Start(){
 		
-		// Get the saved settings from PlayerPrefs
-		string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY);
-        window = PlayerPrefs.GetString(WINDOW_PREF_KEY);
+		string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY); // Get the saved resolution from PLAYER PREFS
+        window = PlayerPrefs.GetString(WINDOW_PREF_KEY); // Get the saved windowed mode form PLAYER PREFS
 		Debug.Log("I'm at ScreenToggle :"+window);
 
-		var dropdown = dropdownInstance.GetComponent<Dropdown>();
+		var dropdown = dropdownInstance.GetComponent<Dropdown>(); // Get instance of the resolution dropdown from UI;
 
+		// Set the saved resolution option on the UI
 		if(res=="1280x720"){
         	dropdown.value = 1;
         }
@@ -32,14 +31,15 @@ public class ScreenToggleScript : MonoBehaviour
             dropdown.value = 0;
         }
 		
+		// Set the saved window mode toggle on the UI
 		if(window=="windowed"){
 			var toggles = toggleGroupInstance.GetComponentsInChildren<Toggle>();
 			toggles[1].isOn = true;
 		}
-		else if(window=="windowedBorderless"){
+		/*else if(window=="windowedBorderless"){
 			var toggles = toggleGroupInstance.GetComponentsInChildren<Toggle>();
 			toggles[2].isOn = true;
-		}
+		}*/ // No longer implementing this in the game
 		else{
 			window = "fullScreen";
 			var toggles = toggleGroupInstance.GetComponentsInChildren<Toggle>();
@@ -48,7 +48,7 @@ public class ScreenToggleScript : MonoBehaviour
 		
 		Debug.Log("First Selected: "+toggleGroupInstance.ActiveToggles().FirstOrDefault().name);
 		
-		/* Checking compatible resolutions
+		/* Checking compatible resolutions for the device
 			Resolution[] resolutions = Screen.resolutions;
 			foreach(var res in resolutions){
 				Debug.Log(res.width+"x"+res.height);
@@ -56,17 +56,21 @@ public class ScreenToggleScript : MonoBehaviour
 		*/
 	}
 
+	// Check toggle change
 	public void OnChangeValue(){
 		var toggles = toggleGroupInstance.GetComponentsInChildren<Toggle>();
 		if(toggles[0].isOn){
 			Debug.Log("It's FullScreen now");
 		}
-		else if(toggles[1].isOn){
+		else{
+			Debug.Log("It's Windowed now");
+		}
+		/*else if(toggles[1].isOn){
 			Debug.Log("It's Windowed now");
 		}
 		else if(toggles[2].isOn){
 			Debug.Log("It's Windowed Borderless now");
-		}
+		}*/ // No longer implementing this in the game
 	}
     
 }

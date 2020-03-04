@@ -15,10 +15,10 @@ public class ForgotPassword : MonoBehaviour
 {
     public static string email = "";
     public UnityEngine.UI.InputField EmailLoginInput;
-    public UnityEngine.UI.Button login;
+    public UnityEngine.UI.Button login; //was too lazy to change this, this points to the forgot password button
     // Start is called before the first frame update
 
-    
+    // Calls ResetPass when forget password is clicked
     public void Start()
     {
         login.onClick.AddListener(clicked);
@@ -29,7 +29,7 @@ public class ForgotPassword : MonoBehaviour
         ResetPass(email);
     }
 
-    // Update is called once per frame
+    // Constantly updates email variable with text in email field
     public void Update()
     {
         email = EmailLoginInput.text;
@@ -40,8 +40,9 @@ public class ForgotPassword : MonoBehaviour
         if (email == "") {
             return;
         }
-        login user = new login("tempPass", email, "asdf");
-        string json = JsonConvert.SerializeObject(user);
+        login user = new login("tempPass", email, "asdf"); //uses Login class to format the right JSON request
+        //server query
+        string json = JsonConvert.SerializeObject(user); 
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);
         data = new Byte[256];
@@ -49,6 +50,6 @@ public class ForgotPassword : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
         Debug.Log(responseData);
-        //TODO: maybe add display message to show message, not needed
+        //TODO: add display message to show message
     }
 }
