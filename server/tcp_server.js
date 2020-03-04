@@ -18,44 +18,46 @@ const host = 'localhost';
 const port = process.env.port || 8000;
 var server = net.createServer(onClientConnected);
 
+/* Start server */
 server.listen(port, host, () => {
     console.log(`server listening on ${server.address().address}, port ${server.address().port}`);
 });
 
 
+/* This runs every time a new client connects */
 function onClientConnected(sock) {
     let remoteAddress = `${sock.remoteAddress}:${sock.remotePort}`;
     console.log(`new client connectioned: ${remoteAddress}`);
     sock.setKeepAlive(true, 60000);
 
-    /* Determine what needs to be done */
+    /* Determine what needs to be done every time
+       data is received from a client */
     sock.on('data', (data) => {        
         try {     
 			const obj = JSON.parse(data);               // Turn data into a JSON object		
             console.log(obj);
-            console.log(noTokenNeeded.includes(obj.cmd));
-            if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {
+            if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {        // Check that either no token is needed or the token is valid
                 switch (obj.cmd) {
-                    case "signup":
+                    case "signup":                      // Signup new account
                         Signup.signup(obj, sock);
                         break;
-                    case "login":
+                    case "login":                       // Login
                         Login.login(obj, sock);
                         break;
-                    case "getAllDecks":
+                    case "getAllDecks":                 // Get all deck names for an account
                         Decks.getAllDecks(obj, sock);
                         break;
                     case "saveDeck":
-                        Decks.saveDeck(obj, sock);
+                        Decks.saveDeck(obj, sock);      // Save a deck to an account
                         break;
                     case "deleteDeck":
-                        Decks.deleteDeck(obj, sock);
+                        Decks.deleteDeck(obj, sock);    // Delete a deck from an account
                         break;
-                    case "getOneDeck":
-                        Decks.getDeck(obj, sock);
+                    case "getOneDeck":                  
+                        Decks.getDeck(obj, sock);       // Get a single deck object from an account
                         break;
                     case "getCollection":
-                        Collection.getCollection(obj, sock);
+                        Collection.getCollection(obj, sock);    // Get the entire collection for an account.
                         break;
                     case "addCardToCollection":
                         Collection.addCard(obj, sock);
