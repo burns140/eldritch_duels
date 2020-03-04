@@ -15,14 +15,13 @@ using System.Collections.Generic;
 
 public class EditProfilePicScript : MonoBehaviour
 {
-
-    public Dropdown dropdown;
-    public Sprite[] pictures;
-    public InputField screenNameInput;
-    public InputField bioInput;
-    private string bio;
-    private string screenname;
-    private int picnum=0;
+    public Dropdown dropdown; // Picture Dropdown on the UI
+    public Sprite[] pictures; // List of available pictures
+    public InputField screenNameInput; // Screenname field on the UI
+    public InputField bioInput; // Bio field on the UI
+    private string bio; // save new bio to this string
+    private string screenname; // save new screenname to this string
+    private int picnum=0; // default profile pic is the first option
 
     // Start is called before the first frame update
     void Start()
@@ -35,13 +34,12 @@ public class EditProfilePicScript : MonoBehaviour
 
     public void onSave(){
         Debug.Log("Clicked on Save Profile");
-        bio = bioInput.text;
+        bio = bioInput.text; // save new bio
         Debug.Log("This is the new bio: "+bio);
-        screenname = screenNameInput.text;
+        screenname = screenNameInput.text; // save new screenname
         Debug.Log("This is the new screenname: "+screenname);
-        
-        // TODO - Update these on the database: bio, screenname, picnum
 
+        // Sending request to server to update bio, screen name, & profile pic
         EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, picnum, screenname);
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
@@ -61,46 +59,44 @@ public class EditProfilePicScript : MonoBehaviour
 
         foreach(var pic in pictures){
             var picOption = new Dropdown.OptionData(pic.name, pic);
-            picItems.Add(picOption);
+            picItems.Add(picOption); 
         }
 
-        dropdown.AddOptions(picItems);
+        dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
     }
 
     public void handlePicName(int val){
-        picnum = val;
+        picnum = val; // Get selected picture index from the dropdown
         Debug.Log("Selected Profile Pic option: "+picnum.ToString());
     }
 
     private void displayPic(){
-        // Display original pic on frontend
 
-        int originalPic = Global.avatar; // TODO - Get picnum from global variable
+        int originalPic = Global.avatar; // Get original picnum from global variable
 
         var dropdownInstance = dropdown.GetComponent<Dropdown>();
-        dropdownInstance.value = originalPic; // Select option on frontend
+        dropdownInstance.value = originalPic; // Select original picture option on the UI
 
 
     }
 
     private void displayBio(){
-        // Display original bio on frontend
 
-        string originalBio = Global.bio; // TODO Get bio from global variable
+        string originalBio = Global.bio; // Get original bio from global variable
 
         var bioInstance = bioInput.GetComponent<InputField>();
-        bioInstance.text = originalBio;
+        bioInstance.text = originalBio; // Display original bio on the UI
     }
 
     private void displayScreenName(){
-        // Display original screenName on frontend
 
-        string originalScreenname = Global.username; // TODO - Get screenname from global variable
+        string originalScreenname = Global.username; // Get original screenname from global variable
 
         var screennameInstance = screenNameInput.GetComponent<InputField>();
-        screennameInstance.text = originalScreenname;
+        screennameInstance.text = originalScreenname; // Display original screenname on the UI
     }
 
+    // Class for server request to send Profile changes
     public class EditProfileRequest {
         public string cmd;
         public string id;

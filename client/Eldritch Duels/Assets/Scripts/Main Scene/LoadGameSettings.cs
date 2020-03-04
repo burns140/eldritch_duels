@@ -5,23 +5,20 @@ using UnityEngine.UI;
 
 public class LoadGameSettings : MonoBehaviour
 {
-
-    private const string WINDOW_PREF_KEY = "window";
-    private const string RESOLUTION_PREF_KEY = "resolution";
-    private int width = 1920;
-    private int height = 1080;
-    private string window = "fullScreen";
+    private const string WINDOW_PREF_KEY = "window"; // PLAYER PREF KEY to store window mode
+    private const string RESOLUTION_PREF_KEY = "resolution"; // PLAYER PREF KEY to store resolution
+    private int width = 1920; // Default resoultion width
+    private int height = 1080; // Default resolution height
+    private string window = "fullScreen"; // Default screen mode
 
     // Start is called before the first frame update
     void Start()
     {
-        // Get the saved settings from PlayerPrefs
-        string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY);
+        string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY); // Get the resolution from PLAYER PREFS
        
-        window = PlayerPrefs.GetString(WINDOW_PREF_KEY);
-        //Debug.Log("I'm at SampleScene " + window);
+        window = PlayerPrefs.GetString(WINDOW_PREF_KEY); // Get the windowed mode from PLAYER PREFS
 
-
+        // Set the width and height based on saved resolution
         if (res == "1920x1080")
         {
             width = 1920;
@@ -42,25 +39,25 @@ public class LoadGameSettings : MonoBehaviour
             width = 1920;
             height = 1080;
         }
+
         setResWindow();
     }
 
 
     private void setResWindow()
     {
-
         if (window == "windowed")
         {
-            Screen.SetResolution(width, height, FullScreenMode.Windowed);
+            Screen.SetResolution(width, height, FullScreenMode.Windowed); // Set saved windowed mode & saved resolution
         }
         else if (window == "fullScreen")
         {
-            Screen.SetResolution(width, height, FullScreenMode.ExclusiveFullScreen);
+            Screen.SetResolution(width, height, FullScreenMode.ExclusiveFullScreen); // Set full screen mode & saved resolution
         }
-        else if (window == "windowedBorderless")
+        /*else if (window == "windowedBorderless")
         {
             Screen.SetResolution(width, height, FullScreenMode.FullScreenWindow);
-        }
+        }*/ // No longer implementing this in the game
         else
         {
             Screen.SetResolution(width, height, FullScreenMode.ExclusiveFullScreen);
