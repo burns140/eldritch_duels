@@ -4,12 +4,16 @@ const MongoClient = require('mongodb').MongoClient;
 const dbconfig = require('../dbconfig.json');
 const ObjectID = require('mongodb').ObjectID;
 
-
+/**
+ * Change configurable profile information
+ * @param {object} data 
+ * @param {object} sock 
+ */
 const editProfile = (data, sock) => {
-    const username = data.username;
-    const avatar = data.avatar;
-    const bio = data.bio;
-    const id = data.id;
+    const username = data.username;     // username
+    const avatar = data.avatar;         // avatar
+    const bio = data.bio;               // bio
+    const id = data.id;                 // user id
 
 
     try {
@@ -17,17 +21,18 @@ const editProfile = (data, sock) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
+            /* Find a user with the given id and set the three given values */
             db.collection('users').updateOne(
                 { _id: ObjectID(id) },
                 {
                     $set: { username: username, avatar: avatar, bio: bio }
                 }
             ).then(result => {
-                if (result.modifiedCount != 1) {
+                if (result.modifiedCount != 1) {            // No document was modified, so error
                     console.log('modified not 1');
                     sock.write(`Failed to update profile correctly`);
                 } else {
-                    console.log('successfully updated');
+                    console.log('successfully updated');    // Success
                     sock.write('Profile successfully updated');
                 }
                 client.close();
@@ -45,18 +50,24 @@ const editProfile = (data, sock) => {
     }
 }
 
+/**
+ * Delete a user's account
+ * @param {object} data 
+ * @param {object} sock 
+ */
 const deleteAccount = (data, sock) => {
-    const id = data.id;
+    const id = data.id;     // user's id
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
+            /* If a user exists with given id, delete it */
             db.collection('users').deleteOne(
                 { _id: ObjectID(id) }
             ).then(result => {
-                if (result.nRemoved != 1) {
+                if (result.deletedCount != 1) {
                     console.log('account not found');
                     sock.write(`Failed to delete profile`);
                 } else {
@@ -78,9 +89,14 @@ const deleteAccount = (data, sock) => {
     }
 }
 
+/**
+ * Change a user's password
+ * @param {object} data 
+ * @param {object} sock 
+ */
 const changePassword = (data, sock) => {
-    const id = data.id;
-    var newPass = data.pass;
+    const id = data.id;             // user's id
+    var newPass = data.pass;        // new password in plaintext
     newPass = bcrypt.hashSync(newPass, 10);     // Hash password
 
 
@@ -89,8 +105,9 @@ const changePassword = (data, sock) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
-            var pass = [`${newPass}`];
+            var pass = [`${newPass}`];      // Set password array to only contain this new password
 
+            /* Update account to have password array be the new array above */
             db.collection('users').updateOne(
                 { _id: ObjectID(id) },
                 {
@@ -119,6 +136,11 @@ const changePassword = (data, sock) => {
     }
 }
 
+/**
+ * Change the email linked to a user's account
+ * @param {object} data 
+ * @param {object} sock 
+ */
 const changeEmail = (data, sock) => {
     const id = data.id;
     const newemail = data.email;
@@ -127,15 +149,19 @@ const changeEmail = (data, sock) => {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
+
+            /* Check to see whether a user already exist with the requested new email */
             db.collection('users').find({
                 email: newemail
             }).limit(1).count().then(result => {
                 if (result != 0) {
-                    console.log(`User with email ${newemail} already exists`);
+                    console.log(`User with email ${newemail} already exists`); // Cannot update email because new email already exists
                     sock.write('User with that email already exists');
                     client.close();
                     return;
                 } else {
+
+                    /* Find user with the given id and update their email */
                     db.collection('users').updateOne(
                         { _id: ObjectID(id) },
                         {

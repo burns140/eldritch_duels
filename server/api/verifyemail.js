@@ -12,6 +12,8 @@ router.get('/:verify', async (req, res) => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
 
+            /* Find a user with given verification string. That user will be marked
+               as verified. */
             db.collection('users').updateOne(
                 { verifyStr: verify },
                 { $set: { verifyStr: "verified", verified: true } }

@@ -47,43 +47,43 @@ function onClientConnected(sock) {
                     case "getAllDecks":                 // Get all deck names for an account
                         Decks.getAllDecks(obj, sock);
                         break;
-                    case "saveDeck":
-                        Decks.saveDeck(obj, sock);      // Save a deck to an account
+                    case "saveDeck":                    // Save a deck to an account
+                        Decks.saveDeck(obj, sock);      
                         break;
-                    case "deleteDeck":
-                        Decks.deleteDeck(obj, sock);    // Delete a deck from an account
+                    case "deleteDeck":                  // Delete a deck from an account
+                        Decks.deleteDeck(obj, sock);    
                         break;
-                    case "getOneDeck":                  
-                        Decks.getDeck(obj, sock);       // Get a single deck object from an account
+                    case "getOneDeck":                  // Get a single deck object from an account
+                        Decks.getDeck(obj, sock);       
                         break;
-                    case "getCollection":
-                        Collection.getCollection(obj, sock);    // Get the entire collection for an account.
+                    case "getCollection":               // Get the entire collection for an account
+                        Collection.getCollection(obj, sock);    
                         break;
-                    case "addCardToCollection":
+                    case "addCardToCollection":         // Add a card to an account's collection               
                         Collection.addCard(obj, sock);
                         break;
-                    case "removeCardFromCollection":
+                    case "removeCardFromCollection":    // Remove a card from an account's collection
                         Collection.removeCard(obj, sock);
                         break;
-                    case "tempPass":
+                    case "tempPass":                    // Request an email with a temporary password
                         Email.resetPassword(obj, sock);
                         break;
-                    case "editProfile":
+                    case "editProfile":                 // Edit a user's profile
                         Profile.editProfile(obj, sock);
                         break;
-                    case "changePassword":
+                    case "changePassword":              // Change a user's password
                         Profile.changePassword(obj, sock);
                         break;
-                    case "changeEmail":
+                    case "changeEmail":                 // Change a user's email
                         Profile.changeEmail(obj, sock);
                         break;
-                    case "deleteAccount":
+                    case "deleteAccount":               // Delete a user's account
                         Profile.deleteAccount(obj, sock);
                         break;
-                    case "enterQueue":
+                    case "enterQueue":                  // Enter the matchmaking queue
                         
                         break;
-                    default:
+                    default:                            // Command was invalid
                         sock.write('Not a valid command');
                         break;
                 }
