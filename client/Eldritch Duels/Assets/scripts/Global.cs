@@ -50,6 +50,7 @@ namespace eldritch {
 
     public static class Global
     {
+    	//Global variables, can be called by any class and script via Global.(variable) as long as "using eldritch" is in the imports
         public static string username = "";
         public static int userID = 0;
         public static List<Card> userCards = new List<Card>();
