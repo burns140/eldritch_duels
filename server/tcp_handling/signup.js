@@ -77,6 +77,7 @@ const signup = (data, sock) => {
                         achievements: [],                   // int[]
                         collection: startCollection,        // Map<cardname, amount>
                         decks: startDecks,                          // list<Tuple<string, string[]>>
+                        sharedwithme: [],
                         avatar: 0,                         // int
                         level: 0,                           // int
                         wins: 0,                            // int

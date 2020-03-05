@@ -83,6 +83,9 @@ function onClientConnected(sock) {
                     case "resendVerify":                // resend verification email
                         Email.resendVerification(obj, sock);
                         break;
+                    case "shareDeck":
+                        Decks.shareDeck(obj, sock);
+                        break;
                     case "enterQueue":
                         
                         break;
