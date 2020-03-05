@@ -6,11 +6,6 @@ const generator = require('generate-password');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';
 
-var startCollection = {
-    "Test 0": 30,
-    "Test 1": 30
-};
-
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -28,6 +23,7 @@ const signup = (data, sock) => {
     const password = data.password; // password
     const hash = bcrypt.hashSync(password, 10);     // Hash password
     const host = "localhost:7999";
+    console.log(userSock);
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {

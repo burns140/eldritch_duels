@@ -1,5 +1,3 @@
-const assert = require('assert');
-const bcrypt = require('bcrypt');
 const net = require('net');
 const Signup = require('./tcp_handling/signup.js');
 const Login = require('./tcp_handling/login.js');

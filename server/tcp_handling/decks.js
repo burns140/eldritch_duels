@@ -11,6 +11,7 @@ const verify = require('../verifyjwt');
  */
 const getAllDecks = (data, sock) => {
     const id = data.id;         // user id
+    const shared = data.shared; // is the deck shared
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -24,7 +25,12 @@ const getAllDecks = (data, sock) => {
                 _id: ObjectID(id)
             }).then(result => {
                 var temparr = [];
-                var decks = result.decks;
+                var decks;
+                if (!shared) {
+                    decks = result.decks;
+                } else {
+                    decks = result.sharedwithme;
+                }
                 for (var el of decks) {             // Add each deckname to an array
                     temparr.push(el.deckname);
                 }
@@ -55,6 +61,7 @@ const getAllDecks = (data, sock) => {
 const getDeck = (data, sock) => {
     const id = data.id;             // user id
     const deckname = data.name;     // deckname
+    const shared = data.shared;     // whether this is a shared deck
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -68,17 +75,24 @@ const getDeck = (data, sock) => {
                 _id: ObjectID(id)
             }).then(result => {
                 var temparr = [];
-                var decks = result.decks;
+
+                if (!shared) {
+                    var decks = result.decks;   
+                } else {
+                    decks = result.sharedwithme;
+                }
 
                 for (var el of decks) {                     // iterate through all decks to find correct deck
                     if (el.deckname == deckname) {
                         for (var key of Object.keys(el)) {  // in that deck, iterate through object to get all key:value pairs
-                            if (key != deckname) {
+                            if (key != deckname && key != fromUser) {
                                 temparr.push(`${key}-${el[key]}`);  // write key value pairs into array with element forms "key-value"
                             }
                         }
                     }
                 }
+                
+                
                 
                 console.log(temparr.toString());
                 sock.write(temparr.toString());     // Convert the array to a string and write it back
@@ -180,6 +194,7 @@ const saveDeck = (data, sock) => {
 const deleteDeck = (data, sock) => {
     const id = data.id;             // user id
     const deckname = data.name;     // deck name
+    const shared = data.shared;
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
@@ -189,22 +204,41 @@ const deleteDeck = (data, sock) => {
 
             /* Find user with given id and, if a deck with the specified deckname
                exists in their deck array, remove it */
-            db.collection('users').updateOne(
-                { _id: ObjectID(id) },
-                {
-                    $pull: { decks: { deckname: deckname } }
-                }
-            ).then(result => {
-                console.log(`Deck ${deckname} successfully deleted`);
-                sock.write('deck successfully deleted');
-                client.close();
-                return;
-            }).catch(err => {
-                console.log(err);
-                sock.write(err);
-                client.close();
-                return;
-            });
+            if (!shared) {
+                db.collection('users').updateOne(
+                    { _id: ObjectID(id) },
+                    {
+                        $pull: { decks: { deckname: deckname } }
+                    }
+                ).then(result => {
+                    console.log(`Deck ${deckname} successfully deleted`);
+                    sock.write('deck successfully deleted');
+                    client.close();
+                    return;
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    client.close();
+                    return;
+                });
+            } else {
+                db.collection('users').updateOne(
+                    { _id: ObjectID(id) },
+                    {
+                        $pull: { sharedwithme: { deckname: deckname } }
+                    }
+                ).then(result => {
+                    console.log(`Deck ${deckname} successfully deleted`);
+                    sock.write('deck successfully deleted');
+                    client.close();
+                    return;
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    client.close();
+                    return;
+                });
+            }
         });
     } catch(err) {
         console.log(err);
@@ -289,7 +323,7 @@ function findDeck(fromUser, toUser, deckname) {
 
     for (el of fromUser.decks) {
         if (el.deckname == deckname) {          // Find the deck to be shared
-            newdeck = el;
+            newDeck = el;
             sharedArr = toUser.sharedwithme;
             newName = deckname
 
@@ -309,6 +343,7 @@ function findDeck(fromUser, toUser, deckname) {
     }
 
     newDeck.deckname = newName;
+    newDeck.fromUser = fromUser.email;
 
     return newDeck;
 }
