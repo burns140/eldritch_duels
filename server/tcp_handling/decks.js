@@ -238,9 +238,9 @@ const shareDeck = (data, sock) => {
 
                 /* Find the deck to be pushed */
                 if (result[0]._id == ObjectID(myId)) {
-                    decktopush = findDeck(result[0], deckname);
+                    decktopush = findDeck(result[0], result[1], deckname);
                 } else {
-                    decktopush = findDeck(result[1], deckname);
+                    decktopush = findDeck(result[1], result[0], deckname);
                 }
 
                 db.collection('users').updateOne(
@@ -276,16 +276,41 @@ const shareDeck = (data, sock) => {
 }
 
 /**
- * Find the deck that will be shared with another user
+ * Find the deck that will be shared with another user. Make sure that it has a unique name
  * @param {object} fromUser 
+ * @param {object} toUser
  * @param {string} deckname 
  */
-function findDeck(fromUser, deckname) {
+function findDeck(fromUser, toUser, deckname) {
+    var newName = "";
+    var newDeck = {};
+    var timesChanged = 0;
+    var i = 0;
+
     for (el of fromUser.decks) {
-        if (el.deckname == deckname) {
-            return el;
+        if (el.deckname == deckname) {          // Find the deck to be shared
+            newdeck = el;
+            sharedArr = toUser.sharedwithme;
+            newName = deckname
+
+            /* Check to see whether the receiving user has a deck with the same name
+               as the one being shared already in their shared array. If yes, we want to append
+               a number to the end. Keep doing this until the name is unique. */
+            while (i < sharedArr.length) {
+                if (sharedArr[i].deckname == newName) {
+                    timesChanged++;
+                    newName = deckname + timesChanged.toString();
+                    i = -1;
+                }
+                i++;
+            }
+            break;
         }
     }
+
+    newDeck.deckname = newName;
+
+    return newDeck;
 }
 
 exports.getAllDecks = getAllDecks;
