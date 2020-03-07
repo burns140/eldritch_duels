@@ -112,6 +112,7 @@ public class Login : MonoBehaviour
             }
             catch (Exception e)
             {
+                Debug.Log(responseData);
                 Debug.Log(e);
                 Console.WriteLine("Error writing to login file: " + e.Message);
                 return String.Empty;

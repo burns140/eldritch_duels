@@ -1,5 +1,4 @@
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+const MongoClient = require('../mongo_connection');
 const dbconfig = require('../dbconfig.json');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';             // Account I created specifically for this project
@@ -27,9 +26,6 @@ const resetPassword = (data, sock) => {
     console.log('in temp pass');
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
-            /* Find account with that email */
             const db = client.db('eldritch_data');
             db.collection('users').findOne({
                 email: toEmail
@@ -38,7 +34,6 @@ const resetPassword = (data, sock) => {
                 if (!result) {
                     console.log('account with that email doesn\'t exist')
                     sock.write('Account with that email doesn\'t exist');
-                    client.close();
                     return;
                 } else {
                     var tempPass = generator.generate({         // Generate temp password
@@ -78,28 +73,23 @@ const resetPassword = (data, sock) => {
                                     console.log(err);
                                 } else {
                                     console.log('Email send: ' + info.response);
-                                    sock.write(`Email sent with temporary password`);
                                 }
                             });
-                            client.close();
                             return;
                         } else {
                             console.log('Unable to update database');
                             sock.write('Failed to update database');
-                            client.close();
                             return;
                         }
                     }).catch(err => {
                         console.log(err);
                         sock.write(err);
-                        client.close();
                         return;
-                    })
+                    });
                 }
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         })
@@ -116,7 +106,7 @@ const resendVerification = (data, sock) => {
 
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             assert.equal(null, err);
             const db = client.db('eldritch_data');
             
@@ -126,7 +116,6 @@ const resendVerification = (data, sock) => {
                 if (result.length != 1) {
                     console.log("failed to find that id");
                     sock.write("failed to find that id");
-                    client.close();
                     return;
                 } else {
                     var emailText = `<h1>Email Verification</h1>` +
@@ -151,13 +140,11 @@ const resendVerification = (data, sock) => {
                     
                     sock.write('Verification email resent');
                     console.log('Verification email resent');
-                    client.close();
                     return;
                 }
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
