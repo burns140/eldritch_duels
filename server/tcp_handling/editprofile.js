@@ -1,9 +1,6 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
-const MongoClient = require('mongodb').MongoClient;
-const dbconfig = require('../dbconfig.json');
+const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
-
 
 const editProfile = (data, sock) => {
     const username = data.username;
@@ -13,8 +10,7 @@ const editProfile = (data, sock) => {
 
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             db.collection('users').updateOne(
@@ -30,12 +26,10 @@ const editProfile = (data, sock) => {
                     console.log('successfully updated');
                     sock.write('Profile successfully updated');
                 }
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(`Failed to update profile`);
-                client.close();
                 return;
             });
         });
@@ -49,8 +43,7 @@ const deleteAccount = (data, sock) => {
     const id = data.id;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             db.collection('users').deleteOne(
@@ -63,12 +56,10 @@ const deleteAccount = (data, sock) => {
                     console.log('successfully deleted');
                     sock.write('Profile successfully deleted');
                 }
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(`Failed to delete profile`);
-                client.close();
                 return;
             });
         });
@@ -85,10 +76,8 @@ const changePassword = (data, sock) => {
 
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
-
             var pass = [`${newPass}`];
 
             db.collection('users').updateOne(
@@ -104,12 +93,10 @@ const changePassword = (data, sock) => {
                     console.log('successfully updated');
                     sock.write('password successfully updated');
                 }
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(`Failed to update password`);
-                client.close();
                 return;
             });
         });
@@ -124,8 +111,7 @@ const changeEmail = (data, sock) => {
     const newemail = data.email;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             db.collection('users').find({
                 _id: ObjectID(id)
@@ -133,7 +119,6 @@ const changeEmail = (data, sock) => {
                 if (result != 0) {
                     console.log(`User with email ${newemail} already exists`);
                     sock.write('User with that email already exists');
-                    client.close();
                     return;
                 } else {
                     db.collection('users').updateOne(
@@ -149,19 +134,16 @@ const changeEmail = (data, sock) => {
                             console.log('successfully updated');
                             sock.write('Email updated successfully');
                         }
-                        client.close();
                         return;
                     }).catch(err => {
                         console.log(err);
                         sock.write(`Failed to update email`);
-                        client.close();
                         return;
                     });
                 }
             }).catch(err => {
                 console.log(err);
                 sock.write('Failed to update email');
-                client.close();
                 return;
             })
 

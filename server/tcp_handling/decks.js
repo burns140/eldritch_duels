@@ -1,16 +1,11 @@
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
-const assert = require('assert');
-const dbconfig = require('../dbconfig.json');
-const verify = require('../verifyjwt');
 
 const getAllDecks = (data, sock) => {
     const id = data.id;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             /* Return all decks for this user */
             db.collection('users').findOne({
@@ -27,11 +22,9 @@ const getAllDecks = (data, sock) => {
                 } else {
                     sock.write(temparr.toString());
                 }
-                client.close();
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
             });
         });
     } catch (err) {
@@ -45,9 +38,7 @@ const getDeck = (data, sock) => {
     const deckname = data.name;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-            
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             db.collection('users').findOne({
                 _id: ObjectID(id)
@@ -67,12 +58,10 @@ const getDeck = (data, sock) => {
                 
                 console.log(temparr.toString());
                 sock.write(temparr.toString());
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
@@ -88,9 +77,7 @@ const saveDeck = (data, sock) => {
     const deckname = data.name;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             db.collection('users').findOne({
                 _id: ObjectID(id)
@@ -124,18 +111,15 @@ const saveDeck = (data, sock) => {
                 ).then(result => {
                     console.log(`Deck w/ name ${deckname} added successfully`);
                     sock.write('Deck added successfully');
-                    client.close();
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
@@ -150,9 +134,7 @@ const deleteDeck = (data, sock) => {
     const deckname = data.name;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             db.collection('users').updateOne(
                 { _id: ObjectID(id) },
@@ -162,12 +144,10 @@ const deleteDeck = (data, sock) => {
             ).then(result => {
                 console.log(`Deck ${deckname} successfully deleted`);
                 sock.write('deck successfully deleted');
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });

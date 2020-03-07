@@ -1,6 +1,5 @@
 ﻿//#define DEBUG
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +50,7 @@ namespace eldritch {
     public static class Global
     {
         public static string username = "";
+        public static string enemyUsername = null;
         public static int userID = 0;
         public static List<Card> userCards = new List<Card>();
         public static int usercredits = 0;

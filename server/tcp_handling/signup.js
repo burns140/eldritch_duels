@@ -1,10 +1,7 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
-const MongoClient = require('mongodb').MongoClient;
-const dbconfig = require('../dbconfig.json');
+const MongoClient = require('../mongo_connection');
 
 const signup = (data, sock) => {
-
     /* Parse data */
     const email = data.email;
     const username = data.name;
@@ -12,8 +9,7 @@ const signup = (data, sock) => {
     const hash = bcrypt.hashSync(password, 10);     // Hash password
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             db.collection('users').find({                               // Query for account with matching email
@@ -22,7 +18,6 @@ const signup = (data, sock) => {
                 if (result != 0) {                                      // Fail if the email already exists
                     console.log(`User with email ${email} already exists`);
                     sock.write('User with that email already exists');
-                    client.close();
                     return;
                 } else {                                                // Create user using our user schema
                     var temparr = [];
@@ -59,12 +54,10 @@ const signup = (data, sock) => {
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}`);
-                        client.close();
                         return;
                     }).catch(err => {
                         console.log(err);
                         sock.write(err);
-                        client.close();
                         return;
                     });
                 }

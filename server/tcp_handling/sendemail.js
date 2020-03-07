@@ -1,7 +1,5 @@
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+const MongoClient = require('../mongo_connection');
 const dbconfig = require('../dbconfig.json');
-const verify = require('../verifyjwt');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';
 const generator = require('generate-password');
@@ -27,9 +25,7 @@ const resetPassword = (data, sock) => {
     console.log('in temp pass');
     //const toEmail = 'aphantomdolphin@gmail.com';
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             db.collection('users').findOne({
                 email: toEmail
@@ -37,7 +33,6 @@ const resetPassword = (data, sock) => {
                 if (!result) {
                     console.log('account with that email doesn\'t exist')
                     sock.write('Account with that email doesn\'t exist');
-                    client.close();
                     return;
                 } else {
                     var tempPass = generator.generate({
@@ -76,25 +71,21 @@ const resetPassword = (data, sock) => {
                                     console.log('Email send: ' + info.response);
                                 }
                             });
-                            client.close();
                             return;
                         } else {
                             console.log('Unable to update database');
                             sock.write('Failed to update database');
-                            client.close();
                             return;
                         }
                     }).catch(err => {
                         console.log(err);
                         sock.write(err);
-                        client.close();
                         return;
                     });
                 }
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         })

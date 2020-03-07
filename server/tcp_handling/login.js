@@ -1,9 +1,7 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
-const MongoClient = require('mongodb').MongoClient;
 const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
-
+const MongoClient = require('../mongo_connection');
 
 const login = (data, sock) => {
     /* Parse data */
@@ -11,8 +9,7 @@ const login = (data, sock) => {
     const password = data.password;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             db.collection('users').findOne({                               // Query for account with matching email
@@ -20,7 +17,6 @@ const login = (data, sock) => {
             }).then(result => {
                 if (!result) {
                     sock.write('Account with that email doesn\'t exist');     // No result
-                    client.close();
                     return;
                 } else {
                     var foundPass = false;
@@ -51,35 +47,30 @@ const login = (data, sock) => {
                             ).then(result => {
                                 if (result.modifiedCount != 0) {
                                     console.log('successfully removed bad password');
-                                    client.close();
                                     return;
                                 } else {
                                     console.log('old password not successfully removed');
-                                    client.close();
                                     return;
                                 }
                             }).catch(err => {
                                 console.log(err);
                             });
                         } else {
-                            client.close();
                             return;
                         }
                     } else {                                                            // Password didn't match hash
                         sock.write('Incorrect password');
-                        client.close();
                         return;
                     }
                 }
             }).catch(err => {
                 console.log(err);
-                client.close();
                 return;
             });
         });
     } catch (err) {
         console.log(err);
-        sock.write(err);
+        sock.write(err.msg);
     }
 }
 
