@@ -15,7 +15,6 @@ var queue = new PlayerQueue();
 
 const noTokenNeeded = ["signup", "login", "tempPass"];
 const MongoClient = require('./mongo_connection');
-const onClientConnected = require('./tcp_handling/data_handler');
 
 /* Create server */
 const host = 'localhost';
