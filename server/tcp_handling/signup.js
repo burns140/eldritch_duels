@@ -1,6 +1,5 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('../mongo_connection');
 const dbconfig = require('../dbconfig.json');
 const generator = require('generate-password');
 const nodemailer = require('nodemailer');
@@ -18,8 +17,6 @@ var transporter = nodemailer.createTransport({
         pass: dbconfig.emailpass
     }
 });
-
-
 const signup = (data, sock) => {
 
     /* Parse data */
@@ -31,7 +28,6 @@ const signup = (data, sock) => {
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
             const db = client.db('eldritch_data');
 
             /* Check if a user with that email already exists. If not, create account and send
@@ -42,7 +38,6 @@ const signup = (data, sock) => {
                 if (result != 0) {                                      // Fail if the email already exists
                     console.log(`User with email ${email} already exists`);
                     sock.write('User with that email already exists');
-                    client.close();
                     return;
                 } else {                                                // Create user using our user schema
                     var temparr = [];
@@ -90,7 +85,6 @@ const signup = (data, sock) => {
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
-                        client.close();
 
                         /* Set html to be sent for verification email */
                         var emailText = `<h1>Email Verification</h1>` +
@@ -117,14 +111,12 @@ const signup = (data, sock) => {
                     }).catch(err => {
                         console.log(err);
                         sock.write(err);
-                        client.close();
                         return;
                     });
                 }
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });

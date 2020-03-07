@@ -1,8 +1,5 @@
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
-const assert = require('assert');
-const dbconfig = require('../dbconfig.json');
-const verify = require('../verifyjwt');
 
 /**
  * Get the name of all decks on a user's account
@@ -14,8 +11,6 @@ const getAllDecks = (data, sock) => {
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
             const db = client.db('eldritch_data');
 
             /* Return all deck names for this user by adding each name to an array, 
@@ -28,17 +23,15 @@ const getAllDecks = (data, sock) => {
                 for (var el of decks) {             // Add each deckname to an array
                     temparr.push(el.deckname);
                 }
-                console.log(temparr.toString());     
+                console.log(temparr.toString());
                 if (temparr.toString() == "") {     // Account has no decks
                     sock.write("no decks");
                 } else {
                     sock.write(temparr.toString());     // Convert array to string and write it to socket
                 }
-                client.close();
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
             });
         });
     } catch (err) {
@@ -57,9 +50,7 @@ const getDeck = (data, sock) => {
     const deckname = data.name;     // deckname
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-            
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find a deck with a certain name, convert it to array, convert array to string,
@@ -82,12 +73,10 @@ const getDeck = (data, sock) => {
                 
                 console.log(temparr.toString());
                 sock.write(temparr.toString());     // Convert the array to a string and write it back
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
@@ -108,9 +97,7 @@ const saveDeck = (data, sock) => {
     const deckname = data.name;     // deck name
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find a user with matching id and save this deck to their account */
@@ -151,18 +138,15 @@ const saveDeck = (data, sock) => {
                 ).then(result => {
                     console.log(`Deck w/ name ${deckname} added successfully`);
                     sock.write('Deck added successfully');
-                    client.close();
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
@@ -182,9 +166,7 @@ const deleteDeck = (data, sock) => {
     const deckname = data.name;     // deck name
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find user with given id and, if a deck with the specified deckname
@@ -197,12 +179,10 @@ const deleteDeck = (data, sock) => {
             ).then(result => {
                 console.log(`Deck ${deckname} successfully deleted`);
                 sock.write('deck successfully deleted');
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
@@ -223,8 +203,7 @@ const shareDeck = (data, sock) => {
     const deckname = data.deckname;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find the users that have email matching the receiver or ID matching the sender
@@ -254,18 +233,15 @@ const shareDeck = (data, sock) => {
                         console.log("shared deck");
                         sock.write('deck shared successfully');
                     }
-                    client.close();
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         });
@@ -292,4 +268,3 @@ exports.getAllDecks = getAllDecks;
 exports.saveDeck = saveDeck;
 exports.deleteDeck = deleteDeck;
 exports.getDeck = getDeck;
-exports.shareDeck = shareDeck;

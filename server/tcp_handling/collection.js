@@ -1,8 +1,5 @@
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
-const assert = require('assert');
-const dbconfig = require('../dbconfig.json');
-const verify = require('../verifyjwt');
 
 /**
  * Gets all the cards that a user has on their account
@@ -14,8 +11,6 @@ const getCollection = (data, sock) => {
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-            
             const db = client.db('eldritch_data');
 
             /* Find a user with the specified id */
@@ -33,14 +28,15 @@ const getCollection = (data, sock) => {
                 }
                 console.log(temparr.toString());
                 sock.write(temparr.toString());
-                client.close();
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
+        }).catch(e => {
+            console.log(e);
+            sock.write(e.msg);
         });
     } catch(err) {
         console.log(err);
@@ -58,9 +54,7 @@ const addCard = (data, sock) => {
     const cardid = data.cardid;         // card name
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find a user with the supplied id. Because collection is stored as an object, 
@@ -80,18 +74,15 @@ const addCard = (data, sock) => {
                 ).then(result => {
                     console.log('card added successfully');
                     sock.write('card added successfully');
-                    client.close();
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         })
@@ -111,9 +102,7 @@ const removeCard = (data, sock) => {
     const cardid = data.cardid;         // card's id
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
-
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             
             /* Find a user with the supplied id. Because collection is stored as an object, 
@@ -129,7 +118,6 @@ const removeCard = (data, sock) => {
                 } else {
                     console.log(`tried to remove card you don't have`);
                     sock.write(`card doesn't exist in collection`);
-                    client.close();
                     return;
                 }
 
@@ -140,18 +128,15 @@ const removeCard = (data, sock) => {
                 ).then(result => {
                     console.log('card removed successfully');
                     sock.write('card removed successfully');
-                    client.close();
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
                 return;
             });
         })

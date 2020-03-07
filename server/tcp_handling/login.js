@@ -1,17 +1,19 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
-const MongoClient = require('mongodb').MongoClient;
 const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
+const AllPlayerList = require('../classes/AllPlayerList.js');
+const server = require('../tcp_server.js');
 
+
+//const MongoClient = require('../mongo_connection');
 
 const login = (data, sock) => {
     const email = data.email;       // input email
     const password = data.password; // input password
 
     try {
+        //MongoClient.get().then(client => {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
             const db = client.db('eldritch_data');
 
             /* Query for an account with a matching email */
@@ -20,7 +22,6 @@ const login = (data, sock) => {
             }).then(result => {
                 if (!result) {
                     sock.write('Account with that email doesn\'t exist');     // No result
-                    client.close();
                     return;
                 } else {
                     var foundPass = false;          // flag to track whether the array contains the correct pass
@@ -45,8 +46,30 @@ const login = (data, sock) => {
                             }
                         }, dbconfig.jwt_key);
 
-                        sock.write(`${token}:${result._id.toString()}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
+                        const idString = result._id.toString();
+
+                        sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
                         console.log('login successful; token returned');
+
+                        var playList = server.getPlayList();        // Get list of all ids currently connected
+
+                        /* Check if player is already logged in somewhere */
+                        if (playList.isLoggedIn(idString)) {
+                            var prevSocket = playList.getSocketByKey(idString);
+                            try {
+                                //prevSocket.end('Another device has logged in with this account');
+                                console.log('forcing socket to close');
+                            } catch (err) {
+                                console.log(err);
+                            }
+                            playList.removePlayer(idString);
+                        }
+
+                        /* Add username: socket pair to a map in case we need to force
+                           close the connection later */
+                        playList.addPlayer(idString, sock);
+                        console.log(playList);
+                        
                         
                         /* If password array length is greater than 1, the user had requested a temporary password.
                            The program is designed so that their new password will be the password they logged in with 
@@ -63,35 +86,30 @@ const login = (data, sock) => {
                             ).then(result => {
                                 if (result.modifiedCount != 0) {
                                     console.log('successfully removed bad password');
-                                    client.close();
                                     return;
                                 } else {
                                     console.log('old password not successfully removed');
-                                    client.close();
                                     return;
                                 }
                             }).catch(err => {
                                 console.log(err);
                             });
                         } else {
-                            client.close();
                             return;
                         }
                     } else {                                                            // Password didn't match hash
                         sock.write('Incorrect password');
-                        client.close();
                         return;
                     }
                 }
             }).catch(err => {
                 console.log(err);
-                client.close();
                 return;
             });
         });
     } catch (err) {
         console.log(err);
-        sock.write(err);
+        sock.write(err.msg);
     }
 }
 

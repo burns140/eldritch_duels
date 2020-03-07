@@ -1,31 +1,13 @@
-const assert = require('assert');
-const bcrypt = require('bcrypt');
-const net = require('net');
-const Signup = require('./tcp_handling/signup.js');
-const Login = require('./tcp_handling/login.js');
-const Decks = require('./tcp_handling/decks.js');
-const Collection = require('./tcp_handling/collection.js');
-const Verify = require('./verifyjwt.js')
-const Email = require('./tcp_handling/sendemail.js');
-const Profile = require('./tcp_handling/editprofile.js');
-const PlayerQueue = require('./classes/PlayerQueue.js');
-const AllPlayerList = require('./classes/AllPlayerList.js');
-var playList = new AllPlayerList();
-var queue = new PlayerQueue();
+﻿const Signup = require('./signup.js');
+const Login = require('./login.js');
+const Decks = require('./decks.js');
+const Collection = require('./collection.js');
+const Verify = require('../verifyjwt.js')
+const Email = require('./sendemail.js');
+const Profile = require('./editprofile.js');
+const Queue = require('./queue.js');
 
 const noTokenNeeded = ["signup", "login", "tempPass"];
-const MongoClient = require('./mongo_connection');
-
-/* Create server */
-const host = 'localhost';
-const port = process.env.port || 8000;
-var server = net.createServer(onClientConnected);
-
-/* Start server */
-server.listen(port, host, () => {
-    console.log(`server listening on ${server.address().address}, port ${server.address().port}`);
-});
-
 
 /* This runs every time a new client connects */
 function onClientConnected(sock) {
@@ -35,9 +17,9 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done every time
        data is received from a client */
-    sock.on('data', (data) => {        
-        try {     
-			const obj = JSON.parse(data);               // Turn data into a JSON object		
+    sock.on('data', (data) => {
+        try {
+            const obj = JSON.parse(data);               // Turn data into a JSON object		
             console.log(obj);
             if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {        // Check that either no token is needed or the token is valid
                 switch (obj.cmd) {
@@ -51,18 +33,18 @@ function onClientConnected(sock) {
                         Decks.getAllDecks(obj, sock);
                         break;
                     case "saveDeck":                    // Save a deck to an account
-                        Decks.saveDeck(obj, sock);      
+                        Decks.saveDeck(obj, sock);
                         break;
                     case "deleteDeck":                  // Delete a deck from an account
-                        Decks.deleteDeck(obj, sock);    
+                        Decks.deleteDeck(obj, sock);
                         break;
                     case "getOneDeck":                  // Get a single deck object from an account
-                        Decks.getDeck(obj, sock);       
+                        Decks.getDeck(obj, sock);
                         break;
                     case "getCollection":               // Get the entire collection for an account
-                        Collection.getCollection(obj, sock);    
+                        Collection.getCollection(obj, sock);
                         break;
-                    case "addCardToCollection":         // Add a card to an account's collection               
+                    case "addCardToCollection":         // Add a card to an account's collection
                         Collection.addCard(obj, sock);
                         break;
                     case "removeCardFromCollection":    // Remove a card from an account's collection
@@ -87,15 +69,12 @@ function onClientConnected(sock) {
                         Email.resendVerification(obj, sock);
                         break;
                     case "shareDeck":
-                        Decks.shareDeck(obj, sock);
+                        Email.resendVerification(obj, sock);
                         break;
-                    case "logout":
-                        playList.removeSocket(sock);
+                    case "enterQueue":                 // Enter matchmaking queue
+                        Queue.enterQueue(obj, sock, onClientConnected);
                         break;
-                    case "enterQueue":
-                        
-                        break;
-                    default:                            // Command was invalid
+                    default:
                         sock.write('Not a valid command');
                         break;
                 }
@@ -114,27 +93,7 @@ function onClientConnected(sock) {
     /* Connection closed gracefully */
     sock.on('close', () => {
         console.log('connection closed');
-        playList.removeSocket(sock);
-    });
-
-    sock.on('end', () => {
-        console.log('connection ended');
-        playList.removeSocket(sock);
-    });
+    })
 }
 
-exports.getPlayList = () => {
-    return playList;
-};
-
-/* console.log("establishing mongo client");
-MongoClient.get().then((client) => {
-    console.log("mongo client established");
-    
-    server.listen(port, host, () => {
-        console.log(`server listening on ${server.address().address}, port ${server.address().port}`);
-    });
-}).catch(e => {
-    console.log("Mongo db error");
-    console.log(e);
-}); */
+module.exports = onClientConnected;

@@ -2703,7 +2703,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
       - m_Target: {fileID: 1729559800}
         m_MethodName: Start
         m_Mode: 1
