@@ -11,7 +11,7 @@ const Profile = require('./tcp_handling/editprofile.js');
 const PlayerQueue = require('./classes/PlayerQueue.js');
 const AllPlayerList = require('./classes/AllPlayerList.js');
 var playList = new AllPlayerList();
-var queue = new PlayerQueue();
+const Queue = require('./queue.js');
 
 const noTokenNeeded = ["signup", "login", "tempPass"];
 const MongoClient = require('./mongo_connection');
@@ -92,8 +92,8 @@ function onClientConnected(sock) {
                     case "logout":
                         playList.removeSocket(sock);
                         break;
-                    case "enterQueue":
-                        
+                    case "enterQueue":                 // Enter matchmaking queue
+                        Queue.enterQueue(obj, sock, onClientConnected);
                         break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');
