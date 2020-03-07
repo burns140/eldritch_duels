@@ -43,6 +43,8 @@ public class Login : MonoBehaviour
     public UnityEngine.UI.InputField EmailLoginInput;
     public UnityEngine.UI.InputField PswlLoginInput;
     public UnityEngine.UI.Button login;
+    public UnityEngine.UI.Image ErrorPanel;
+    public UnityEngine.UI.Text ErrorText;
     // Calls the login function on click
     public void Start()
     {
@@ -51,6 +53,7 @@ public class Login : MonoBehaviour
 
     public void clicked()
     {
+        bool verified = true;
         string result = ServerLogin(email, pass); 
         if(result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
@@ -59,9 +62,20 @@ public class Login : MonoBehaviour
             string tmp = Global.GetCollection();
             Global.InitUserCards(tmp, 1);
             SceneManager.LoadScene("Lobby");
-        } else
+        }
+        else if (verified) //TODO: CHECK FOR IF ACCOUNT IS VERIFIED OR NOT
         {
-            Debug.Log("Login failed!");
+            Debug.Log("Your account is not verified");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "Invalid Email/Password";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Login failed");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "Invalid Email/Password";
+            ErrorText.gameObject.SetActive(true);
         }
     }
 
