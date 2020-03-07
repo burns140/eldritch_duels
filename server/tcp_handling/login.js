@@ -4,43 +4,55 @@ const jwt = require('jsonwebtoken');
 const MongoClient = require('../mongo_connection');
 
 const login = (data, sock) => {
-    /* Parse data */
-    const email = data.email;
-    const password = data.password;
+    const email = data.email;       // input email
+    const password = data.password; // input password
 
     try {
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
-            db.collection('users').findOne({                               // Query for account with matching email
+            /* Query for an account with a matching email */
+            db.collection('users').findOne({                               
                 email: email
             }).then(result => {
                 if (!result) {
                     sock.write('Account with that email doesn\'t exist');     // No result
                     return;
                 } else {
-                    var foundPass = false;
-                    var rightpass = '';
+                    var foundPass = false;          // flag to track whether the array contains the correct pass
+                    var rightpass = '';             // determines which password is correct
                     passwords = result.password;
+
+                    /* Iterate through array of user's passwords. If one matches, flag it and note the correct one */
                     for (var i of passwords) {
                         if (bcrypt.compareSync(password, i)) {
                             foundPass = true;
                             rightpass = i;
+                            break;
                         }
                     }
                     if (foundPass) {                // Password matched hash
+
+                        /* Return a token */
                         const token = jwt.sign({
                             data: {
                                 id: result._id,
                                 email: result.email
                             }
                         }, dbconfig.jwt_key);
-                        sock.write(`${token}:${result._id.toString()}:${result.avatar}:${result.username}:${result.bio}`);
+
+                        sock.write(`${token}:${result._id.toString()}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
                         console.log('login successful; token returned');
+                        
+                        /* If password array length is greater than 1, the user had requested a temporary password.
+                           The program is designed so that their new password will be the password they logged in with 
+                           most recently after requesting a temp password */
                         if (passwords.length > 1) {
                             var tempPass = [];
-                            tempPass.push(rightpass);
+                            tempPass.push(rightpass);           // Create new array with the only element being the new password
                             console.log(`${email}: ${tempPass}`)
+
+                            /* Set the password of the user that just logged in to the password they used */
                             db.collection('users').updateOne(
                                 { email: email },
                                 { $set: { password: tempPass } }

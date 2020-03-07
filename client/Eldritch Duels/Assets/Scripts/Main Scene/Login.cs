@@ -5,20 +5,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using eldritch;
 
-public class User
+public class User // Used for server requests
 {
     public string email;
     public string password;
     public string name;
     public string cmd;
-
-    public User(string cmd)
-    {
-        this.email = "testemail@email.edu";
-        this.cmd = cmd;
-        this.password = "password";
-        this.name = "username";
-    }
 
     public User(string cmd, string email, string password, string username)
     {
@@ -29,18 +21,11 @@ public class User
     }
 }
 
-public class login
+public class login // Used for server requests
 {   
     public string email;
     public string password;
     public string cmd;
-
-    public login(string cmd)
-    {
-        this.email = "testemail@email.edu";
-        this.cmd = cmd;
-        this.password = "password";
-    }
 
     public login(string cmd, string email, string password)
     {
@@ -52,12 +37,13 @@ public class login
 
 public class Login : MonoBehaviour
 {
+    // Variables to keep track of input fields and the login button
     public static string email = "";
     public static string pass = "";
     public UnityEngine.UI.InputField EmailLoginInput;
     public UnityEngine.UI.InputField PswlLoginInput;
     public UnityEngine.UI.Button login;
-    // Start is called before the first frame update
+    // Calls the login function on click
     public void Start()
     {
         login.onClick.AddListener(clicked);
@@ -65,8 +51,8 @@ public class Login : MonoBehaviour
 
     public void clicked()
     {
-        string result = ServerLogin(email, pass);
-        if(result.Length > 0)
+        string result = ServerLogin(email, pass); 
+        if(result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
             Debug.Log("Login successful! Temp file is: " + result);
             Global.tokenfile = result;
@@ -79,7 +65,7 @@ public class Login : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    // Updates email and password variables every frame
     public void Update()
     {
         email = EmailLoginInput.text;
@@ -88,6 +74,7 @@ public class Login : MonoBehaviour
 
     public static string ServerLogin(string email, string password)
     {
+        // server request
         Debug.Log("Inputted: " + email + " | " + password);
         login user = new login("login", email, password);
         string json = JsonConvert.SerializeObject(user);
@@ -98,12 +85,12 @@ public class Login : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-        if (String.Equals(responseData, "Incorrect password"))
+        if (String.Equals(responseData, "Incorrect password")) // checking for incorrect password response
         {
             return String.Empty;
         }
         string tempFile = "LoginTemp";
-        try
+        try //make the temp file
         {
             tempFile = Path.GetTempFileName();
             FileInfo fileInfo = new FileInfo(tempFile);
@@ -118,8 +105,7 @@ public class Login : MonoBehaviour
                 streamWriter.WriteLine(loginstuff[1]); // ID
                 streamWriter.Flush();
                 streamWriter.Close();
-
-                Global.avatar = Int32.Parse(loginstuff[2]);
+                Global.avatar = (loginstuff[2] == null || loginstuff[2] == "")? 0 : Int32.Parse(loginstuff[2]);
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
                 return tempFile;
