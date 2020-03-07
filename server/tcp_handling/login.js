@@ -48,6 +48,11 @@ const login = (data, sock) => {
 
                         const idString = result._id.toString();
 
+                        if (!result.verified) {
+                            sock.write("Not verified, can't login");
+                            return; 
+                        }
+                        
                         sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
                         console.log('login successful; token returned');
 
