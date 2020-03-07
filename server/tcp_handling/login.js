@@ -3,6 +3,10 @@ const bcrypt = require('bcrypt');
 const MongoClient = require('mongodb').MongoClient;
 const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
+const AllPlayerList = require('../classes/AllPlayerList.js');
+const server = require('../tcp_server.js');
+//var playList = new AllPlayerList();;
+
 
 
 const login = (data, sock) => {
@@ -45,8 +49,30 @@ const login = (data, sock) => {
                             }
                         }, dbconfig.jwt_key);
 
-                        sock.write(`${token}:${result._id.toString()}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
+                        const idString = result._id.toString();
+
+                        sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
                         console.log('login successful; token returned');
+
+                        var playList = server.getPlayList();        // Get list of all ids currently connected
+
+                        /* Check if player is already logged in somewhere */
+                        if (playList.isLoggedIn(idString)) {
+                            var prevSocket = playList.getSocketByKey(idString);
+                            try {
+                                //prevSocket.end('Another device has logged in with this account');
+                                console.log('forcing socket to close');
+                            } catch (err) {
+                                console.log(err);
+                            }
+                            playList.removePlayer(idString);
+                        }
+
+                        /* Add username: socket pair to a map in case we need to force
+                           close the connection later */
+                        playList.addPlayer(idString, sock);
+                        console.log(playList);
+                        
                         
                         /* If password array length is greater than 1, the user had requested a temporary password.
                            The program is designed so that their new password will be the password they logged in with 

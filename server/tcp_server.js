@@ -9,6 +9,8 @@ const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/editprofile.js');
 const PlayerQueue = require('./classes/PlayerQueue.js');
+const AllPlayerList = require('./classes/AllPlayerList.js');
+var playList = new AllPlayerList();
 var queue = new PlayerQueue();
 
 const noTokenNeeded = ["signup", "login", "tempPass"];
@@ -86,6 +88,9 @@ function onClientConnected(sock) {
                     case "shareDeck":
                         Decks.shareDeck(obj, sock);
                         break;
+                    case "logout":
+                        playList.removeSocket(sock);
+                        break;
                     case "enterQueue":
                         
                         break;
@@ -108,5 +113,16 @@ function onClientConnected(sock) {
     /* Connection closed gracefully */
     sock.on('close', () => {
         console.log('connection closed');
-    })
+        playList.removeSocket(sock);
+    });
+
+    sock.on('end', () => {
+        console.log('connection ended');
+        playList.removeSocket(sock);
+    });
 }
+
+exports.getPlayList = () => {
+    return playList;
+};
+
