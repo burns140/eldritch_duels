@@ -53,7 +53,6 @@ public class Login : MonoBehaviour
 
     public void clicked()
     {
-        bool verified = true;
         string result = ServerLogin(email, pass); 
         if(result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
@@ -63,7 +62,7 @@ public class Login : MonoBehaviour
             Global.InitUserCards(tmp, 1);
             SceneManager.LoadScene("Lobby");
         }
-        else if (verified) //TODO: CHECK FOR IF ACCOUNT IS VERIFIED OR NOT
+        else if (String.Equals("Not verified, can't login", result))
         {
             Debug.Log("Your account is not verified");
             ErrorPanel.gameObject.SetActive(true);
