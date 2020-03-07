@@ -16,7 +16,7 @@ const editProfile = (data, sock) => {
 
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find a user with the given id and set the three given values */

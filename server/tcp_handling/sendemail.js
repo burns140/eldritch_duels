@@ -25,7 +25,7 @@ const resetPassword = (data, sock) => {
     const toEmail = data.email;     // Email to send password reset request to
     console.log('in temp pass');
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
             db.collection('users').findOne({
                 email: toEmail
