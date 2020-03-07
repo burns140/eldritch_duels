@@ -24,3 +24,6 @@ C:\Users\steve\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.
 C:\Users\steve\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.csproj.CopyComplete
 C:\Users\steve\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.exe
 C:\Users\steve\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\obj\Debug\tcpTest.pdb
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\nunit.framework.dll
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\nunit.framework.pdb
+C:\Users\steph\Desktop\eldritch_duels\tests\burns_tcp\tcpTest\bin\Debug\nunit.framework.xml

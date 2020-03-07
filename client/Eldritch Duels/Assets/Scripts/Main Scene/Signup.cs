@@ -5,6 +5,7 @@ using eldritch;
 
 public class Signup : MonoBehaviour
 {
+    // Keeps track of all relevant fields and variables
     public static string email = "";
     public static string pass = "";
     public static string user = "";
@@ -12,6 +13,7 @@ public class Signup : MonoBehaviour
     public UnityEngine.UI.InputField Password;
     public UnityEngine.UI.InputField Username;
     public UnityEngine.UI.Image UserPanel;
+    // These are tracked to open/close buttons and panels when signup is successful.
     public UnityEngine.UI.Button quitbutton;
     public UnityEngine.UI.Button loginbutton;
     public UnityEngine.UI.Button signupbutton;
@@ -25,6 +27,7 @@ public class Signup : MonoBehaviour
     public void clicked()
     {
         string result = ServerSignup(email, pass, user);
+        //TODO: implement error checking and show messages
         //if(String.Equals(result,"User with that email already exists"))
         //{
         //    Debug.Log(result);
@@ -33,6 +36,7 @@ public class Signup : MonoBehaviour
         //    string[] temp = result.Split(' ');
 
         //}
+        // Resets the screen back to main screen with login buttons, etc.
         UserPanel.gameObject.SetActive(false);
         quitbutton.gameObject.SetActive(true);
         loginbutton.gameObject.SetActive(true);
@@ -51,6 +55,7 @@ public class Signup : MonoBehaviour
 
     static string ServerSignup(string email, string password, string username)
     {
+        // server query
         User user = new User("signup", email, password, username);
         string json = JsonConvert.SerializeObject(user);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
