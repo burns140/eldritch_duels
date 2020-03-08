@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace eldritch.cards
 {
@@ -61,6 +62,11 @@ namespace eldritch.cards
             selector.gameObject.SetActive(true);
             updateSelectionUI();
         }
+        public void CancelSelect()
+        {
+            selectMode = 0;
+            selector.gameObject.SetActive(false);
+        }
 
         public void Select(Card c)
         {
@@ -78,20 +84,30 @@ namespace eldritch.cards
         private void updateUI()
         {
             //update images
-            BaseCard.material = baseCardSRC.CardImage;
-            FodderCard.material = fodderCardSRC.CardImage;
+            if(baseCardSRC != null)
+                BaseCard.material = baseCardSRC.CardImage;
+            if(fodderCardSRC != null)
+                FodderCard.material = fodderCardSRC.CardImage;
 
-            CraftingRecipe cr = Library.PreviewCraft(baseCardSRC.CardName, fodderCardSRC.CardName);
-            if (!cr.Equals(CraftingRecipe.Empty))
+            if (baseCardSRC != null && fodderCardSRC != null)
             {
-                CraftCost.text = cr.CraftCost + "";
-                resultCardSRC = Library.GetCard(cr.ResultCard);
-                if(resultCardSRC!= null)
+                Debug.Log("Showing recipe");
+                CraftingRecipe cr = Library.PreviewCraft(baseCardSRC.CardName, fodderCardSRC.CardName);
+                if (!cr.Equals(CraftingRecipe.Empty))
                 {
-                    ResultCard.material = resultCardSRC.CardImage;
+                    CraftCost.text = "COST: " + cr.CraftCost + "";
+                    resultCardSRC = Library.GetCard(cr.ResultCard);
+                    if (resultCardSRC != null)
+                    {
+                        ResultCard.material = resultCardSRC.CardImage;
+                    }
                 }
             }
 
+        }
+        public void LoadScene(string sceneName)
+        {
+            SceneManager.LoadScene(sceneName);
         }
 
         //updates the list of craftable cards
@@ -101,7 +117,8 @@ namespace eldritch.cards
             craftable = new List<CardContainer>();
             foreach (Card c in Global.userCards)
             {
-                int mod = (baseCardSRC.CardName.Equals(c.CardName) || fodderCardSRC.CardName.Equals(c.CardName)) ? 1 : 0;
+                
+                int mod = ((baseCardSRC != null && baseCardSRC.CardName.Equals(c.CardName)) || (fodderCardSRC != null && fodderCardSRC.CardName.Equals(c.CardName))) ? 1 : 0;
                 foreach (Deck d in Global.userDecks)
                 {
                     int inDeck = d.AmountInDeck(c.CardName);
@@ -118,6 +135,23 @@ namespace eldritch.cards
             page = 0;
         }
 
+        public void Craft()
+        {
+            Global.RemoveCard(baseCardSRC.CardName);
+            Global.RemoveCard(fodderCardSRC.CardName);
+            Global.AddCard(resultCardSRC.CardName);
+            //TODO update user credits
+
+            //reset UI
+            baseCardSRC = null;
+            fodderCardSRC = null;
+            resultCardSRC = null;
+            CraftCost.text = "COST: ";
+            BaseCard.material = null;
+            FodderCard.material = null;
+            ResultCard.material = null;
+        }
+
         //selector panel UI update
         public void updateSelectionUI()
         {
@@ -130,7 +164,7 @@ namespace eldritch.cards
                 if(pos < craftable.Count)
                 {
                     i.gameObject.SetActive(true);
-                    i.gameObject.GetComponent<CardSelector>()._currentCard = craftable[pos].c;
+                    i.gameObject.GetComponent<CardSelector>().CurrentCard = craftable[pos].c;
                 }
                 pos++;
             }

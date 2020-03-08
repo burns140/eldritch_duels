@@ -48,6 +48,21 @@ namespace eldritch {
             this.name = name;
         }
     }
+    public class AddCardRequest
+    {
+        public string id;
+        public string token;
+        public string cardid;
+        public string cmd;
+
+        public AddCardRequest(string id, string token, string cardid, string cmd)
+        {
+            this.id = id;
+            this.token = token;
+            this.cardid = cardid;
+            this.cmd = cmd;
+        }
+    }
 
     public static class Global
     {
@@ -198,7 +213,7 @@ namespace eldritch {
                 if (g != null)
                 {
                     Card c = g.GetComponent<ContentLibrary>().GetCard(tuple[0]);
-                    if (c != null)
+                    if (c != null && amount > 0)
                     {
                         c.CopiesOwned = amount;
                         cards.Add(c);
@@ -261,6 +276,22 @@ namespace eldritch {
                     }
                 }
             }
+
+            try
+            {
+                AddCardRequest arc = new AddCardRequest(Global.getID(), Global.getToken(), cardName, "removeCardFromCollection");
+                string json = JsonConvert.SerializeObject(arc);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            catch (Exception)
+            {
+
+            }
         }
         public static void AddCard(string cardName)
         {
@@ -271,12 +302,45 @@ namespace eldritch {
                     Card tmp = userCards[i];
                     tmp.CopiesOwned++;
                     userCards[i] = tmp;
+                    Debug.Log("Adding card: " + cardName);
+                    try
+                    {
+                        AddCardRequest arc = new AddCardRequest(Global.getID(), Global.getToken(), cardName, "addCardToCollection");
+                        string json = JsonConvert.SerializeObject(arc);
+                        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                        Global.stream.Write(data, 0, data.Length);
+                        data = new Byte[256];
+                        string responseData = string.Empty;
+                        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    }
+                    catch (Exception)
+                    {
+                        Debug.Log("error");
+                    }
                     return;
                 }
             }
             Card newCard = Library.GetCard(cardName);
             newCard.CopiesOwned = 1;
             userCards.Add(newCard);
+
+            Debug.Log("Adding card: " + cardName);
+            try
+            {
+                AddCardRequest arc = new AddCardRequest(Global.getID(), Global.getToken(), cardName, "addCardToCollection");
+                string json = JsonConvert.SerializeObject(arc);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            catch (Exception)
+            {
+                Debug.Log("error");
+            }
         }
         public static void InitNewPlayer()
         {
