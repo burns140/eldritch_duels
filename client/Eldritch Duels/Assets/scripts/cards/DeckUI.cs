@@ -173,6 +173,10 @@ namespace eldritch.cards {
                     {
                         if(inDeck[j].c.CardID == c.CardID)
                         {
+                            if(inDeck[i].count >= Constants.MAX_CARD_ALLOWED)
+                            {
+                                return;
+                            }
                             CardContainer temp = inDeck[j];
                             temp.count++;
                             inDeck[j] = temp;

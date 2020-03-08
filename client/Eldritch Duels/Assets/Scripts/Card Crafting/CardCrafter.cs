@@ -29,27 +29,37 @@ namespace eldritch.cards
     }
     public class CardCrafter : MonoBehaviour
     {
-        Image BaseCard;
-        Image FodderCard;
-        Image ResultCard;
-        Text CraftCost;
+        public Image BaseCard;
+        public Image FodderCard;
+        public Image ResultCard;
+        public Text CraftCost;
         Image CardSelector;
+        public GameObject placeholders;
+        public GameObject selector;
 
         private int selectMode = 0;
         private Card baseCardSRC;
         private Card fodderCardSRC;
         private Card resultCardSRC;
 
+        private int page = 0;
+        private int maxPage = 0;
+        private List<CardContainer> craftable = new List<CardContainer>();
+
         public void ChooseBase()
         {
             selectMode = 1;
-            CardSelector.gameObject.SetActive(true);
+            updateList();
+            selector.gameObject.SetActive(true);
+            updateSelectionUI();
         }
 
         public void ChooseFodder()
         {
             selectMode = 2;
-            CardSelector.gameObject.SetActive(true);
+            updateList();
+            selector.gameObject.SetActive(true);
+            updateSelectionUI();
         }
 
         public void Select(Card c)
@@ -84,9 +94,46 @@ namespace eldritch.cards
 
         }
 
+        //updates the list of craftable cards
+        private void updateList()
+        {
+            //get the cards usable for crafting
+            craftable = new List<CardContainer>();
+            foreach (Card c in Global.userCards)
+            {
+                int mod = (baseCardSRC.CardName.Equals(c.CardName) || fodderCardSRC.CardName.Equals(c.CardName)) ? 1 : 0;
+                foreach (Deck d in Global.userDecks)
+                {
+                    int inDeck = d.AmountInDeck(c.CardName);
+                    if (inDeck < (c.CopiesOwned - mod))
+                    {
+                        CardContainer newCC;
+                        newCC.c = c;
+                        newCC.count = c.CopiesOwned - inDeck - mod;
+                        craftable.Add(newCC);
+                    }
+                }
+            }
+            maxPage = craftable.Count / 24;
+            page = 0;
+        }
+
         //selector panel UI update
         public void updateSelectionUI()
         {
+            
+            //set the placeholder values
+            int pos = page * 24;
+            foreach(Transform i in placeholders.transform)
+            {
+                i.gameObject.SetActive(false);
+                if(pos < craftable.Count)
+                {
+                    i.gameObject.SetActive(true);
+                    i.gameObject.GetComponent<CardSelector>()._currentCard = craftable[pos].c;
+                }
+                pos++;
+            }
 
         }
 

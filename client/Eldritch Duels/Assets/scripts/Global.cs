@@ -18,6 +18,7 @@ namespace eldritch {
     {
         public const int MAX_DECK_SIZE = 32;
         public const int MIN_DECK_SIZE = 32;
+        public const int MAX_CARD_ALLOWED = 4;
     }
     public class getCollection
     {
