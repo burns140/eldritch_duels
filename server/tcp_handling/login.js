@@ -60,7 +60,7 @@ const login = (data, sock) => {
                         if (playList.isLoggedIn(idString)) {
                             var prevSocket = playList.getSocketByKey(idString);
                             try {
-                                //prevSocket.end('Another device has logged in with this account');
+                                prevSocket.end('Another device has logged in with this account');
                                 console.log('forcing socket to close');
                             } catch (err) {
                                 console.log(err);
