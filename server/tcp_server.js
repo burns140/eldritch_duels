@@ -128,7 +128,8 @@ exports.getPlayList = () => {
     return playList;
 };
 
- console.log("establishing mongo client");
+console.log("establishing mongo client");
+
 MongoClient.get().then((client) => {
     console.log("mongo client established");
     
