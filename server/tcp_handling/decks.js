@@ -8,6 +8,7 @@ const ObjectID = require('mongodb').ObjectID;
  */
 const getAllDecks = (data, sock) => {
     const id = data.id;         // user id
+    const shared = data.shared; // is the deck shared
 
     try {
         MongoClient.get().then(client => {
@@ -19,7 +20,12 @@ const getAllDecks = (data, sock) => {
                 _id: ObjectID(id)
             }).then(result => {
                 var temparr = [];
-                var decks = result.decks;
+                var decks;
+                if (!shared) {
+                    decks = result.decks;
+                } else {
+                    decks = result.sharedwithme;
+                }
                 for (var el of decks) {             // Add each deckname to an array
                     temparr.push(el.deckname);
                 }
@@ -48,6 +54,7 @@ const getAllDecks = (data, sock) => {
 const getDeck = (data, sock) => {
     const id = data.id;             // user id
     const deckname = data.name;     // deckname
+    const shared = data.shared;     // whether this is a shared deck
 
     try {
         MongoClient.get().then(client => {
@@ -59,17 +66,24 @@ const getDeck = (data, sock) => {
                 _id: ObjectID(id)
             }).then(result => {
                 var temparr = [];
-                var decks = result.decks;
+
+                if (!shared) {
+                    var decks = result.decks;   
+                } else {
+                    decks = result.sharedwithme;
+                }
 
                 for (var el of decks) {                     // iterate through all decks to find correct deck
                     if (el.deckname == deckname) {
                         for (var key of Object.keys(el)) {  // in that deck, iterate through object to get all key:value pairs
-                            if (key != deckname) {
+                            if (key != deckname && key != fromUser) {
                                 temparr.push(`${key}-${el[key]}`);  // write key value pairs into array with element forms "key-value"
                             }
                         }
                     }
                 }
+                
+                
                 
                 console.log(temparr.toString());
                 sock.write(temparr.toString());     // Convert the array to a string and write it back
@@ -164,6 +178,7 @@ const saveDeck = (data, sock) => {
 const deleteDeck = (data, sock) => {
     const id = data.id;             // user id
     const deckname = data.name;     // deck name
+    const shared = data.shared;
 
     try {
         MongoClient.get().then(client => {
@@ -171,20 +186,41 @@ const deleteDeck = (data, sock) => {
 
             /* Find user with given id and, if a deck with the specified deckname
                exists in their deck array, remove it */
-            db.collection('users').updateOne(
-                { _id: ObjectID(id) },
-                {
-                    $pull: { decks: { deckname: deckname } }
-                }
-            ).then(result => {
-                console.log(`Deck ${deckname} successfully deleted`);
-                sock.write('deck successfully deleted');
-                return;
-            }).catch(err => {
-                console.log(err);
-                sock.write(err);
-                return;
-            });
+            if (!shared) {
+                db.collection('users').updateOne(
+                    { _id: ObjectID(id) },
+                    {
+                        $pull: { decks: { deckname: deckname } }
+                    }
+                ).then(result => {
+                    console.log(`Deck ${deckname} successfully deleted`);
+                    sock.write('deck successfully deleted');
+                    client.close();
+                    return;
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    client.close();
+                    return;
+                });
+            } else {
+                db.collection('users').updateOne(
+                    { _id: ObjectID(id) },
+                    {
+                        $pull: { sharedwithme: { deckname: deckname } }
+                    }
+                ).then(result => {
+                    console.log(`Deck ${deckname} successfully deleted`);
+                    sock.write('deck successfully deleted');
+                    client.close();
+                    return;
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    client.close();
+                    return;
+                });
+            }
         });
     } catch(err) {
         console.log(err);
@@ -222,6 +258,13 @@ const shareDeck = (data, sock) => {
                     decktopush = findDeck(result[1], result[0], deckname);
                 }
 
+                if (!decktopush) {
+                    console.log('that deck doesn\'t exist');
+                    sock.write('that deck doesn\'t exist');
+                    client.close();
+                    return;
+                }
+
                 db.collection('users').updateOne(
                     { email: shareEmail },
                     { $push: { sharedwithme: decktopush } }
@@ -252,6 +295,88 @@ const shareDeck = (data, sock) => {
 }
 
 /**
+ * Copy a shared deck to my decks array, allowing me to edit it.
+ * @param {object} data 
+ * @param {object} sock 
+ */
+const copySharedDeck = (data, sock) => {
+    const id = data.id;
+    const deckname = data.deckname;
+
+    try {
+        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+            assert.equal(null, err);
+            const db = client.db('eldritch_data');
+
+            /* Find the necessary user */
+            db.collection('users').findOne(
+                {_id: ObjectID(id)}
+            ).then(result => {
+                var deckToCopy;
+
+                /* Find deck to copy in result array */
+                for (deck of result.sharedwithme) {
+                    if (deck.deckname == deckname) {
+                        deckToCopy = deck;
+                        break;
+                    }
+                }
+
+                var newName = deckToCopy.deckname;
+                var timesChanged = 0;
+                var i = 0;
+                for (el of result.decks) {
+                    if (el.deckname == newName) {
+                        deckToCopy = el;
+                        tempArr = result.decks;
+                        while (i < tempArr.length) {
+                            if (tempArr[i].deckname == newName) {
+                                timesChanged++;
+                                newName = deckname + timesChanged.toString();
+                                i = -1;
+                            }
+                            i++;
+                        }
+                        deckToCopy.deckname = newName;
+                        break;
+                    }
+                }
+
+                /* Push value onto decks array */
+                db.collection('users').updateOne(
+                    { _id: ObjectID(id) },
+                    { $push: { decks: deckToCopy } }
+                ).then(result => {
+                    if (result.matchedCount != 1) {
+                        console.log('failed to copy');
+                        sock.write('failed to copy deck');
+                    } else {
+                        console.log(`successfully copied deck ${deckname}`);
+                        sock.write('deck successfully copied');
+                    }
+                    client.close();
+                    return;
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    client.close();
+                    return;
+                });
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
+                client.close();
+                return;
+            });
+
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
+/**
  * Find the deck that will be shared with another user. Make sure that it has a unique name
  * @param {object} fromUser 
  * @param {object} toUser
@@ -265,7 +390,7 @@ function findDeck(fromUser, toUser, deckname) {
 
     for (el of fromUser.decks) {
         if (el.deckname == deckname) {          // Find the deck to be shared
-            newdeck = el;
+            newDeck = el;
             sharedArr = toUser.sharedwithme;
             newName = deckname
 
@@ -284,7 +409,12 @@ function findDeck(fromUser, toUser, deckname) {
         }
     }
 
+    if (newDeck == {}) {
+        return false;
+    }
+
     newDeck.deckname = newName;
+    newDeck.fromUser = fromUser.email;
 
     return newDeck;
 }
@@ -293,3 +423,5 @@ exports.getAllDecks = getAllDecks;
 exports.saveDeck = saveDeck;
 exports.deleteDeck = deleteDeck;
 exports.getDeck = getDeck;
+exports.shareDeck = shareDeck;
+exports.copySharedDeck = copySharedDeck;

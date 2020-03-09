@@ -5,11 +5,6 @@ const generator = require('generate-password');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';
 
-var startCollection = {
-    "Test 0": 30,
-    "Test 1": 30
-};
-
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {

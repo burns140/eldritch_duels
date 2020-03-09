@@ -85,7 +85,10 @@ function onClientConnected(sock) {
                         Email.resendVerification(obj, sock);
                         break;
                     case "shareDeck":
-                        Decks.shareDeck(obj, sock);
+                        Decks.shareDeck(obj, sock);     // Share deck with another user
+                        break;
+                    case "copySharedDeck":
+                        Decks.copySharedDeck(obj, sock);    // Copy a shared deck to my decks, allowing me to edit
                         break;
                     case "logout":
                         playList.removeSocket(sock);
