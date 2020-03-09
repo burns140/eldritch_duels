@@ -83,6 +83,8 @@ public class Signup : MonoBehaviour
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+                
+
                 return responseData;
             }
             else
