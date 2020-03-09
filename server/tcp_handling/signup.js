@@ -23,7 +23,6 @@ const signup = (data, sock) => {
     const password = data.password; // password
     const hash = bcrypt.hashSync(password, 10);     // Hash password
     const host = "localhost:7999";
-    console.log(userSock);
 
     try {
         MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
