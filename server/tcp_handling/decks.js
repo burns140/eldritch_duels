@@ -10,7 +10,7 @@ const getAllDecks = (data, sock) => {
     const id = data.id;         // user id
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Return all deck names for this user by adding each name to an array, 

@@ -3,7 +3,7 @@ const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
 const AllPlayerList = require('../classes/AllPlayerList.js');
 const server = require('../tcp_server.js');
-
+const MongoClient = require('../mongo_connection');
 
 //const MongoClient = require('../mongo_connection');
 
@@ -12,8 +12,7 @@ const login = (data, sock) => {
     const password = data.password; // input password
 
     try {
-        //MongoClient.get().then(client => {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Query for an account with a matching email */

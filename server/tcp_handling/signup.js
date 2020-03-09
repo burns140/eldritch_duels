@@ -27,7 +27,7 @@ const signup = (data, sock) => {
     const host = "localhost:7999";
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Check if a user with that email already exists. If not, create account and send
