@@ -107,7 +107,6 @@ const resendVerification = (data, sock) => {
 
     try {
         MongoClient.get().then(client => {
-            assert.equal(null, err);
             const db = client.db('eldritch_data');
             
             db.collection('users').find({
