@@ -6,6 +6,7 @@ const Collection = require('./tcp_handling/collection.js');
 const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/editprofile.js');
+const Block = require('./tcp_handling/blockUser.js');
 const AllPlayerList = require('./classes/AllPlayerList.js');
 var playList = new AllPlayerList();
 const Queue = require('./tcp_handling/queue.js');
@@ -90,11 +91,23 @@ function onClientConnected(sock) {
                     case "copySharedDeck":
                         Decks.copySharedDeck(obj, sock);    // Copy a shared deck to my decks, allowing me to edit
                         break;
-                    case "logout":
+                    case "logout":                          // Logout
                         playList.removeSocket(sock);
                         break;
                     case "enterQueue":                 // Enter matchmaking queue
                         Queue.enterQueue(obj, sock, onClientConnected);
+                        break;
+                    case "blockUser":                   // Block a user
+                        Block.blockUser(obj, sock);     
+                        break;
+                    case "unblockUser":                 // Unblock a user
+                        Block.unblockUser(obj, sock);   
+                        break;
+                    case "getBlockedUsers":             // Get array of blocked users for this user
+                        Block.getBlockedUsers(obj, sock);   
+                        break;
+                    case "getBlockedByUsers":            //Get array of the users who have blocked me
+                        Block.getBlockedByUsers(obj, sock);
                         break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');

@@ -28,15 +28,18 @@ const getCollection = (data, sock) => {
                 }
                 console.log(temparr.toString());
                 sock.write(temparr.toString());
+                // client.close()
                 return;
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
+                // client.close()
                 return;
             });
         }).catch(e => {
             console.log(e);
             sock.write(e.msg);
+            return;
         });
     } catch(err) {
         console.log(err);

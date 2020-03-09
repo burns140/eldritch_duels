@@ -76,7 +76,9 @@ const signup = (data, sock) => {
                         currency: 500,                       // int
                         bio: "enter_bio",                   // string
                         verified: false,                     // boolean of whether they verified their account
-                        verifyStr: str                      // string
+                        verifyStr: str,                      // string
+                        blocked: [],
+                        blockedBy: []
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);

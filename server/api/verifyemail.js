@@ -28,12 +28,12 @@ router.get('/:verify', (req, res) => {
                     console.log('verified email');
                     res.status(200).send('successfully verified email');
                 }
-                client.close();
+                // client.close()
                 return;
             }).catch(err => {
                 console.log(err);
                 res.status(400).send(err);
-                client.close();
+                // client.close()
                 return;
             });
         });

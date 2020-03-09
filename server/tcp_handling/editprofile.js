@@ -26,7 +26,7 @@ const editProfile = (data, sock) => {
                     $set: { username: username, avatar: avatar, bio: bio }
                 }
             ).then(result => {
-                if (result.modifiedCount != 1) {            // No document was modified, so error
+                if (result.matchedCount != 1) {            // No document was modified, so error
                     console.log('modified not 1');
                     sock.write(`Failed to update profile correctly`);
                 } else {

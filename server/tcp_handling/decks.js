@@ -195,12 +195,12 @@ const deleteDeck = (data, sock) => {
                 ).then(result => {
                     console.log(`Deck ${deckname} successfully deleted`);
                     sock.write('deck successfully deleted');
-                    client.close();
+                    // client.close()
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
+                    // client.close()
                     return;
                 });
             } else {
@@ -212,12 +212,12 @@ const deleteDeck = (data, sock) => {
                 ).then(result => {
                     console.log(`Deck ${deckname} successfully deleted`);
                     sock.write('deck successfully deleted');
-                    client.close();
+                    // client.close()
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
+                    // client.close()
                     return;
                 });
             }
@@ -261,7 +261,7 @@ const shareDeck = (data, sock) => {
                 if (!decktopush) {
                     console.log('that deck doesn\'t exist');
                     sock.write('that deck doesn\'t exist');
-                    client.close();
+                    // client.close()
                     return;
                 }
 
@@ -304,8 +304,8 @@ const copySharedDeck = (data, sock) => {
     const deckname = data.deckname;
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        // MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find the necessary user */
@@ -354,18 +354,18 @@ const copySharedDeck = (data, sock) => {
                         console.log(`successfully copied deck ${deckname}`);
                         sock.write('deck successfully copied');
                     }
-                    client.close();
+                    // client.close()
                     return;
                 }).catch(err => {
                     console.log(err);
                     sock.write(err);
-                    client.close();
+                    // client.close()
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 sock.write(err);
-                client.close();
+                // client.close()
                 return;
             });
 
