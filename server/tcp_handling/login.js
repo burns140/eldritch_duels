@@ -66,7 +66,7 @@ const login = (data, sock) => {
                             } catch (err) {
                                 console.log(err);
                             }
-                            //playList.removePlayer(idString);
+                            playList.removePlayer(idString);
                         }
 
                         /* Add username: socket pair to a map in case we need to force
