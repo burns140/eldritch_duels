@@ -5,7 +5,7 @@ const Decks = require('./tcp_handling/decks.js');
 const Collection = require('./tcp_handling/collection.js');
 const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
-const Profile = require('./tcp_handling/editprofile.js');
+const Profile = require('./tcp_handling/profile.js');
 const Block = require('./tcp_handling/blockUser.js');
 const Friends = require('./tcp_handling/friends.js');
 const AllPlayerList = require('./classes/AllPlayerList.js');
@@ -121,6 +121,9 @@ function onClientConnected(sock) {
                         break;
                     case "removeFriend":                // Remove a friend from my friends list
                         Friends.removeFriend(obj, sock);
+                        break;
+                    case "viewProfile":                 // Get info for a user's profile
+                        Profile.viewProfile(obj, sock);
                         break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');

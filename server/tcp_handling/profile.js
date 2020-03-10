@@ -184,7 +184,40 @@ const changeEmail = (data, sock) => {
     }
 }
 
+const viewProfile = (data, sock) => {
+    const theirEmail = data.theirEmail;
+    const errString = `couldn't retrieve profile`;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').findOne(
+                { email: theirEmail }
+            ).then(result => {
+                if (!result) {
+                    throw new Error(errString);
+                }
+                var temparr = [];
+                temparr.push(`avatar-${result.avatar}`);
+                temparr.push(`bio-${result.bio}`);
+                temparr.push(`username-${result.username}`);
+                sock.write(temparr.toString());
+                console.log('profile found successfully');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
+                return;
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
 exports.deleteAccount = deleteAccount;
 exports.editProfile = editProfile;
 exports.changePassword = changePassword;
 exports.changeEmail = changeEmail;
+exports.viewProfile = viewProfile;
