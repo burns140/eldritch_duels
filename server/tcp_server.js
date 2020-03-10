@@ -7,6 +7,7 @@ const Verify = require('./verifyjwt.js')
 const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/editprofile.js');
 const Block = require('./tcp_handling/blockUser.js');
+const Friends = require('./tcp_handling/friends.js');
 const AllPlayerList = require('./classes/AllPlayerList.js');
 var playList = new AllPlayerList();
 const Queue = require('./tcp_handling/queue.js');
@@ -85,11 +86,11 @@ function onClientConnected(sock) {
                     case "resendVerify":                // resend verification email
                         Email.resendVerification(obj, sock);
                         break;
-                    case "shareDeck":
-                        Decks.shareDeck(obj, sock);     // Share deck with another user
+                    case "shareDeck":                   // Share deck with another user
+                        Decks.shareDeck(obj, sock);     
                         break;
-                    case "copySharedDeck":
-                        Decks.copySharedDeck(obj, sock);    // Copy a shared deck to my decks, allowing me to edit
+                    case "copySharedDeck":              // Copy a shared deck to my decks, allowing me to edit
+                        Decks.copySharedDeck(obj, sock);    
                         break;
                     case "logout":                          // Logout
                         playList.removeSocket(sock);
@@ -106,8 +107,20 @@ function onClientConnected(sock) {
                     case "getBlockedUsers":             // Get array of blocked users for this user
                         Block.getBlockedUsers(obj, sock);   
                         break;
-                    case "getBlockedByUsers":            //Get array of the users who have blocked me
+                    case "getBlockedByUsers":            // Get array of the users who have blocked me
                         Block.getBlockedByUsers(obj, sock);
+                        break;
+                    case "sendFriendRequest":           // Send friend request to a user
+                        Friends.sendFriendRequest(obj, sock);
+                        break;
+                    case "acceptFriendRequest":         // Accept a friend request
+                        Friends.acceptFriendRequest(obj, sock);
+                        break;
+                    case "rejectFriendRequest":         // Reject a friend request
+                        Friends.rejectFriendRequest(obj, sock);
+                        break;
+                    case "removeFriend":                // Remove a friend from my friends list
+                        Friends.removeFriend(obj, sock);
                         break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');

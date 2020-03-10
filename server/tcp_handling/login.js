@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
-const AllPlayerList = require('../classes/AllPlayerList.js');
 const server = require('../tcp_server.js');
 const MongoClient = require('../mongo_connection');
 

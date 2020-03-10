@@ -78,7 +78,10 @@ const signup = (data, sock) => {
                         verified: false,                     // boolean of whether they verified their account
                         verifyStr: str,                      // string
                         blocked: [],
-                        blockedBy: []
+                        blockedBy: [],
+                        friendRequests: [],
+                        friends: [],
+                        friendRequestsSent: []
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
