@@ -125,6 +125,9 @@ function onClientConnected(sock) {
                     case "viewProfile":                 // Get info for a user's profile
                         Profile.viewProfile(obj, sock);
                         break;
+                    case "reportPlayer":                // Report a player
+                        Profile.reportPlayer(obj, sock);
+                        break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');
                         break;
