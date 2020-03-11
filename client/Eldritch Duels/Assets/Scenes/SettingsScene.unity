@@ -1471,7 +1471,6 @@ MonoBehaviour:
   applyButton: {fileID: 0}
   isFullScreen: {fileID: 75562306}
   isWindowed: {fileID: 1564150749}
-  isWindowedBorderless: {fileID: 1220467488}
 --- !u!1 &968922461
 GameObject:
   m_ObjectHideFlags: 0
@@ -2438,7 +2437,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d34c0bdb14d655242ac83bcaf65a4033, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6a0fec31644d22f4f93fec21f306a802, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2522,8 +2521,8 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 58b647c5b2ec4184e9a07a561cdf0644, type: 3}
     m_FontSize: 100
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 1
+    m_BestFit: 1
+    m_MinSize: 10
     m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -3143,8 +3142,8 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 58b647c5b2ec4184e9a07a561cdf0644, type: 3}
     m_FontSize: 100
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 1
+    m_BestFit: 1
+    m_MinSize: 10
     m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
