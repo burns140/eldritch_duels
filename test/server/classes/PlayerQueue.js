@@ -104,7 +104,7 @@ describe('Player Queue', function () {
 
             res = await queue.matchPlayers();
             res.should.arrayEqualUnordered([3, 4]);
-        })
+        });
     });
 
     describe('Matchmaking', function () {
@@ -183,7 +183,27 @@ describe('Player Queue', function () {
             queue.addPlayer(1, 21).should.be.true();
 
             let res = await queue.matchPlayers();
+            res.should.arrayEqualUnordered([]);
+
+            res = await queue.matchPlayers();
             res.should.arrayEqualUnordered([0, 1]);
+        });
+
+        it('properly resets elo range after deletion', async function () {
+            let queue = new Queue();
+            queue.addPlayer(0, 10).should.be.true();
+            queue.addPlayer(1, 21).should.be.true();
+            queue.addPlayer(2, 40).should.be.true();
+
+            let res = await queue.matchPlayers();
+            res.should.arrayEqualUnordered([]);
+
+            queue.removePlayer(0).should.be.true();
+
+            res = await queue.matchPlayers();
+            res.should.arrayEqualUnordered([]);
+
+            queue.matchPlayers().should.eventually.arrayEqualUnordered([1, 2]);
         });
 
         it('large number of users', async function () {
@@ -217,8 +237,9 @@ describe('Player Queue', function () {
             let matchesFound = 0;
             while (matchesFound != Math.floor(sz / 2)) {
                 let res = await queue.matchPlayers();
-                res.length.should.equal(2);
-                matchesFound++;
+
+                if (res.length == 2)
+                    matchesFound++;
             }
 
             res = await queue.matchPlayers();

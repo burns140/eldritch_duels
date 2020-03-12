@@ -19,12 +19,94 @@ const host = 'localhost';
 const port = process.env.port || 8000;
 var server = net.createServer(onClientConnected);
 
-/*
-// Start server
-server.listen(port, host, () => {
-    console.log(`server listening on ${server.address().address}, port ${server.address().port}`);
-});*/
+function dataHandler(data) {
+    const sock = this;
+    try {
+        const obj = JSON.parse(data);               // Turn data into a JSON object		
+        console.log(obj);
+        if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {        // Check that either no token is needed or the token is valid
+            switch (obj.cmd) {
+                case "signup":                      // Signup new account
+                    Signup.signup(obj, sock);
+                    break;
+                case "login":                       // Login
+                    Login.login(obj, sock);
+                    break;
+                case "getAllDecks":                 // Get all deck names for an account
+                    Decks.getAllDecks(obj, sock);
+                    break;
+                case "saveDeck":                    // Save a deck to an account
+                    Decks.saveDeck(obj, sock);
+                    break;
+                case "deleteDeck":                  // Delete a deck from an account
+                    Decks.deleteDeck(obj, sock);
+                    break;
+                case "getOneDeck":                  // Get a single deck object from an account
+                    Decks.getDeck(obj, sock);
+                    break;
+                case "getCollection":               // Get the entire collection for an account
+                    Collection.getCollection(obj, sock);
+                    break;
+                case "addCardToCollection":         // Add a card to an account's collection               
+                    Collection.addCard(obj, sock);
+                    break;
+                case "removeCardFromCollection":    // Remove a card from an account's collection
+                    Collection.removeCard(obj, sock);
+                    break;
+                case "tempPass":                    // Request an email with a temporary password
+                    Email.resetPassword(obj, sock);
+                    break;
+                case "editProfile":                 // Edit a user's profile
+                    Profile.editProfile(obj, sock);
+                    break;
+                case "changePassword":              // Change a user's password
+                    Profile.changePassword(obj, sock);
+                    break;
+                case "changeEmail":                 // Change a user's email
+                    Profile.changeEmail(obj, sock);
+                    break;
+                case "deleteAccount":               // Delete a user's account
+                    Profile.deleteAccount(obj, sock);
+                    break;
+                case "resendVerify":                // resend verification email
+                    Email.resendVerification(obj, sock);
+                    break;
+                case "shareDeck":
+                    Decks.shareDeck(obj, sock);     // Share deck with another user
+                    break;
+                case "copySharedDeck":
+                    Decks.copySharedDeck(obj, sock);    // Copy a shared deck to my decks, allowing me to edit
+                    break;
+                case "logout":                          // Logout
+                    playList.removeSocket(sock);
+                    break;
+                case "enterQueue":                 // Enter matchmaking queue
+                    Queue.enterQueue(obj, sock);
+                    break;
+                case "blockUser":                   // Block a user
+                    Block.blockUser(obj, sock);
+                    break;
+                case "unblockUser":                 // Unblock a user
+                    Block.unblockUser(obj, sock);
+                    break;
+                case "getBlockedUsers":             // Get array of blocked users for this user
+                    Block.getBlockedUsers(obj, sock);
+                    break;
+                case "getBlockedByUsers":            //Get array of the users who have blocked me
+                    Block.getBlockedByUsers(obj, sock);
+                    break;
+                default:                            // Command was invalid
+                    sock.write('Not a valid command');
+                    break;
+            }
+        }
+    } catch (err) {
+        console.log(`tcp: ${err}`);
+    }
+}
 
+// initialize the Queue with the data handler and time for repeating the match making
+Queue.init(dataHandler, 1500);
 
 /* This runs every time a new client connects */
 function onClientConnected(sock) {
@@ -34,90 +116,7 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done every time
        data is received from a client */
-    sock.on('data', (data) => {        
-        try {     
-			const obj = JSON.parse(data);               // Turn data into a JSON object		
-            console.log(obj);
-            if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {        // Check that either no token is needed or the token is valid
-                switch (obj.cmd) {
-                    case "signup":                      // Signup new account
-                        Signup.signup(obj, sock);
-                        break;
-                    case "login":                       // Login
-                        Login.login(obj, sock);
-                        break;
-                    case "getAllDecks":                 // Get all deck names for an account
-                        Decks.getAllDecks(obj, sock);
-                        break;
-                    case "saveDeck":                    // Save a deck to an account
-                        Decks.saveDeck(obj, sock);      
-                        break;
-                    case "deleteDeck":                  // Delete a deck from an account
-                        Decks.deleteDeck(obj, sock);    
-                        break;
-                    case "getOneDeck":                  // Get a single deck object from an account
-                        Decks.getDeck(obj, sock);       
-                        break;
-                    case "getCollection":               // Get the entire collection for an account
-                        Collection.getCollection(obj, sock);    
-                        break;
-                    case "addCardToCollection":         // Add a card to an account's collection               
-                        Collection.addCard(obj, sock);
-                        break;
-                    case "removeCardFromCollection":    // Remove a card from an account's collection
-                        Collection.removeCard(obj, sock);
-                        break;
-                    case "tempPass":                    // Request an email with a temporary password
-                        Email.resetPassword(obj, sock);
-                        break;
-                    case "editProfile":                 // Edit a user's profile
-                        Profile.editProfile(obj, sock);
-                        break;
-                    case "changePassword":              // Change a user's password
-                        Profile.changePassword(obj, sock);
-                        break;
-                    case "changeEmail":                 // Change a user's email
-                        Profile.changeEmail(obj, sock);
-                        break;
-                    case "deleteAccount":               // Delete a user's account
-                        Profile.deleteAccount(obj, sock);
-                        break;
-                    case "resendVerify":                // resend verification email
-                        Email.resendVerification(obj, sock);
-                        break;
-                    case "shareDeck":
-                        Decks.shareDeck(obj, sock);     // Share deck with another user
-                        break;
-                    case "copySharedDeck":
-                        Decks.copySharedDeck(obj, sock);    // Copy a shared deck to my decks, allowing me to edit
-                        break;
-                    case "logout":                          // Logout
-                        playList.removeSocket(sock);
-                        break;
-                    case "enterQueue":                 // Enter matchmaking queue
-                        Queue.enterQueue(obj, sock, onClientConnected);
-                        break;
-                    case "blockUser":                   // Block a user
-                        Block.blockUser(obj, sock);     
-                        break;
-                    case "unblockUser":                 // Unblock a user
-                        Block.unblockUser(obj, sock);   
-                        break;
-                    case "getBlockedUsers":             // Get array of blocked users for this user
-                        Block.getBlockedUsers(obj, sock);   
-                        break;
-                    case "getBlockedByUsers":            //Get array of the users who have blocked me
-                        Block.getBlockedByUsers(obj, sock);
-                        break;
-                    default:                            // Command was invalid
-                        sock.write('Not a valid command');
-                        break;
-                }
-            }
-        } catch (err) {
-            console.log(`tcp: ${err}`);
-        }
-    });
+    sock.on('data', dataHandler);
 
     /* There was a problem */
     sock.on('error', (err) => {
