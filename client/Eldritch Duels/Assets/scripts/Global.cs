@@ -72,6 +72,7 @@ namespace eldritch {
         public static int usercredits = 0;
         public static Deck selectedDeck = new Deck();
         public static List<Deck> userDecks = new List<Deck>();
+        public static List<Deck> sharedDecks = new List<Deck>();
         public static TcpClient client;
         public static NetworkStream stream;
         public static string tokenfile = "";
@@ -437,6 +438,68 @@ namespace eldritch {
             }
             return null;
         }
+        public static bool CopySharedDeck(Deck newDeck)
+        {
+            //find a shared deck
+            Deck toCopy = null;
+            foreach(Deck d in sharedDecks)
+            {
+                if (d.DeckName.Equals(newDeck.DeckName))
+                {
+                    toCopy = d;
+                    break;
+                }
+            }
+            if (toCopy == null)
+                return false;
+
+            //see if user has the cards to copy
+            foreach(CardContainer cc in toCopy.CardsInDeck)
+            {
+                if(cc.c.CopiesOwned < cc.count)
+                {
+                    return false;
+                }
+            }
+
+            //duplicate to userdecks
+            userDecks.Add(toCopy);
+
+            //sync with server
+            try
+            {
+                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), DeckToString(newDeck), newDeck.DeckName);
+                string json = JsonConvert.SerializeObject(saved);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+
+
+            return true;
+        }
+        private static string[] DeckToString(Deck d)
+        {
+            List<CardContainer> cards = d.CardsInDeck;
+            string[] temp = new string[cards.Count];
+            for (int i = 0; i < cards.Count; i++)
+            {
+                temp[i] = cards.ElementAt(i).c.CardName + "-" + cards.ElementAt(i).count;
+                Debug.Log(temp[i]);
+            }
+            return temp;
+        }
 
     }
+
+    
+
 }

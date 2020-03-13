@@ -19,15 +19,34 @@ namespace eldritch.cards
             this.cmd = cmd;
         }
     }
+    public enum DeckType
+    {
+        SHARED,
+        USER
+    }
 
     public class DeckMenuUI : MonoBehaviour
     {
         int deckPage = 0;
         int maxPage = 0;
         public GameObject previewPanel;
+        public DeckType deckType = DeckType.USER;
         private void Start()
         {
+            if(deckType == DeckType.USER)
+            {
+                SetUpUserDecks();
+            }else if(deckType == DeckType.SHARED)
+            {
 
+            }
+            
+            Debug.Log("Number of Decks: " + Global.userDecks.Count);
+            updateUI();
+        }
+
+        private void SetUpUserDecks()
+        {
             alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken());
             string json = JsonConvert.SerializeObject(saved);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
@@ -38,7 +57,7 @@ namespace eldritch.cards
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             string[] temp = responseData.Split(',');
             Debug.Log("Getting deck cards");
-            for(int i = 0; i < temp.Length; i++)
+            for (int i = 0; i < temp.Length; i++)
             {
                 string deckName = temp[i];
                 if (!Global.ContainsDeck(deckName) && !deckName.Equals("no decks"))
@@ -63,9 +82,47 @@ namespace eldritch.cards
                     Global.AddDeck(d);
                 }
             }
-            Debug.Log("Number of Decks: " + Global.userDecks.Count);
-            updateUI();
         }
+        private void SetUpUSharedDecks()
+        {
+            alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken());
+            string json = JsonConvert.SerializeObject(saved);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            string[] temp = responseData.Split(',');
+            Debug.Log("Getting deck cards");
+            for (int i = 0; i < temp.Length; i++)
+            {
+                string deckName = temp[i];
+                if (!Global.ContainsDeck(deckName) && !deckName.Equals("no decks"))
+                {
+                    string[] cards = Global.GetDeckByNameFromServer(temp[i]);
+                    Deck d = new Deck();
+                    d.CardsInDeck = new List<CardContainer>();
+                    d.DeckName = deckName;
+                    if (cards != null && cards.Length > 1)
+                    {
+                        for (int j = 1; j < cards.Length; j++)
+                        {
+                            //add cards
+                            string[] pair = cards[j].Split('-');
+                            Card c = Library.GetCard(pair[0]);
+                            CardContainer cc;
+                            cc.c = c;
+                            cc.count = int.Parse(pair[1]);
+                            d.CardsInDeck.Add(cc);
+                        }
+                    }
+                    Global.AddDeck(d);
+                }
+            }
+        }
+
+
 
         public void LoadScene(string sceneName)
         {
@@ -135,6 +192,11 @@ namespace eldritch.cards
             if (Global.userCards.Count == 0)
                 Global.InitUserCards("0-20,1-25",0);
             Global.InitNewPlayer();
+        }
+
+        public void CopyDeck()
+        {
+
         }
     }
 }
