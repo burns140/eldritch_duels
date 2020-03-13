@@ -9,49 +9,60 @@ const MongoClient = require('../mongo_connection');
 const sendFriendRequest = (data, sock) => {
     var myEmail = data.myEmail;
     var theirEmail = data.theirEmail;
+    var errString = 'failed to send friend request';
 
     try {
-        console.log(err);
-        sock.write(err);
-
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
-            /* Add my email to their friendRequests array */
-            db.collection('users').updateOne(
-                { email: theirEmail },
-                { $addToSet: { friendRequests: myEmail } }
+            /* Check if I already have a friend request from them*/
+            db.collection('users').findOne(
+                { email: myEmail }
             ).then(result => {
-                if (result.matchedCount != 1) {
-                    console.log('failed to send friend request');
-                    sock.write('failed to send friend request');
-                    return;
-                } else {
-                    
-                    /* Add their email to my friendRequestsSent array */
+                if (result == null) {
+                    throw new Error('user not found');
+                }
+                if (!result.friendRequests.includes(theirEmail)) {
+
+                    /* Add my email to their friendRequests array */
                     db.collection('users').updateOne(
-                        { email: myEmail },
-                        { $addToSet: { friendRequestsSent: theirEmail } }
+                        { email: theirEmail },
+                        { $addToSet: { friendRequests: myEmail } }
                     ).then(result => {
                         if (result.matchedCount != 1) {
-                            console.log('failed to send friend request');
-                            sock.write('failed to send friend request');
+                            throw new Error(errString);
                         } else {
-                            console.log('friend request sent');
-                            sock.write('friend request sent');
+                            
+                            /* Add their email to my friendRequestsSent array */
+                            db.collection('users').updateOne(
+                                { email: myEmail },
+                                { $addToSet: { friendRequestsSent: theirEmail } }
+                            ).then(result => {
+                                if (result.matchedCount != 1) {
+                                    throw new Error(errString);
+                                } else {
+                                    console.log('friend request sent');
+                                    sock.write('friend request sent');
+                                }
+                                return;
+                            }).catch(err => {
+                                console.log(err);
+                                sock.write(err);
+                                return;
+                            });  
                         }
-                        return;
                     }).catch(err => {
                         console.log(err);
                         sock.write(err);
                         return;
-                    });  
+                    });
+                } else {
+                    sock.write('this user has already sent you a friend request');
+                    console.log('this user has already sent you a friend request');
                 }
-            }).catch(err => {
-                console.log(err);
-                sock.write(err);
-                return;
-            });
+            })
+
+            
         });
     } catch(err) {
         sock.write(err);
@@ -122,37 +133,41 @@ const rejectFriendRequest = (data, sock) => {
     const theirEmail = data.theirEmail;
     const errString = 'failed to reject friend request';
 
-    const db = client.db('eldritch_data');
+    MongoClient.get().then(client => {
+        const db = client.db('eldritch_data');
 
-    /* Remove their email from my friendRequests array */
-    db.collection('users').updateOne(
-        { email: myEmail },
-        { $pull: { friendRequests: theirEmail } }
-    ).then(result => {
-        if (result.matchedCount != 1) {
-            throw new Error(errString);
-        }
-
-        /* Remove my email from their friendRequestsSent array */
+        /* Remove their email from my friendRequests array */
         db.collection('users').updateOne(
-            { email: theirEmail },
-            { $pull: { friendRequestsSent: myEmail } }
+            { email: myEmail },
+            { $pull: { friendRequests: theirEmail } }
         ).then(result => {
             if (result.matchedCount != 1) {
                 throw new Error(errString);
             }
-            console.log('friend request rejected');
-            sock.write('friend request rejected');
+
+            /* Remove my email from their friendRequestsSent array */
+            db.collection('users').updateOne(
+                { email: theirEmail },
+                { $pull: { friendRequestsSent: myEmail } }
+            ).then(result => {
+                if (result.matchedCount != 1) {
+                    throw new Error(errString);
+                }
+                console.log('friend request rejected');
+                sock.write('friend request rejected');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
+                return;
+            });
         }).catch(err => {
             console.log(err);
             sock.write(err);
             return;
         });
-    }).catch(err => {
-        console.log(err);
-        sock.write(err);
-        return;
-    });
+    })
+
+    
 }
 
 /**
