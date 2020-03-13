@@ -1,5 +1,31 @@
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
+var commonCardNames = [
+    "Test 1",
+    "Test 2", 
+    "Test 3", 
+    "Test 4", 
+    "Test 5", 
+    "Test 6", 
+    "Test 7", 
+    "Test 8", 
+    "Test 9", 
+    "Test 10", 
+    "Test 11", 
+    "Test 12",
+    "Test 13",
+    "Test 14", 
+    "Test 15", 
+    "Test 16", 
+    "Test 17", 
+    "Test 18", 
+    "Test 19", 
+    "Test 20" 
+]
+
+var legendaryCardNames = [
+    "Legend 1"
+]
 
 /**
  * Gets all the cards that a user has on their account
@@ -147,6 +173,34 @@ const removeCard = (data, sock) => {
         console.log(err);
         sock.write(err);
     }
+}
+
+const openPack = (data, sock) => {
+    const id = data.id;
+    const errString = "could not open pack";
+
+    var pack = [];
+
+    try {
+        for (var i = 0; i < 4; i++) {
+            pack.push(Math.floor(Math.random() * commonCardNames.length));
+        }
+
+        if ((Math.floor(Math.random() * 10) + 1) > 5) {
+            pack.push(Math.floor(math.random() * legendaryCardNames.length));
+        } else {
+            pack.push(Math.floor(Math.random() * commonCardNames.length));
+        }
+
+        sock.write(pack.toArray());
+        console.log('pack written successfully');
+    } catch (err) {
+        sock.write(errString);
+        console.log(errString);
+    }
+    
+
+    
 }
 
 exports.removeCard = removeCard;
