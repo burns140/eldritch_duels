@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
-const AllPlayerList = require('../classes/AllPlayerList.js');
 const server = require('../tcp_server.js');
 const MongoClient = require('../mongo_connection');
 
@@ -47,7 +46,28 @@ const login = (data, sock) => {
 
                         const idString = result._id.toString();
 
+                        /* Negative ban length mean this is a perma-ban */
+                        if (result.banLength < 0) {
+                            console.log('account permanently banned');
+                            sock.write('This account has been permanently banned');
+                        }
+
+                        /* If the value of this time minus the ban length is greater than the time at which they are banned, they are past the end of ban
+                           Reset ban length to 0 to ensure they can login again */
+                        var lastReport = result.reports[reports.length - 1];
+                        if (result.banLength > 0) {
+                            if (Date.now() - result.banLength > lastReport.date) {
+                                console.log('temp ban completed');
+                                banLength = 0;
+                            } else {
+                                console.log('this account is temp banned');
+                                sock.write('This account is temporarily banned');
+                                return;
+                            }
+                        }
+
                         if (!result.verified) {
+                            console.log('account not verified');
                             sock.write("Not verified, can't login");
                             return; 
                         }
