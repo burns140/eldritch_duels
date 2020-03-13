@@ -80,13 +80,15 @@ const login = (data, sock) => {
                         /* Check if player is already logged in somewhere */
                         if (playList.isLoggedIn(idString)) {
                             var prevSocket = playList.getSocketByKey(idString);
-                            try {
-                                prevSocket.end('Another device has logged in with this account');
-                                console.log('forcing socket to close');
-                            } catch (err) {
-                                console.log(err);
+                            if (prevSocket != sock) {
+                                try {
+                                    prevSocket.end('Another device has logged in with this account');
+                                    console.log('forcing socket to close');
+                                } catch (err) {
+                                    console.log(err);
+                                }
+                                playList.removePlayer(idString);
                             }
-                            playList.removePlayer(idString);
                         }
 
                         /* Add username: socket pair to a map in case we need to force

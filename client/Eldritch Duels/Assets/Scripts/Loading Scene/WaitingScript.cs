@@ -52,8 +52,13 @@ public class WaitingScript : MonoBehaviour
             {
                 try
                 {
-                    Global.enemyUsername = responseData.Substring(responseData.IndexOf(':') + 2);
-                    Debug.Log(Global.enemyUsername);
+                    int newLine = responseData.IndexOf('\n');
+                    Global.enemyUsername = responseData.Substring(responseData.IndexOf(':') + 2, responseData.Length - newLine);
+                    Debug.Log("Enemy user:" + Global.enemyUsername);
+
+                    Global.matchID = responseData.Substring(newLine + 1);
+                    Debug.Log("Match ID: " + Global.matchID);
+
                     SceneManager.LoadScene(nextSceneName);
                     Global.inQueue = false;
                 }
