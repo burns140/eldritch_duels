@@ -23,6 +23,14 @@ var commonCardNames = [
     "Test 20" 
 ]
 
+var rareCardNames =  [
+    "Rare 1",
+    "Rare 2",
+    "Rare 3",
+    "Rare 4",
+    "Rare 5"
+]
+
 var legendaryCardNames = [
     "Legend 1"
 ]
@@ -183,13 +191,16 @@ const openPack = (data, sock) => {
 
     try {
         for (var i = 0; i < 4; i++) {
-            pack.push(Math.floor(Math.random() * commonCardNames.length));
+            pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
         }
 
-        if ((Math.floor(Math.random() * 10) + 1) > 5) {
-            pack.push(Math.floor(math.random() * legendaryCardNames.length));
+        var cardFive = Math.floor(Math.random() * 10) + 1;
+        if (cardFive >= 1 && cardFive < 4) {
+            pack.push(legendaryCardNames[Math.floor(math.random() * legendaryCardNames.length)]);
+        } else if (cardFive >= 4 && cardFive < 9 ) {
+            pack.push(rareCardNames[Math.floor(math.random() *rareCardNames.length)]);
         } else {
-            pack.push(Math.floor(Math.random() * commonCardNames.length));
+            pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
         }
 
         sock.write(pack.toArray());

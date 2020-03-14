@@ -84,7 +84,6 @@ const getDeck = (data, sock) => {
                 }
                 
                 
-                
                 console.log(temparr.toString());
                 sock.write(temparr.toString());     // Convert the array to a string and write it back
                 return;
