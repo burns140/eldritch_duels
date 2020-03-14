@@ -76,7 +76,7 @@ const getDeck = (data, sock) => {
                 for (var el of decks) {                     // iterate through all decks to find correct deck
                     if (el.deckname == deckname) {
                         for (var key of Object.keys(el)) {  // in that deck, iterate through object to get all key:value pairs
-                            if (key != deckname && key != fromUser) {
+                            if (key != deckname && key != 'fromUser') {
                                 temparr.push(`${key}-${el[key]}`);  // write key value pairs into array with element forms "key-value"
                             }
                         }

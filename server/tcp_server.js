@@ -117,7 +117,6 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done every time
        data is received from a client */
-<<<<<<< HEAD
     sock.on('data', (data) => {        
         try {     
 			const obj = JSON.parse(data);               // Turn data into a JSON object		
@@ -220,9 +219,6 @@ function onClientConnected(sock) {
             console.log(`tcp: ${err}`);
         }
     });
-=======
-    sock.on('data', dataHandler);
->>>>>>> f2769645096dc0c2f9422bac7fb7a8708d5518dd
 
     /* There was a problem */
     sock.on('error', (err) => {
