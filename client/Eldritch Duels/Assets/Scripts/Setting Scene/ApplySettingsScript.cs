@@ -5,20 +5,19 @@ using UnityEngine.UI;
 
 public class ApplySettingsScript : MonoBehaviour
 {
+    private const string RESOLUTION_PREF_KEY = "resolution"; // PLAYER PREF KEY to store resolution settings
+    private const string WINDOW_PREF_KEY = "window"; // PLAYER PREF KEY to store window mode settings
 
-    // PLAYER PREF to store settings
-    private const string RESOLUTION_PREF_KEY = "resolution";
-    private const string WINDOW_PREF_KEY = "window";
-
-    public Button applyButton;
-    public Toggle isFullScreen;
-    public Toggle isWindowed;
-    public Toggle isWindowedBorderless;
-    private int width = 1920;
-    private int height = 1080;
-    private string reskey = "1920x1080";
-    private string windowkey = "fullScreen";
+    public Button applyButton; // Get the apply button from UI
+    public Toggle isFullScreen; // Get the full screen toggle from UI
+    public Toggle isWindowed; // Get the windowed toggle from UI
+    // public Toggle isWindowedBorderless; // No longer implementing this in the game
+    private int width = 1920; // Default resolution width
+    private int height = 1080; // Default resolution height
+    private string reskey = "1920x1080"; // Default PLAYER PREF KEY resolution value
+    private string windowkey = "fullScreen"; // Default PLAYER PREF KEY window mode value
     
+    // Get the resolution selected from the dropdown on the UI
     public void handleRes(int val){
         if(val == 0){
             width = 1920;
@@ -40,6 +39,7 @@ public class ApplySettingsScript : MonoBehaviour
         }
     }
 
+    // Get the selected windowed mode selected on the UI
     public void ActiveToggle(){
 
         if(isWindowed.isOn){
@@ -47,11 +47,11 @@ public class ApplySettingsScript : MonoBehaviour
             windowkey = "windowed";
             callWindowed();
         }
-        else if(isWindowedBorderless.isOn){
+        /*else if(isWindowedBorderless.isOn){
             Debug.Log("WindowedBorderless is selected");
             windowkey = "windowedBorderless";
             callWindowedBorderless();
-        }
+        }*/ // No Longer implementing this in the game
         else{
             Debug.Log("FullSceen is selected");
             windowkey = "fullScreen";
@@ -60,22 +60,25 @@ public class ApplySettingsScript : MonoBehaviour
     }
 
     void callWindowed(){
-        Screen.SetResolution(width, height, FullScreenMode.Windowed);
+        Screen.SetResolution(width, height, FullScreenMode.Windowed); // Set windowed mode & new resolution
     }
 
     void callFullScreen(){
-        Screen.SetResolution(width, height, FullScreenMode.ExclusiveFullScreen);
+        Screen.SetResolution(width, height, FullScreenMode.ExclusiveFullScreen); // Set full screen mode & new resolution
     }
 
+    /* No longer implementing this in the game
     void callWindowedBorderless(){
         Screen.SetResolution(width, height, FullScreenMode.FullScreenWindow);
     }
+    */
 
+    // Handle Apply button click
     public void OnSubmit(){ 
         Debug.Log("Clicked on Apply Settings");
         ActiveToggle();
-        PlayerPrefs.SetString(RESOLUTION_PREF_KEY,reskey);
-        PlayerPrefs.SetString(WINDOW_PREF_KEY,windowkey);
+        PlayerPrefs.SetString(RESOLUTION_PREF_KEY,reskey); // Save the new resolution to PLAYER PREF KEY
+        PlayerPrefs.SetString(WINDOW_PREF_KEY,windowkey); // Save the new windowed mode to PLAYER PREF KEY
         Debug.Log(Screen.fullScreen);
         Debug.Log(Screen.currentResolution);
     }

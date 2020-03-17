@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using eldritch;
 
+// Self explanatory script
 public class Quit : MonoBehaviour
 {
     public UnityEngine.UI.Button quitbutton;

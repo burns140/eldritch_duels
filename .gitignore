@@ -183,5 +183,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-#layout file
-client/Eldritch Duels/Library/CurrentLayout-default.dwlt
+# for multiple clients
+client/Eldritch Duels - copy

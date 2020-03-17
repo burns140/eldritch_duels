@@ -22,12 +22,12 @@ router.get('/:id', (req, res) => {
             }).then(result => {
                 console.log('cards: ' + result.cards);
                 res.status(200).json({ cards: result.cards });
-                client.close();
+                // client.close()
                 return;
             }).catch(err => {
                 console.log(err);
                 res.status(400).send(err);
-                client.close();
+                // client.close()
                 return;
             });
         });

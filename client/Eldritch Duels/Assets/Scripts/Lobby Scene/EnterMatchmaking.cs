@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using eldritch;
 
 public class match
@@ -29,20 +30,25 @@ public class EnterMatchmaking : MonoBehaviour
 
     void clicked()
     {
-        if (!Global.inQueue)
+        if (!Global.inQueue) // checks if already in queue somehow
         {
+            // sends serve request to put user in matchmaking queue
             match user = new match("enterQueue", Global.getID(), Global.getToken());
             string json = JsonConvert.SerializeObject(user);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
             data = new Byte[256];
+
             string responseData = string.Empty;
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             if (String.Equals(responseData, "added to queue"))
             {
                 Global.inQueue = true;
+                SceneManager.LoadScene(8);
             }
+            else
+                Debug.Log(responseData);
         }
     }
 
