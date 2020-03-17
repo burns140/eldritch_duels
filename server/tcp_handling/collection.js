@@ -1,5 +1,39 @@
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
+var commonCardNames = [
+    "Test 1",
+    "Test 2", 
+    "Test 3", 
+    "Test 4", 
+    "Test 5", 
+    "Test 6", 
+    "Test 7", 
+    "Test 8", 
+    "Test 9", 
+    "Test 10", 
+    "Test 11", 
+    "Test 12",
+    "Test 13",
+    "Test 14", 
+    "Test 15", 
+    "Test 16", 
+    "Test 17", 
+    "Test 18", 
+    "Test 19", 
+    "Test 20" 
+]
+
+var rareCardNames =  [
+    "Rare 1",
+    "Rare 2",
+    "Rare 3",
+    "Rare 4",
+    "Rare 5"
+]
+
+var legendaryCardNames = [
+    "Legend 1"
+]
 
 /**
  * Gets all the cards that a user has on their account
@@ -149,6 +183,36 @@ const removeCard = (data, sock) => {
     }
 }
 
+const openPack = (data, sock) => {
+    var pack = [];
+
+    try {
+        for (var i = 0; i < 4; i++) {
+            pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
+        }
+
+        var cardFive = Math.floor(Math.random() * 10) + 1;
+        console.log(cardFive);
+        if (cardFive >= 1 && cardFive < 4) {
+            pack.push(legendaryCardNames[Math.floor(Math.random() * legendaryCardNames.length)]);
+        } else if (cardFive >= 4 && cardFive < 9 ) {
+            pack.push(rareCardNames[Math.floor(Math.random() *rareCardNames.length)]);
+        } else {
+            pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
+        }
+
+        sock.write(pack.toString());
+        console.log('pack written successfully');
+    } catch (err) {
+        sock.write(err.toString());
+        console.log(err);
+    }
+    
+
+    
+}
+
 exports.removeCard = removeCard;
 exports.getCollection = getCollection;
 exports.addCard = addCard;
+exports.openPack = openPack;
