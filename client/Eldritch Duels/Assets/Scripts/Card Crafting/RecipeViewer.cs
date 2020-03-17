@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace eldritch.cards {
     public class RecipeViewer : MonoBehaviour
@@ -27,9 +28,14 @@ namespace eldritch.cards {
                 {
                     child.gameObject.GetComponent<ShowRecipe>().SetRecipe(craftingRecipes[pos]);
                     child.gameObject.SetActive(true);
+                    
                 }
                 pos++;
             }
+        }
+
+        public void LoadScene(string sceneName){
+            SceneManager.LoadScene(sceneName);
         }
         
         public void PageRight()

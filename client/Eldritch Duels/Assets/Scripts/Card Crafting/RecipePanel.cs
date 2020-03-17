@@ -10,5 +10,8 @@ namespace eldritch.cards {
         public Image FodderCard;
         public Image ResultCard;
         public Text CraftCost;
+        public Image Indicator;
+        public Material Green;
+        public Material Gray;
     }
 }

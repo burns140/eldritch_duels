@@ -54,17 +54,20 @@ const login = (data, sock) => {
 
                         /* If the value of this time minus the ban length is greater than the time at which they are banned, they are past the end of ban
                            Reset ban length to 0 to ensure they can login again */
-                        var lastReport = result.reports[reports.length - 1];
-                        if (result.banLength > 0) {
-                            if (Date.now() - result.banLength > lastReport.date) {
-                                console.log('temp ban completed');
-                                banLength = 0;
-                            } else {
-                                console.log('this account is temp banned');
-                                sock.write('This account is temporarily banned');
-                                return;
+                           if(result.reports != null){
+                                var lastReport = result.reports[reports.length - 1];
+                                
+                                if (result.banLength > 0) {
+                                    if (Date.now() - result.banLength > lastReport.date) {
+                                        console.log('temp ban completed');
+                                        banLength = 0;
+                                    } else {
+                                        console.log('this account is temp banned');
+                                        sock.write('This account is temporarily banned');
+                                        return;
+                                    }
+                                }
                             }
-                        }
 
                         if (!result.verified) {
                             console.log('account not verified');

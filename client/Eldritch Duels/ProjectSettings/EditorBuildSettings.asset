@@ -41,4 +41,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OpenPack.unity
     guid: 8e35a9392addb0b478de88ac171ace19
+  - enabled: 1
+    path: Assets/Scenes/CardCrafter.unity
+    guid: 4a40a0d212119b1469cde19ce7adf715
+  - enabled: 1
+    path: Assets/Scenes/RecipeViewer.unity
+    guid: 0e4f3ca17cf16bd43b3aad3976fa8e70
   m_configObjects: {}

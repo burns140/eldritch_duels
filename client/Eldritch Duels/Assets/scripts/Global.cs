@@ -499,6 +499,39 @@ namespace eldritch {
             }
             return temp;
         }
+        public static Card GetUserCard(string cardName){
+            foreach(Card c in userCards){
+                if(c.CardName.Equals(cardName)){
+                    return c;
+                }
+            }
+
+            return null;
+        }
+
+        public static bool EnoughToCraft(CraftingRecipe cr){
+            foreach(Deck d in userDecks){
+                if(cr.BaseCard.Equals(cr.FodderCard)){
+                    if(d.AmountInDeck(cr.BaseCard) > (GetUserCard(cr.BaseCard).CopiesOwned + 2)){
+                        return false;
+                    }
+                }else{
+                    if(d.AmountInDeck(cr.BaseCard) >= GetUserCard(cr.BaseCard).CopiesOwned || 
+                    d.AmountInDeck(cr.FodderCard) >= GetUserCard(cr.FodderCard).CopiesOwned){
+                        return false;
+                    }
+                }
+            }
+            if(cr.BaseCard.Equals(cr.FodderCard) && GetUserCard(cr.BaseCard).CopiesOwned < 2){
+                Debug.Log("Copies owned: " + GetUserCard(cr.BaseCard).CopiesOwned);
+                return false;
+            }
+            if(GetUserCard(cr.BaseCard).CopiesOwned == 0 || GetUserCard(cr.FodderCard).CopiesOwned == 0){
+                return false;
+            }
+
+            return true;
+        }
 
     }
 

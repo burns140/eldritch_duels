@@ -31,6 +31,11 @@ namespace eldritch.cards {
                 viewer.FodderCard.material = f.CardImage;
                 viewer.ResultCard.material = r.CardImage;
                 viewer.CraftCost.text = "Cost: " + recipe.CraftCost;
+                if(Global.EnoughToCraft(recipe)){
+                        viewer.Indicator.material = viewer.Green;
+                }else{
+                    viewer.Indicator.material = viewer.Gray;
+                }
             }
             
 
