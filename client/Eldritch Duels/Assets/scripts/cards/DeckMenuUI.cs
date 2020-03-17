@@ -11,12 +11,14 @@ namespace eldritch.cards
         public string id;
         public string token;
         public string cmd;
+        public bool shared;
 
-        public alldeckretrieval(string cmd, string id, string token)
+        public alldeckretrieval(string cmd, string id, string token, bool shared)
         {
             this.id = id;
             this.token = token;
             this.cmd = cmd;
+            this.shared = shared;
         }
     }
     public enum DeckType
@@ -47,7 +49,7 @@ namespace eldritch.cards
 
         private void SetUpUserDecks()
         {
-            alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken());
+            alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken(), false);
             string json = JsonConvert.SerializeObject(saved);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
@@ -85,7 +87,7 @@ namespace eldritch.cards
         }
         private void SetUpUSharedDecks()
         {
-            alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken());
+            alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken(), true);
             string json = JsonConvert.SerializeObject(saved);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
@@ -98,7 +100,7 @@ namespace eldritch.cards
             for (int i = 0; i < temp.Length; i++)
             {
                 string deckName = temp[i];
-                if (!Global.ContainsDeck(deckName) && !deckName.Equals("no decks"))
+                if (!Global.ContainsSharedDeck(deckName) && !deckName.Equals("no decks"))
                 {
                     string[] cards = Global.GetDeckByNameFromServer(temp[i]);
                     Deck d = new Deck();
@@ -117,7 +119,7 @@ namespace eldritch.cards
                             d.CardsInDeck.Add(cc);
                         }
                     }
-                    Global.AddDeck(d);
+                    Global.AddSharedDeck(d);
                 }
             }
         }
@@ -154,18 +156,33 @@ namespace eldritch.cards
             
             foreach(Transform d in previewPanel.transform)
             {
-                if (pos < Global.userDecks.Count)
-                {
-                    Debug.Log(pos);
-                    Deck dd = Global.userDecks[pos];
-                    d.gameObject.GetComponent<DeckMenuController>().PreviewDeck = dd;
-                    d.gameObject.SetActive(true);
+                if(deckType == DeckType.USER){
+                    if (pos < Global.userDecks.Count)
+                    {
+                        Debug.Log(pos);
+                        Deck dd = Global.userDecks[pos];
+                        d.gameObject.GetComponent<DeckMenuController>().PreviewDeck = dd;
+                        d.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        d.gameObject.SetActive(false);
+                    }
+                    pos++;
+                }else{
+                    if (pos < Global.sharedDecks.Count)
+                    {
+                        Debug.Log(pos);
+                        Deck dd = Global.sharedDecks[pos];
+                        d.gameObject.GetComponent<DeckMenuController>().PreviewDeck = dd;
+                        d.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        d.gameObject.SetActive(false);
+                    }
+                    pos++;
                 }
-                else
-                {
-                    d.gameObject.SetActive(false);
-                }
-                pos++;
             }
         }
 

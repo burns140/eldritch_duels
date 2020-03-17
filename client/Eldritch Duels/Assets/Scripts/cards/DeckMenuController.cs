@@ -22,6 +22,10 @@ namespace eldritch.cards {
             nameText.GetComponent<UnityEngine.UI.Text>().text = this.deck.DeckName;
         }
 
+        public void ShareDeck(){
+            
+        }
+
         public void DeleteDeck()
         {
             Controller.GetComponent<DeckMenuUI>().DeleteDeck(this.deck);

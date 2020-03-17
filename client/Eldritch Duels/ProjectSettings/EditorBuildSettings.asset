@@ -47,4 +47,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RecipeViewer.unity
     guid: 0e4f3ca17cf16bd43b3aad3976fa8e70
+  - enabled: 1
+    path: Assets/Scenes/SharedDecks.unity
+    guid: 972991f4344ae814a96d2dea08e4319b
   m_configObjects: {}

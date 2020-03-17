@@ -62,6 +62,23 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+    public class ShareDeckRequest
+    {
+        public string id;
+        public string token;
+        public string deckname;
+        public string toEmail;
+        public string cmd;
+
+        public ShareDeckRequest(string id, string token, string deckname, string toEmail, string cmd)
+        {
+            this.id = id;
+            this.token = token;
+            this.deckname = deckname;
+            this.toEmail = toEmail;
+            this.cmd = cmd;
+        }
+    }
 
     public static class Global
     {
@@ -382,9 +399,32 @@ namespace eldritch {
             }
             userDecks.Add(d);
         }
+        public static void AddSharedDeck(Deck d)
+        {
+            for(int i = 0; i < sharedDecks.Count; i++)
+            {
+                if (d.DeckName.Equals(sharedDecks[i].DeckName))
+                {
+                    sharedDecks[i] = d;
+                    return;
+                }
+            }
+            sharedDecks.Add(d);
+        }
         public static bool ContainsDeck(string name)
         {
             foreach(Deck d in userDecks)
+            {
+                if (d.DeckName.Equals(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool ContainsSharedDeck(string name)
+        {
+            foreach(Deck d in sharedDecks)
             {
                 if (d.DeckName.Equals(name))
                 {
