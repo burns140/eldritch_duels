@@ -210,6 +210,9 @@ function onClientConnected(sock) {
                     case "reportPlayer":                // Report a player
                         Profile.reportPlayer(obj, sock);
                         break;
+                    case "getAllFriends":               // Get a user's friends list
+                        Friends.getAllFriends(obj, sock);
+                        break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');
                         break;
