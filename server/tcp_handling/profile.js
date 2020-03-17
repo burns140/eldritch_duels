@@ -1,10 +1,8 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
-const TEMP_BAN_MARKS = [3, 5, 10, 12] 
-const TEMP_BAN_LENGTHS_MINS = [10, 300, 1440, -1];
-const FULL_BAN = 12;
+const TEMP_BAN_MARKS = [1, 3, 5, 10, 12] 
+const TEMP_BAN_LENGTHS_MINS = [1, 10, 300, 1440, -1];
 
 /**
  * Change configurable profile information
@@ -236,12 +234,14 @@ const reportPlayer = (data, sock) => {
     var errString = 'failed to report player';
 
     MongoClient.get().then(client => {
-        const db = client.db('eldritch_duels');
+        const db = client.db('eldritch_data');
 
         var report = {
             user: myEmail,
             date: Date.now()
         }
+
+        console.log(report);
 
         /* Add this new report to their reports array */
         db.collection('users').updateOne(
@@ -249,53 +249,69 @@ const reportPlayer = (data, sock) => {
             { $push: { reports: report } }
         ).then(result => {
             if (result.modifiedCount != 1) {
-                throw new Error(errString);
+                throw new Error(`couldn't find user with that email OR user already reported by you`);
             }
 
-            /* Find the user who has been reported to see if they should be banned */
-            db.collection('users').findOne(
-                { email: theirEmail }
+            /* Add this user to my reported array */
+            db.collection('users').updateOne(
+                { email: myEmail },
+                { $push: { reported: theirEmail } }
             ).then(result => {
-                if (result == null) {
-                    throw new Error(errString);
+                if (result.modifiedCount != 1) {
+                    throw new Error(`couldn't add them to my reported`);
                 }
 
-                var reports = result.reports;
-
-                for (var i = 0; i < TEMP_BAN_MARKS.length; i++) {
-                    if (TEMP_BAN_MARKS[i] == reports.length) {
-                        
-                        /* The user should be temp banned. Update their banLength field */
-                        db.collection('users').updateOne(
-                            { email: theirEmail },
-                            { $set: { banLength: TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
-                        ).then(result => {
-                            if (result.modifiedCount != 1) {
-                                throw new Error(errString);
-                            }
-                            console.log('temp ban added successfully');
-                        }).catch(err => {
-                            console.log(err);
-                            sock.write(err);
-                            return;
-                        });
-                        break;
-
+                /* Find the user who has been reported to see if they should be banned */
+                db.collection('users').findOne(
+                    { email: theirEmail }
+                ).then(result => {
+                    if (result == null) {
+                        throw new Error(`couldn't find user with that email`);
                     }
-                }
 
-                console.log('user reported successfullly');
-                sock.write('user reported successfully');
+                    var reports = result.reports;
+
+                    for (var i = 0; i < TEMP_BAN_MARKS.length; i++) {
+                        if (TEMP_BAN_MARKS[i] == reports.length) {
+                            
+                            /* The user should be temp banned. Update their banLength field */
+                            db.collection('users').updateOne(
+                                { email: theirEmail },
+                                { $set: { banLength: Date.now() + TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
+                                //{ $set: { banLength: TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
+                            ).then(result => {
+                                if (result.modifiedCount != 1) {
+                                    throw new Error(`could not update ban field`);
+                                }
+                                console.log('temp ban added successfully');
+                            }).catch(err => {
+                                console.log(err);
+                                sock.write(err);
+                                return;
+                            });
+                            break;
+
+                        }
+                    }
+
+                    console.log('user reported successfullly');
+                    sock.write('user reported successfully');
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    return;
+                });
             }).catch(err => {
                 console.log(err);
-                sock.write(err);
+                sock.write(err.toString());
                 return;
             });
         }).catch(err => {
             console.log(err);
             sock.write(err);
-            return;
         });
+
+            
     });
 }
 
