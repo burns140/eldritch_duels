@@ -184,9 +184,6 @@ const removeCard = (data, sock) => {
 }
 
 const openPack = (data, sock) => {
-    const id = data.id;
-    const errString = "could not open pack";
-
     var pack = [];
 
     try {
@@ -195,19 +192,20 @@ const openPack = (data, sock) => {
         }
 
         var cardFive = Math.floor(Math.random() * 10) + 1;
+        console.log(cardFive);
         if (cardFive >= 1 && cardFive < 4) {
-            pack.push(legendaryCardNames[Math.floor(math.random() * legendaryCardNames.length)]);
+            pack.push(legendaryCardNames[Math.floor(Math.random() * legendaryCardNames.length)]);
         } else if (cardFive >= 4 && cardFive < 9 ) {
-            pack.push(rareCardNames[Math.floor(math.random() *rareCardNames.length)]);
+            pack.push(rareCardNames[Math.floor(Math.random() *rareCardNames.length)]);
         } else {
             pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
         }
 
-        sock.write(pack.toArray());
+        sock.write(pack.toString());
         console.log('pack written successfully');
     } catch (err) {
-        sock.write(errString);
-        console.log(errString);
+        sock.write(err.toString());
+        console.log(err);
     }
     
 
@@ -217,3 +215,4 @@ const openPack = (data, sock) => {
 exports.removeCard = removeCard;
 exports.getCollection = getCollection;
 exports.addCard = addCard;
+exports.openPack = openPack;
