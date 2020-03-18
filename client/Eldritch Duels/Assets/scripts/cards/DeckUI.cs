@@ -19,14 +19,16 @@ namespace eldritch.cards {
         public string cmd;
         public string name;
         public string[] deck;
+        public bool shared;
 
-        public deckupload(string cmd, string id, string token, string[] deck, string name)
+        public deckupload(string cmd, string id, string token, string[] deck, string name, bool shared)
         {
             this.id = id;
             this.token = token;
             this.cmd = cmd;
             this.deck = deck;
             this.name = name;
+            this.shared = shared;
         }
     }
 
@@ -51,7 +53,7 @@ namespace eldritch.cards {
                 DeckNameInput.GetComponent<UnityEngine.UI.InputField>().text = Global.selectedDeck.DeckName;
                 if(Global.selectedDeck.CardsInDeck.Count == 0)
                 {
-                    Debug.Log(Global.GetDeckByNameFromServer(Global.selectedDeck.DeckName).Length);
+                    Debug.Log(Global.GetDeckByNameFromServer(Global.selectedDeck.DeckName, false).Length);
                 }
             }
             if (Global.selectedDeck == null)
@@ -277,7 +279,7 @@ namespace eldritch.cards {
                     //sync with server
                     try
                     {
-                        deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(updatedDeck), updatedDeck.DeckName);
+                        deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(updatedDeck), updatedDeck.DeckName, false);
                         string json = JsonConvert.SerializeObject(saved);
                         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                         Global.stream.Write(data, 0, data.Length);
@@ -306,7 +308,7 @@ namespace eldritch.cards {
             //sync with server
             try
             {
-                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(newDeck), newDeck.DeckName);
+                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(newDeck), newDeck.DeckName, false);
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);

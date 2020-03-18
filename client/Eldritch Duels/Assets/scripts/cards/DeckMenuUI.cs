@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 namespace eldritch.cards
@@ -33,6 +34,8 @@ namespace eldritch.cards
         int maxPage = 0;
         public GameObject previewPanel;
         public DeckType deckType = DeckType.USER;
+        public InputField emailInput;
+        private Deck toShare;
         private void Start()
         {
             if(deckType == DeckType.USER)
@@ -40,7 +43,7 @@ namespace eldritch.cards
                 SetUpUserDecks();
             }else if(deckType == DeckType.SHARED)
             {
-
+                SetupSharedDecks();
             }
             
             Debug.Log("Number of Decks: " + Global.userDecks.Count);
@@ -64,7 +67,7 @@ namespace eldritch.cards
                 string deckName = temp[i];
                 if (!Global.ContainsDeck(deckName) && !deckName.Equals("no decks"))
                 {
-                    string[] cards = Global.GetDeckByNameFromServer(temp[i]);
+                    string[] cards = Global.GetDeckByNameFromServer(temp[i], false);
                     Deck d = new Deck();
                     d.CardsInDeck = new List<CardContainer>();
                     d.DeckName = deckName;
@@ -85,7 +88,7 @@ namespace eldritch.cards
                 }
             }
         }
-        private void SetUpUSharedDecks()
+        private void SetupSharedDecks()
         {
             alldeckretrieval saved = new alldeckretrieval("getAllDecks", Global.getID(), Global.getToken(), true);
             string json = JsonConvert.SerializeObject(saved);
@@ -102,7 +105,7 @@ namespace eldritch.cards
                 string deckName = temp[i];
                 if (!Global.ContainsSharedDeck(deckName) && !deckName.Equals("no decks"))
                 {
-                    string[] cards = Global.GetDeckByNameFromServer(temp[i]);
+                    string[] cards = Global.GetDeckByNameFromServer(temp[i], true);
                     Deck d = new Deck();
                     d.CardsInDeck = new List<CardContainer>();
                     d.DeckName = deckName;
@@ -200,7 +203,11 @@ namespace eldritch.cards
 
         public void DeleteDeck(Deck d)
         {
-            Global.RemoveDeck(d.DeckName);
+            if(deckType == DeckType.USER){
+                Global.RemoveDeck(d.DeckName, false);
+            }else{
+                Global.RemoveDeck(d.DeckName, true);
+            }
             updateUI();
         }
 
@@ -211,9 +218,25 @@ namespace eldritch.cards
             Global.InitNewPlayer();
         }
 
-        public void CopyDeck()
+        public void CopyDeck(Deck d)
         {
+            Global.CopySharedDeck(d);
+        }
 
+        public void ShareDeck(Deck d)
+        {
+            this.toShare = d;
+        }
+        public void ConfirmShare()
+        {
+            if (emailInput != null && emailInput.text != null && emailInput.text != "")
+            {
+                Global.ShareDeck(toShare.DeckName, emailInput.text);
+            }
+            else
+            {
+                Debug.Log("Email empty");
+            }
         }
     }
 }

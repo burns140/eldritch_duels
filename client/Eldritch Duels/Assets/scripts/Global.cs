@@ -13,6 +13,7 @@ using System.IO;
 using Newtonsoft.Json;
 
 namespace eldritch {
+#region SpecialClasses
     public static class Constants
     {
         public const int MAX_DECK_SIZE = 32;
@@ -38,13 +39,15 @@ namespace eldritch {
         public string token;
         public string cmd;
         public string name;
+        public bool shared;
 
-        public deleteDeck(string cmd, string id, string token, string name)
+        public deleteDeck(string cmd, string id, string token, string name, bool shared)
         {
             this.id = id;
             this.token = token;
             this.cmd = cmd;
             this.name = name;
+            this.shared = shared;
         }
     }
     public class AddCardRequest
@@ -80,9 +83,26 @@ namespace eldritch {
         }
     }
 
+    public class CopySharedDeckRequest{
+        public string id;
+        public string token;
+        public string deckname;
+        public string cmd;
+
+        public CopySharedDeckRequest(string id, string token, string deckname, string cmd)
+        {
+            this.id = id;
+            this.token = token;
+            this.deckname = deckname;
+            this.cmd = cmd;
+        }
+    }
+#endregion
     public static class Global
     {
-    	//Global variables, can be called by any class and script via Global.(variable) as long as "using eldritch" is in the imports
+        //global variables
+        #region vars
+        //Global variables, can be called by any class and script via Global.(variable) as long as "using eldritch" is in the imports
         public static string username = "";
         public static string enemyUsername = null;
         public static string matchID = null;
@@ -99,100 +119,11 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
-
-        public static void SetUpConnection()
-        {
-            try
-            {
-                //Connects to server and sets global variables, change localhost and port if connecting remotely.
-                Global.client = new TcpClient("localhost", 8000);
-                Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                Global.stream = Global.client.GetStream();
-                Debug.Log("Connected to: " + "localhost");
-            } catch(Exception e)
-            {
-                try
-                {
-                    //Connects to server and sets global variables, change localhost and port if connecting remotely.
-                    Global.client = new TcpClient(hostIP, 8000);
-                    Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    Global.stream = Global.client.GetStream();
-                    Debug.Log("Connected to: " + hostIP);
-                }
-                catch (Exception e2)
-                {
-                    Debug.Log("Error connecting to server.");
-                    Debug.Log(e.Message);
-                    Debug.Log(e2.Message);
-                    Application.Quit();
-                }
-            }
-        }
-
-        public static string[] GetDeckByNameFromServer(string deckName)
-        {
-            Debug.Log(deckName);
-            if(deckName.Equals("no decks"))
-            {
-                return null;
-            }
-            try
-            {
-                string[] useless = new string[1];
-                deckupload saved = new deckupload("getOneDeck", Global.getID(), Global.getToken(), useless, deckName);
-                string json = JsonConvert.SerializeObject(saved);
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-                Global.stream.Write(data, 0, data.Length);
-                data = new Byte[256];
-                string responseData = string.Empty;
-                Int32 bytes = Global.stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Debug.Log("Deck resp: " + responseData);
-                string[] temp = responseData.Split(',');
-                return temp;
-            }catch (Exception)
-            {
-
-            }
-            return null;
-        }
+        #endregion
 
 
-        public static string getToken()
-        {
-            try
-            {
-                // Read from the temp file.
-                StreamReader myReader = File.OpenText(tokenfile);
-                string token = myReader.ReadLine();
-                myReader.Close();
-                return token;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error reading token file: " + ex.Message);
-                return String.Empty;
-            }
-        }
-
-        public static string getID()
-        {
-            try
-            {
-                // Read from the temp file.
-                StreamReader myReader = File.OpenText(tokenfile);
-                myReader.ReadLine();
-                string id = myReader.ReadLine();
-                myReader.Close();
-                return id;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error reading token file: " + ex.Message);
-                return String.Empty;
-            }
-        }
-
+        //region for all global card related methods
+        #region cards
         //converts a tring into a list of cards
         private static List<Card> StringToCards(string toParse)
         {
@@ -227,7 +158,7 @@ namespace eldritch {
             {
                 string[] tuple = s.Split('-');
 
-                
+
                 int amount = int.Parse(tuple[1]);
                 GameObject g = GameObject.Find("ContentManager");
                 if (g != null)
@@ -244,34 +175,6 @@ namespace eldritch {
             return cards;
 
         }
-
-        private static List<CardContainer>StringToDeck(string cards)
-        {
-            List<CardContainer> cardsc = new List<CardContainer>();
-            string[] pairs = cards.Split(',');
-            foreach (string s in pairs)
-            {
-                string[] tuple = s.Split('-');
-
-                int id = int.Parse(tuple[0]);
-                int amount = int.Parse(tuple[1]);
-                GameObject g = GameObject.Find("ContentManager");
-                if (g != null)
-                {
-                    Card c = g.GetComponent<ContentLibrary>().GetCard(id);
-                    if (c != null)
-                    {
-                        CardContainer cc;
-                        cc.c = c;
-                        cc.count = amount;
-                        cardsc.Add(cc);
-                    }
-                }
-
-            }
-            return cardsc;
-        }
-
         //format of user card string: "id-#,id2-#..."
         public static void InitUserCards(string userCards, int mode)
         {
@@ -283,14 +186,14 @@ namespace eldritch {
         //user has destroyed a card in crafting
         public static void RemoveCard(string cardName)
         {
-            for( int i = 0; i < Global.userCards.Count; i++)
+            for (int i = 0; i < Global.userCards.Count; i++)
             {
                 if (userCards[i].CardName.Equals(cardName))
                 {
                     Card tmp = userCards[i];
                     tmp.CopiesOwned--;
                     userCards[i] = tmp;
-                    if(tmp.CopiesOwned <= 0)
+                    if (tmp.CopiesOwned <= 0)
                     {
                         userCards.RemoveAt(i);
                     }
@@ -313,6 +216,7 @@ namespace eldritch {
 
             }
         }
+        //add a card to user collection
         public static void AddCard(string cardName)
         {
             for (int i = 0; i < Global.userCards.Count; i++)
@@ -362,103 +266,7 @@ namespace eldritch {
                 Debug.Log("error");
             }
         }
-        public static void InitNewPlayer()
-        {
-            if (userCards.Count == 0)
-            {
-                InitUserCards("0-32",0);
-            }
-            if (userDecks.Count == 0)
-            {
-                InitUserDecks(new string[] { "First Deck,0-32" });
-            }
-        }
-        public static void InitUserDecks(string[] decks)
-        {
-            Global.userDecks = new List<Deck>();
-            foreach(string s in decks)
-            {
-                string[] first = s.Split(new char[] { ',' },2);
-                Deck d = new Deck();
-                d.DeckName = first[0];
-                Debug.Log(first[1]);
-                d.CardsInDeck = StringToDeck(first[1]);
-                Global.userDecks.Add(d);
-
-            }
-        }
-        public static void AddDeck(Deck d)
-        {
-            for(int i = 0; i < userDecks.Count; i++)
-            {
-                if (d.DeckName.Equals(userDecks[i].DeckName))
-                {
-                    userDecks[i] = d;
-                    return;
-                }
-            }
-            userDecks.Add(d);
-        }
-        public static void AddSharedDeck(Deck d)
-        {
-            for(int i = 0; i < sharedDecks.Count; i++)
-            {
-                if (d.DeckName.Equals(sharedDecks[i].DeckName))
-                {
-                    sharedDecks[i] = d;
-                    return;
-                }
-            }
-            sharedDecks.Add(d);
-        }
-        public static bool ContainsDeck(string name)
-        {
-            foreach(Deck d in userDecks)
-            {
-                if (d.DeckName.Equals(name))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public static bool ContainsSharedDeck(string name)
-        {
-            foreach(Deck d in sharedDecks)
-            {
-                if (d.DeckName.Equals(name))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public static void RemoveDeck(string deckName)
-        {
-            for(int i = 0; i < userDecks.Count; i++)
-            {
-                if (userDecks[i].DeckName.Equals(deckName))
-                {
-                    try
-                    {
-                        deleteDeck saved = new deleteDeck("deleteDeck", Global.getID(), Global.getToken(), deckName);
-                        string json = JsonConvert.SerializeObject(saved);
-                        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-                        Global.stream.Write(data, 0, data.Length);
-                        data = new Byte[256];
-                        string responseData = string.Empty;
-                        Int32 bytes = Global.stream.Read(data, 0, data.Length);
-                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    userDecks.RemoveAt(i);
-                }
-            }
-        }
-
+        //get user collection
         public static string GetCollection()
         {
             try
@@ -480,11 +288,211 @@ namespace eldritch {
             }
             return null;
         }
+        //check if user has enough surplus cards to use crafting recipe
+        public static bool EnoughToCraft(CraftingRecipe cr)
+        {
+            foreach (Deck d in userDecks)
+            {
+                if (cr.BaseCard.Equals(cr.FodderCard))
+                {
+                    if (d.AmountInDeck(cr.BaseCard) > (GetUserCard(cr.BaseCard).CopiesOwned + 2))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (d.AmountInDeck(cr.BaseCard) >= GetUserCard(cr.BaseCard).CopiesOwned ||
+                    d.AmountInDeck(cr.FodderCard) >= GetUserCard(cr.FodderCard).CopiesOwned)
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (cr.BaseCard.Equals(cr.FodderCard) && GetUserCard(cr.BaseCard).CopiesOwned < 2)
+            {
+                Debug.Log("Copies owned: " + GetUserCard(cr.BaseCard).CopiesOwned);
+                return false;
+            }
+            if (GetUserCard(cr.BaseCard).CopiesOwned == 0 || GetUserCard(cr.FodderCard).CopiesOwned == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        //get a card owned by the user
+        public static Card GetUserCard(string cardName)
+        {
+            foreach (Card c in userCards)
+            {
+                if (c.CardName.Equals(cardName))
+                {
+                    return c;
+                }
+            }
+
+            return null;
+        }
+        #endregion
+        //region for all global deck related methods
+        #region decks
+            //get a shared or user deck from the server
+        public static string[] GetDeckByNameFromServer(string deckName, bool shared)
+        {
+            Debug.Log(deckName);
+            if (deckName.Equals("no decks"))
+            {
+                return null;
+            }
+            try
+            {
+                string[] useless = new string[1];
+                deckupload saved = new deckupload("getOneDeck", Global.getID(), Global.getToken(), useless, deckName, shared);
+                string json = JsonConvert.SerializeObject(saved);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Debug.Log("Deck resp: " + responseData);
+                string[] temp = responseData.Split(',');
+                return temp;
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
+        }
+        //convert a string to deck card list
+        private static List<CardContainer> StringToDeck(string cards)
+        {
+            List<CardContainer> cardsc = new List<CardContainer>();
+            string[] pairs = cards.Split(',');
+            foreach (string s in pairs)
+            {
+                string[] tuple = s.Split('-');
+
+                int id = int.Parse(tuple[0]);
+                int amount = int.Parse(tuple[1]);
+                GameObject g = GameObject.Find("ContentManager");
+                if (g != null)
+                {
+                    Card c = g.GetComponent<ContentLibrary>().GetCard(id);
+                    if (c != null)
+                    {
+                        CardContainer cc;
+                        cc.c = c;
+                        cc.count = amount;
+                        cardsc.Add(cc);
+                    }
+                }
+
+            }
+            return cardsc;
+        }
+        //initialize user decks
+        public static void InitUserDecks(string[] decks)
+        {
+            Global.userDecks = new List<Deck>();
+            foreach (string s in decks)
+            {
+                string[] first = s.Split(new char[] { ',' }, 2);
+                Deck d = new Deck();
+                d.DeckName = first[0];
+                Debug.Log(first[1]);
+                d.CardsInDeck = StringToDeck(first[1]);
+                Global.userDecks.Add(d);
+
+            }
+        }
+        //add a deck to userDecks (no server sync)
+        public static void AddDeck(Deck d)
+        {
+            for (int i = 0; i < userDecks.Count; i++)
+            {
+                if (d.DeckName.Equals(userDecks[i].DeckName))
+                {
+                    userDecks[i] = d;
+                    return;
+                }
+            }
+            userDecks.Add(d);
+        }
+        //add a deck to sharedDecks (no server sync)
+        public static void AddSharedDeck(Deck d)
+        {
+            for (int i = 0; i < sharedDecks.Count; i++)
+            {
+                if (d.DeckName.Equals(sharedDecks[i].DeckName))
+                {
+                    sharedDecks[i] = d;
+                    return;
+                }
+            }
+            sharedDecks.Add(d);
+        }
+        //checks if user has a deck with a specific name
+        public static bool ContainsDeck(string name)
+        {
+            foreach (Deck d in userDecks)
+            {
+                if (d.DeckName.Equals(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        //check if user has a shared deck with a specific name
+        public static bool ContainsSharedDeck(string name)
+        {
+            foreach (Deck d in sharedDecks)
+            {
+                if (d.DeckName.Equals(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        //remove a user or shared deck (syncs with server)
+        public static void RemoveDeck(string deckName, bool shared)
+        {
+            for (int i = 0; i < (shared == true ? sharedDecks.Count :userDecks.Count); i++)
+            {
+                if (shared == true? sharedDecks[i].DeckName.Equals(deckName) :userDecks[i].DeckName.Equals(deckName))
+                {
+                    try
+                    {
+                        deleteDeck saved = new deleteDeck("deleteDeck", Global.getID(), Global.getToken(), deckName, shared);
+                        string json = JsonConvert.SerializeObject(saved);
+                        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                        Global.stream.Write(data, 0, data.Length);
+                        data = new Byte[256];
+                        string responseData = string.Empty;
+                        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    if (shared == false)
+                        userDecks.RemoveAt(i);
+                    else
+                        sharedDecks.RemoveAt(i);
+                }
+            }
+        }
+        //copy a deck from shared list to user list (syncs with server)
         public static bool CopySharedDeck(Deck newDeck)
         {
             //find a shared deck
             Deck toCopy = null;
-            foreach(Deck d in sharedDecks)
+            foreach (Deck d in sharedDecks)
             {
                 if (d.DeckName.Equals(newDeck.DeckName))
                 {
@@ -496,9 +504,9 @@ namespace eldritch {
                 return false;
 
             //see if user has the cards to copy
-            foreach(CardContainer cc in toCopy.CardsInDeck)
+            foreach (CardContainer cc in toCopy.CardsInDeck)
             {
-                if(cc.c.CopiesOwned < cc.count)
+                if (cc.c.CopiesOwned < cc.count)
                 {
                     return false;
                 }
@@ -510,7 +518,7 @@ namespace eldritch {
             //sync with server
             try
             {
-                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), DeckToString(newDeck), newDeck.DeckName);
+                CopySharedDeckRequest saved = new CopySharedDeckRequest(Global.getID(), Global.getToken(), toCopy.DeckName, "copySharedDeck");
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
@@ -539,39 +547,108 @@ namespace eldritch {
             }
             return temp;
         }
-        public static Card GetUserCard(string cardName){
-            foreach(Card c in userCards){
-                if(c.CardName.Equals(cardName)){
-                    return c;
-                }
+
+        public static void ShareDeck(string deckName, string email)
+        {
+            Debug.Log("Sharing: " + deckName + " with: " + email);
+            try
+            {
+                ShareDeckRequest saved = new ShareDeckRequest(Global.getID(), Global.getToken(), deckName, email, "shareDeck");
+                string json = JsonConvert.SerializeObject(saved);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            catch (Exception)
+            {
+                
             }
 
-            return null;
+        }
+        #endregion
+
+        //region for all core global methods
+        #region root
+        public static void InitNewPlayer()
+        {
+            if (userCards.Count == 0)
+            {
+                InitUserCards("0-32", 0);
+            }
+            if (userDecks.Count == 0)
+            {
+                InitUserDecks(new string[] { "First Deck,0-32" });
+            }
+        }
+        public static string getToken()
+        {
+            try
+            {
+                // Read from the temp file.
+                StreamReader myReader = File.OpenText(tokenfile);
+                string token = myReader.ReadLine();
+                myReader.Close();
+                return token;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error reading token file: " + ex.Message);
+                return String.Empty;
+            }
         }
 
-        public static bool EnoughToCraft(CraftingRecipe cr){
-            foreach(Deck d in userDecks){
-                if(cr.BaseCard.Equals(cr.FodderCard)){
-                    if(d.AmountInDeck(cr.BaseCard) > (GetUserCard(cr.BaseCard).CopiesOwned + 2)){
-                        return false;
-                    }
-                }else{
-                    if(d.AmountInDeck(cr.BaseCard) >= GetUserCard(cr.BaseCard).CopiesOwned || 
-                    d.AmountInDeck(cr.FodderCard) >= GetUserCard(cr.FodderCard).CopiesOwned){
-                        return false;
-                    }
+        public static string getID()
+        {
+            try
+            {
+                // Read from the temp file.
+                StreamReader myReader = File.OpenText(tokenfile);
+                myReader.ReadLine();
+                string id = myReader.ReadLine();
+                myReader.Close();
+                return id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error reading token file: " + ex.Message);
+                return String.Empty;
+            }
+        }
+        public static void SetUpConnection()
+        {
+            try
+            {
+                //Connects to server and sets global variables, change localhost and port if connecting remotely.
+                Global.client = new TcpClient("localhost", 8000);
+                Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                Global.stream = Global.client.GetStream();
+                Debug.Log("Connected to: " + "localhost");
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    //Connects to server and sets global variables, change localhost and port if connecting remotely.
+                    Global.client = new TcpClient(hostIP, 8000);
+                    Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    Global.stream = Global.client.GetStream();
+                    Debug.Log("Connected to: " + hostIP);
+                }
+                catch (Exception e2)
+                {
+                    Debug.Log("Error connecting to server.");
+                    Debug.Log(e.Message);
+                    Debug.Log(e2.Message);
+                    Application.Quit();
                 }
             }
-            if(cr.BaseCard.Equals(cr.FodderCard) && GetUserCard(cr.BaseCard).CopiesOwned < 2){
-                Debug.Log("Copies owned: " + GetUserCard(cr.BaseCard).CopiesOwned);
-                return false;
-            }
-            if(GetUserCard(cr.BaseCard).CopiesOwned == 0 || GetUserCard(cr.FodderCard).CopiesOwned == 0){
-                return false;
-            }
-
-            return true;
         }
+        #endregion
+
+
 
     }
 

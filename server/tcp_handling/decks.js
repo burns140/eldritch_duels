@@ -255,6 +255,7 @@ const shareDeck = (data, sock) => {
                 if (result[0]._id == ObjectID(myId)) {
                     decktopush = findDeck(result[0], result[1], deckname);
                 } else {
+                    console.log(result[1] + ' and ' + result[0] +  ' and ' + deckname);
                     decktopush = findDeck(result[1], result[0], deckname);
                 }
 
