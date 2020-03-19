@@ -29,17 +29,34 @@ public class ProfileScript : MonoBehaviour
     private bool alreadyBlocked; // boolean to check if user is blocked by you
     public Button ReportButton; // report user button on UI
     private bool alreadyReported; // boolean to check if user is reported by you
+
+    public GameObject buttonPanel; // Panel with all buttons on UI
+
+    public Button GoBackButton; // go back button
     
 
     // Awake is called when the script instance is being loaded
     void Awake()
     {
-        displayPic();
-        displayBio();
-        displayScreenName(); 
-        setAddButton();
-        setReportButton();
-        setBlockButton();
+        if(!getBlockedMe()){ // Hide profile if I am blocked by user
+            displayPic();
+            displayBio();
+            displayScreenName(); 
+            setAddButton();
+            setReportButton();
+            setBlockButton();
+        }
+    }
+
+    private bool getBlockedMe(){
+        // @TODO Check if I am blocked by this user
+        // If I'm blocked then hide buttons and return true
+        Button[] gameObjects = buttonPanel.GetComponentsInChildren<Button>(); // Get buttons from panel
+        foreach(Button o in gameObjects){ 
+            Destroy(o.gameObject); // Destroy buttons on UI
+        }
+        return true;
+        // If I'm not blocked then return false
     }
 
     private void displayPic(){
@@ -118,5 +135,9 @@ public class ProfileScript : MonoBehaviour
             ReportButton.interactable = false; // cannot undo a report
             alreadyReported = true; 
         }
+    }
+
+    public void goBack(){ // Load Previous Scene
+
     }
 }
