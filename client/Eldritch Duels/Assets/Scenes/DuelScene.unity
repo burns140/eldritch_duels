@@ -671,6 +671,32 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1946213868}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &536725771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536725770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8483fbee5975478d818d84aa3494b76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentToReturnTo: {fileID: 0}
+  placeholderParent: {fileID: 0}
+--- !u!225 &536725772
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536725770}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &642089266
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,6 +1052,7 @@ GameObject:
   - component: {fileID: 674374119}
   - component: {fileID: 674374118}
   - component: {fileID: 674374120}
+  - component: {fileID: 674374121}
   m_Layer: 5
   m_Name: HandAreaPanel
   m_TagString: Untagged
@@ -1112,6 +1139,18 @@ MonoBehaviour:
   m_Spacing: {x: 15, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
+--- !u!114 &674374121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674374116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7657c717d258b46cc8fbf194703301d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &726253889
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2003,6 +2042,7 @@ GameObject:
   - component: {fileID: 1444714785}
   - component: {fileID: 1444714784}
   - component: {fileID: 1444714786}
+  - component: {fileID: 1444714787}
   m_Layer: 5
   m_Name: MyPlayAreaPanel
   m_TagString: Untagged
@@ -2089,6 +2129,18 @@ MonoBehaviour:
   m_Spacing: {x: 15, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
+--- !u!114 &1444714787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1444714782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7657c717d258b46cc8fbf194703301d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1529895458
 GameObject:
   m_ObjectHideFlags: 0

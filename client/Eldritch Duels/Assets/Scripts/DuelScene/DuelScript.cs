@@ -36,6 +36,10 @@ public class DuelScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        checkDeckCount(); // Check & update card back quantity on deck UI
+    }
+
+    private void checkDeckCount(){
         if(deckList.Count<30){
             cardBack1.SetActive(false); // Hide first card in deck
         }
@@ -64,6 +68,7 @@ public class DuelScript : MonoBehaviour
             GameObject c = (GameObject)Instantiate(card);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
+            c.name = b.CardName;
             c.transform.SetParent(handAreaPanel.transform, false); // Add card to hand
             handList.Add(c); // Add card to hand list
             handCount++; 
@@ -79,6 +84,7 @@ public class DuelScript : MonoBehaviour
             GameObject c = (GameObject)Instantiate(card);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
+            c.name = b.CardName;
             c.transform.SetParent(myPlayAreaPanel.transform, false); // Add card to my play area
             myPlayList.Add(c); // Add card to my play list
             playCount++; 
