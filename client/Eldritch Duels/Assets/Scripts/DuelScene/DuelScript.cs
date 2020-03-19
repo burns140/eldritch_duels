@@ -12,6 +12,7 @@ public class DuelScript : MonoBehaviour
     public GameObject cardBack3;
     public GameObject cardBack4;
 
+    public Text gameText;
     private bool isMyTurn; // Check if it is my turn
 
     public GameObject handAreaPanel; // Hand Area UI
