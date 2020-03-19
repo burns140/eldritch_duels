@@ -115,7 +115,7 @@ client/Eldritch\ Duels/.vs/*
 bin/
 obj/
 *.sln
-
+client/Eldritch Duels/.history/
 
 
 ###################
@@ -182,3 +182,4 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+

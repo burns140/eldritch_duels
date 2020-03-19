@@ -11,6 +11,9 @@ public class SearchFriendsScript : MonoBehaviour
     public GameObject inputField; // Search input field in UI
     public GameObject searchButton; // Search button in UI
     public GameObject buttonPrefab; // Button prefab in UI
+    
+    public Text ErrorText; // Show error text
+
     private List<string> searchPlayersList = new List<string>(); // To store all searched users
     private List<string> lastPlayedList = new List<string>(); // To store last 3 opponents played
 
@@ -66,14 +69,35 @@ public class SearchFriendsScript : MonoBehaviour
         }
         
         string search = inputField.GetComponentInChildren<Text>().text; // Get user input text
-
-        foreach(string value in searchPlayersList){
-            if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
-                GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
-                searched.GetComponentInChildren<Text>().text = value; // Set text to the searched username 
-                searched.transform.SetParent(searchPanel.transform, false); // Add username buttons to search panel
+        if(search.Equals("")){
+            StartCoroutine(showError());
+        }
+        else{
+            foreach(string value in searchPlayersList){
+                if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
+                    GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
+                    searched.GetComponentInChildren<Text>().text = value; // Set text to the searched username 
+                    searched.SetActive(true);
+                    searched.transform.SetParent(searchPanel.transform, false); // Add username buttons to search panel
+                }
             }
         }
+    }
+
+    IEnumerator showError(){
+        ErrorText.text = "*please input something";
+        ErrorText.GetComponent<Text>().enabled = true;
+        yield return new WaitForSeconds(3f); 
+        ErrorText.GetComponent<Text>().enabled = false;
+    }
+
+    public void buttonClicked(Button btn){
+        Debug.Log(btn.GetComponentInChildren<Text>().text);
+        loadUserProfile(); // Go to the user's profile page scene
+    }
+
+    private void loadUserProfile(){
+        
     }
 
     // Start is called before the first frame update
