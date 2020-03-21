@@ -2,13 +2,18 @@ const LinkedList = require("./LinkedList");
 const Tree = require('binary-search-tree').BinarySearchTree
 const _ = require('lodash');
 
+
 /**
  * Class that players join when waiting for a game.
  * matches 2 players with similar elo
+ * will prioritize first added
+ * @typedef {number | string} ID type of ID
+ * @typedef {{ elo: number, list: LinkedList<number> }} TreeData
 **/
-
-// will prioritize first added
-module.exports = class PlayerQueue {
+class PlayerQueue {
+    /**
+     * @param {number} eloDiff - The initial max difference between 2 players' elo in order to be matched
+     */
     constructor(eloDiff = 10) {
         if (!_.isNumber(eloDiff))
             throw Error("Must provide number");
@@ -18,8 +23,6 @@ module.exports = class PlayerQueue {
             eloDiff = 1; // Must allow some wiggle room
 
         this.size = 0;
-
-        // initial max difference between 2 players' elo in order to be matched
         this.eloDifference = eloDiff;
 
         // doubles every time a player goes unmatched in a matchPlayers.
@@ -27,19 +30,25 @@ module.exports = class PlayerQueue {
         this.currentEloRange = eloDiff;
 
         // list of IDs
-        this.queue = new LinkedList();
+        this.queue = /** @type {LinkedList<ID>} */ (new LinkedList());
 
         // faster way to find matches
         this.tree = new Tree({
             unique: true
         });
-
-        // id => data (just elo for now)
-        this.queueData = {};
+        
+        /**
+         * id => Data
+         * @typedef {number} Data
+        */
+        this.queueData = /** @type {Object.<ID, Data> */ ({});
     }
-
-    // id is some sort of ID, e.g. database ID, username
-    // elo is the competetive score
+    
+    /**
+     * adds a player with a given elo (competetive socre)
+     * @param {ID} id
+     * @param {number} elo
+     */
     addPlayer(id, elo) {
         if (this.queueData[id])
             return false;
@@ -57,19 +66,33 @@ module.exports = class PlayerQueue {
         return true;
     }
 
+    /**
+     * Removes a player from the queue
+     * @param {ID} id
+     */
     removePlayer(id) {
         if (this.queueData[id]) {
             delete this.queueData[id];
             this.size--;
+
+            if (this.queue.peekFirst() == id) {
+                this.queue.dequeue();
+                this.currentEloRange = this.eloDifference;
+            }
+
             return true;
         }
 
         return false;
         // The rest of the operations take more than O(1) time, so they can be handled during O(n) and O(log n) operations
     }
-
-    // Use for stuff like account deletion or if you know what you're doing
-    // If the player is still enqueued, elo is optional
+    
+    /**
+     * Use for stuff like account deletion or if you know what you're doing
+     * If the player is still enqueued, elo is optional
+     * @param {ID} id
+     * @param {number} [elo]
+     */
     deepRemovePlayer(id, elo) {
         // remove id from data
         if (this.queueData[id]) {
@@ -108,6 +131,9 @@ module.exports = class PlayerQueue {
         }
     }
 
+    /**
+     * @param {(id: ID)} func - a function that will receive every queued ID, one at a time
+     */
     forEachId(func) {
         let it = this.queue.it();
         while (it.hasValue()) {
@@ -121,11 +147,12 @@ module.exports = class PlayerQueue {
         }
     }
 	
-	// Call this to match players with another
-	// Promises matched players as an array of couples (array of len 2)
-	// If no one is matched, resolve an empty array
+    /**
+     * Call this to match players with another
+     * @returns {Promise<ID[]>} Promises matched players as an array of couples (array of len 2). If no one is matched, resolves an empty array
+    */
 	matchPlayers() {
-		return new Promise((res, err) => {
+		return new Promise(res => {
 			if (this.size <= 1) {
 				res([]);
 				return;
@@ -133,7 +160,13 @@ module.exports = class PlayerQueue {
 
             // get topmost queued player
             let it = this.queue.it();
-            let id, elo;
+
+            /** @type {ID} */
+            let id
+
+            /** @type {number} */
+            let elo;
+
             while (it.hasValue()) {
                 id = it.value();
                 elo = this.queueData[id];
@@ -142,9 +175,10 @@ module.exports = class PlayerQueue {
                     continue;
                 }
 
-                let matchingPlayers = this.tree.betweenBounds({ $lte: elo + this.currentEloRange, $gte: elo - this.currentEloRange });
+                let matchingPlayers = /** @type {TreeData[]} */ (this.tree.betweenBounds({ $lte: elo + this.currentEloRange, $gte: elo - this.currentEloRange }));
                 if (matchingPlayers.length != 0) {
                     // favor matching higher elo players, because the growth is unbounded
+                    /** @type {number[]} */
                     let emptyEloBins = [];
                     for (let i = matchingPlayers.length - 1; i >= 0; i--) {
                         let data2 = matchingPlayers[i];
@@ -152,7 +186,7 @@ module.exports = class PlayerQueue {
 
                         while (it2.hasValue()) {
                             let id2 = it2.value();
-                            let elo2 = this.queueData[id2];
+                            let elo2 = /** @type {number} */ (this.queueData[id2]);
                             if (elo2 == undefined || elo2 != data2.elo) {
                                 it2.delete();
                                 continue;
@@ -206,12 +240,14 @@ module.exports = class PlayerQueue {
 
                 // no one matched
                 this.currentEloRange *= 2;
-                res(this.matchPlayers());
+                res([]);
                 return;
             }
 
             res([]);
             return;
 		});
-	}
+    }
 }
+
+module.exports = PlayerQueue;

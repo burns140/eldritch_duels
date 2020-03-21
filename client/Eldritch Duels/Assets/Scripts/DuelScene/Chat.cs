@@ -5,10 +5,11 @@ using Photon.Chat;
 using ExitGames.Client.Photon;
 using eldritch;
 
+
+//TODO: LINK UP TO DUEL SCREEN UI
 public class Chat : MonoBehaviour, IChatClientListener
 {
     ChatClient chatClient;
-    string channelname = "testchannel"; //TODO: PASS IN CHANNEL NAME SOMEWHERE, POSSIBLY WHEN MATCHMAKING IS FOUND
 
     public UnityEngine.UI.Button connectbutton;
     public UnityEngine.UI.Button sendbutton;
@@ -39,7 +40,7 @@ public class Chat : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        chatClient.Subscribe(new string[] { channelname }); //REPLACE CHANNEL NAME WITH GAME ID OR SOMETHING
+        chatClient.Subscribe(new string[] { Global.matchID });
     }
 
     public void OnDisconnected()
@@ -121,11 +122,11 @@ public class Chat : MonoBehaviour, IChatClientListener
     public void sendMessage()
     {
         Debug.Log("Attempting to send message...");
-        chatClient.PublishMessage(channelname, messagetext);
+        chatClient.PublishMessage(Global.matchID, messagetext);
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Start() // REWORK TO CONNECT WHEN DUEL SCENE IS OPENED
     {
         connectbutton.onClick.AddListener(connect);
         sendbutton.onClick.AddListener(sendMessage);

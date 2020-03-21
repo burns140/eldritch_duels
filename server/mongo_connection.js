@@ -5,7 +5,14 @@ const dbconfig = require('./dbconfig.json');
 
 // create one mongo client because creating one every time it is needed is slow
 //  see https://stackoverflow.com/questions/10656574/how-do-i-manage-mongodb-connections-in-a-node-js-web-application#answer-14464750
+
+/** @type {MongoClient} */
 let mongoClient = null;
+
+/**
+ * Get the Mongo client
+ * @returns {Promise<MongoClient>}
+*/
 function get() {
     return new Promise(res => {
         if (mongoClient != null) {

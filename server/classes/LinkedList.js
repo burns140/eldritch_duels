@@ -1,8 +1,13 @@
 ﻿let _ = require("lodash");
 
-module.exports = class LinkedList {
+/**@template T */
+class LinkedList {
+    /**
+     * @constructor
+     * @param {T | T[]} [stuff]
+    */
     constructor(stuff) {
-        this.head = new LinkedListNode();
+        this.head = /** @type {LinkedListNode<T>} */ (new LinkedListNode());
         this.node = this.head;
         this._size = 0;
 
@@ -18,6 +23,7 @@ module.exports = class LinkedList {
 
     size() { return this._size; }
 
+    /** @returns {LLIterator<T>} */
     iterator() {
         return new LLIterator(this);
     }
@@ -25,32 +31,43 @@ module.exports = class LinkedList {
     it() {
         return this.iterator();
     }
-
-    // puts value on end of queue
+    
+    /**
+     * puts value on end of queue
+     * @param {T} val
+     */
     push(val) {
         new LinkedListNode(val, this.head, this.head.prev);
         this._size++;
         return this;
     }
-
-    // puts value on end of queue
+    
+    /**
+     * puts value on end of queue
+     * @param {T} val
+     */
     enqueue(val) {
         return this.push(val);
     }
 
+    /** @returns {T | undefined} */
     peekFirst() {
         return this.isEmpty() ? undefined : this.node.next.value;
     }
 
+    /** @returns {T} */
     peekLast() {
         return this.isEmpty() ? undefined : this.node.prev.value;
     }
-
-    // takes first value on queue
+    
+    /**
+     * takes first value on queue
+     * @returns {T}
+     */
     dequeue() {
-        let node = this.node.next;
+        let node = (this.node.next);
         if (node == this.head)
-            return null;
+            return undefined;
 
         this.node.next = node.next;
         node.next.prev = this.node;
@@ -62,6 +79,7 @@ module.exports = class LinkedList {
         return this.node.next == this.head;
     }
 
+    /** @returns {string} */
     toString() {
         let it = this.iterator();
         if (!it.hasNext())
@@ -77,7 +95,14 @@ module.exports = class LinkedList {
     }
 }
 
+/**@template T */
 class LinkedListNode {
+    /**
+     * 
+     * @param {T} value
+     * @param {LinkedListNode<T>} next
+     * @param {LinkedListNode<T>} prev
+     */
     constructor(value, next = this, prev = this) {
         this.value = value;
         this.next = next;
@@ -88,7 +113,9 @@ class LinkedListNode {
     }
 }
 
+/** @template T */
 class LLIterator {
+    /** @param {LinkedList<T>} ll*/
     constructor(ll) {
         this.list = ll;
         this.node = ll.node.next;
@@ -109,13 +136,22 @@ class LLIterator {
         this.node = this.node.next;;
     }
 
+    /**
+     * Sets or gets the value at current node
+     * @param {T} [val] - if defined, sets the value to it. Otherwise, gets the value
+     * @returns {T}
+     */
     value(val) {
         if (val == undefined)
             return this.node.value;
         else
-            this.node.value = val;
+            return this.node.value = val;
     }
 
+    /**
+     * Inserts value after current node
+     * @param {T} val
+     */
     insertAfter(val) {
         if (this.node == this.list.head)
             throw Error("inserting after end of list");
@@ -124,9 +160,13 @@ class LLIterator {
         new LinkedListNode(val, this.node.next, this.node);
     }
 
+    /**
+     * Deletes current node and moves to next one
+     * @returns {T} The value at the current node
+    */
     delete() {
         if (this.node == this.list.head)
-            return;
+            return undefined;
 
         let node = this.node;
 
@@ -138,3 +178,5 @@ class LLIterator {
         return node.value;
     }
 }
+
+module.exports = LinkedList;

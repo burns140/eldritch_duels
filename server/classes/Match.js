@@ -1,18 +1,34 @@
+
+
 module.exports = class Match {
     init() {
+        /** @type {ID[]} */
         this.ids = [];
-        this.sockets = {};
+
+        /** @type {import("net").Socket[]} */
+        this.sockets = [];
+
+        /** @type {Object.<ID, Function} */
         this.closeFuncs = {};
+
+        /** @type {Object.<ID, Function} */
         this.dataFuncs = {};
     }
 
-    constructor() {
+    constructor(dataHandler) {
+        this.dataHandler = dataHandler;
+
         this.init();
     }
 
+    /**
+     * Adds a player to the match
+     * @param {string|number} id
+     * @param {Socket} socket
+     */
     addPlayer(id, socket) {
         this.ids.push(id);
-        this.sockets[id] = socket;
+        this.sockets.push(socket);
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
@@ -20,6 +36,11 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
+            if (data == "YOU LOSE") {
+                this.endMatch(data, id);
+                return;
+            }
+            
             this.forEachPlayer((cid, sock) => {
                 if (cid == id)
                     return;
@@ -30,7 +51,10 @@ module.exports = class Match {
 
         socket.on('data', this.dataFuncs[id]);
     }
-
+    
+    /** 
+     * @param {(string|number, import("net").Socket)} handler
+     */
     forEachPlayer(handler) {
         for (let i = 0; i < this.ids.length; i++) {
             let id = this.ids[i];
@@ -38,10 +62,10 @@ module.exports = class Match {
             handler(id, socket);
         }
     }
-
-    endMatch(skipId = undefined) {
+    
+    endMatch(data, skipID) {
         this.forEachPlayer((id, sock) => {
-            if (id == skipId)
+            if (skipID == id)
                 return;
 
             let fn;
@@ -51,7 +75,9 @@ module.exports = class Match {
             if (fn = this.dataFuncs[id])
                 sock.off('data', fn);
 
-            sock.write('match ended');
+            sock.write(data);
+
+            sock.on("data", this.dataHandler);
         });
 
         this.init();
