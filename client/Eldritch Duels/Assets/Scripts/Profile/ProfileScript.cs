@@ -39,14 +39,18 @@ public class ProfileScript : MonoBehaviour
     public GameObject FriendRequestsButton; // button to show friend requests
     private bool isMe; // True if it's my profile
     private bool hasPicIndex; // Check if picture was from default pictures
-    private List<string> friendsList = new List<string>(); // To store all my friends
-    private List<string> friendRequestsList = new List<string>(); // To store all my friend requests
+    
     public GameObject friendButtonPrefab; // Button prefab for friends buttons in UI
     public GameObject requestButtonPrefab; // Button prefab for friend requests buttons in UI
     public GameObject friendsPanelHolder; // hide/unhide holder of friendsPanel
     public GameObject friendsPanel; // panel to display friends list in UI
     public GameObject requestsPanelHolder; // hide/unhide holder of requestsPanel
     public GameObject requestsPanel; // panel to display friend requests list in UI
+    public GameObject handleRequestPanel; // panel to handle a request in UI
+    public GameObject userRequestButton; // button to go to profile of user who sent the request
+    public GameObject acceptRequestButton; // button to accept request in UI
+    public GameObject rejectRequestButton; // button to reject request in UI
+    public GameObject cancelRequestButton; // button to hide handle request panel in UI 
     public Text ErrorText; // Display error message on UI
     #endregion
 
@@ -371,9 +375,11 @@ public class ProfileScript : MonoBehaviour
         friendsPanelHolder.SetActive(false); // hide friends list
     }
 
-    private bool setUpFriendsList(){ // Set up friends list
+    private List<string> setUpFriendsList(){ // Set up friends list
+        List<string> friendsList = new List<string>(); // To store all my friends
+        
         Button[] gameObjects = friendsPanel.GetComponentsInChildren<Button>(); // Get previous friend buttons
-        foreach(Button o in gameObjects){ 
+        foreach(Button o in gameObjects){
             Destroy(o.gameObject); // Destroy all previous friend buttons
         }
         
@@ -401,43 +407,40 @@ public class ProfileScript : MonoBehaviour
         //     // foreach(string value in getFriends){
         //     //     friendsList.Add(value); // add friends to friends list
         //     // }
-        // }
-        if(friendsList.Count == 0){
-            StartCoroutine(showError("No friends found, please search users & add friends!")); // show error
-            return false;
+        // } 
+        foreach(string value in friendsList){
+            GameObject friendObject = (GameObject)Instantiate(friendButtonPrefab); // Create friend user button
+            friendObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
+            friendObject.SetActive(true);
+            friendObject.transform.SetParent(friendsPanel.transform, false); // Add friend username buttons to friends panel
         }
-        else{
-            foreach(string value in friendsList){
-                GameObject friendObject = (GameObject)Instantiate(friendButtonPrefab); // Create friend user button
-                friendObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
-                friendObject.SetActive(true);
-                friendObject.transform.SetParent(friendsPanel.transform, false); // Add friend username buttons to friends panel
-            }
-            return true;
-        }
+
+        return friendsList;
     }
 
     public void loadFriendsList(){ // handle button & hide/unhide friends list
-        bool done = setUpFriendsList();
-        if(friendsPanelHolder.activeSelf || !done){
+        requestsPanelHolder.SetActive(false); // hide friend requests list
+        List<string> getList = setUpFriendsList();
+        if(getList.Count == 0){
+            StartCoroutine(showError("No friends found, please search users & add friends!")); // show error
+            friendsPanelHolder.SetActive(false); // hide friends list
+        }
+        else if(friendsPanelHolder.activeSelf){
             friendsPanelHolder.SetActive(false); // hide friends list
         }
         else{
             friendsPanelHolder.SetActive(true); // unhide friends list
         }
-        requestsPanelHolder.SetActive(false); // hide friend requests list
     }
 
-    public void friendButtonClicked(Button btn){ // click on a user from from friends list
+
+    public void loadUserProfile(Button btn){ // Go to the user's profile page scene
         Debug.Log(btn.GetComponentInChildren<Text>().text);
-        loadUserProfile(); 
     }
 
-    private void loadUserProfile(){ // Go to the user's profile page scene
-
-    }
-
-    private bool setUpFriendRequestsList(){ // Set up friend requests list
+    private List<string> setUpFriendRequestsList(){ // Set up friend requests list
+        List<string> friendRequestsList = new List<string>(); // To store all my friend requests
+        
         Button[] gameObjects = requestsPanel.GetComponentsInChildren<Button>(); // Get previous request buttons
         foreach(Button o in gameObjects){ 
             Destroy(o.gameObject); // Destroy all previous friend request buttons
@@ -468,35 +471,53 @@ public class ProfileScript : MonoBehaviour
         //     //     friendRequestsList.Add(value); // add users to friend requests list
         //     // }
         // }
-        if(friendRequestsList.Count == 0){
-            StartCoroutine(showError("No friend requests yet!")); // show error
-            return false;
+        foreach(string value in friendRequestsList){
+            GameObject requestObject = (GameObject)Instantiate(requestButtonPrefab); // Create friend user button
+            requestObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
+            requestObject.SetActive(true);
+            requestObject.transform.SetParent(requestsPanel.transform, false); // Add friend username buttons to friends panel
         }
-        else{
-            foreach(string value in friendRequestsList){
-                GameObject requestObject = (GameObject)Instantiate(requestButtonPrefab); // Create friend user button
-                requestObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
-                requestObject.SetActive(true);
-                requestObject.transform.SetParent(requestsPanel.transform, false); // Add friend username buttons to friends panel
-            }
-            return true;
-        }
+
+        return friendRequestsList;
     }
 
-    public void loadRequestsList(){ // Handle button & hide/unhide requests list
-        bool done = setUpFriendRequestsList();
-        if(requestsPanelHolder.activeSelf || !done){
+    public void loadRequestsList(){ // Handle button & hide/unhide requests list    
+        friendsPanelHolder.SetActive(false); // hide friend list
+        List<string> getList = setUpFriendRequestsList();
+        if(getList.Count == 0){
+            StartCoroutine(showError("No friend requests yet!")); // show error
+            requestsPanelHolder.SetActive(false); // hide friend requests list
+        }
+        else if(requestsPanelHolder.activeSelf){
             requestsPanelHolder.SetActive(false); // hide friend requests list
         }
         else{
             requestsPanelHolder.SetActive(true); // unhide friend requests list
         }
-        
-        friendsPanelHolder.SetActive(false); // hide friend list
     }
 
     public void requestButtonClicked(Button btn){ // click on a friend request
         Debug.Log(btn.GetComponentInChildren<Text>().text); 
+        requestsPanelHolder.SetActive(false); // hide friend requests list
+        handleRequestPanel.SetActive(true);
+        userRequestButton.GetComponentInChildren<Text>().text = btn.GetComponentInChildren<Text>().text; // set username
+    }
+
+    public void acceptRequest(){ // accept a friend request
+        // @TODO accept the friend request & add to friend list on server @STEPHEN
+        handleRequestPanel.SetActive(false); // hide handle request panel UI
+        loadRequestsList(); // to update the requests list
+    }
+
+    public void rejectRequest(){ // reject a friend request
+        // @TODO reject the friend request & remove from friend list on server @STEPHEN
+        handleRequestPanel.SetActive(false); // hide handle request panel UI
+        loadRequestsList(); // to update the requests list
+    }
+
+    public void cancelRequest(){ // hide handle request panel UI
+        handleRequestPanel.SetActive(false);
+        requestsPanelHolder.SetActive(true); // unhide requests list
     }
 
 }
