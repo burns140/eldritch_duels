@@ -25,11 +25,13 @@ public class ProfileScript : MonoBehaviour
     private string usernameText; // store username text from server
 
     public GameObject AddButton; // add/remove friend button on UI
-    private bool alreadyFriend; // boolean to check if user is already a friend
+    private bool alreadyFriend=false; // boolean to check if user is already a friend
+    private bool alreadySentRequest=false; // boolean to check if I have already sent a friend request to the user
+    private bool alreadyReceivedRequest=false; // boolean to check if I have already received a friend request from the user
     public GameObject BlockButton; // block user Button on UI
-    private bool alreadyBlocked; // boolean to check if user is blocked by you
+    private bool alreadyBlocked=false; // boolean to check if user is blocked by you
     public GameObject ReportButton; // report user button on UI
-    private bool alreadyReported; // boolean to check if user is reported by you
+    private bool alreadyReported=false; // boolean to check if user is reported by you
 
     public GameObject buttonPanel; // Panel with all buttons on UI
 
@@ -37,8 +39,8 @@ public class ProfileScript : MonoBehaviour
     public GameObject EditProfileButton; // edit profile button
     public GameObject FriendsButton; // button to show friends list
     public GameObject FriendRequestsButton; // button to show friend requests
-    private bool isMe; // True if it's my profile
-    private bool hasPicIndex; // Check if picture was from default pictures
+    private bool isMe=false; // True if it's my profile
+    private bool hasPicIndex=false; // Check if picture was from default pictures
     
     public GameObject friendButtonPrefab; // Button prefab for friends buttons in UI
     public GameObject requestButtonPrefab; // Button prefab for friend requests buttons in UI
@@ -226,8 +228,8 @@ public class ProfileScript : MonoBehaviour
             AddButton.SetActive(false); // cannot add myself as friend
         }
         else{
-            // @TODO Get from server if I have already blocked the user
-            alreadyFriend = true; // Check if the user is my friend from server
+            // @TODO Get from server if user is already my friend @STEPHEN
+            alreadyFriend = true; // Store if the user is my friend
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool failed = false;
             if(failed){
@@ -237,12 +239,29 @@ public class ProfileScript : MonoBehaviour
             else{
                 if(alreadyFriend){
                     AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
+                    AddButton.GetComponentInChildren<Button>().interactable = true;
+                }
+                else{
+                    // @TODO Get from server if user has sent me friend request @STEPHEN
+                    alreadyReceivedRequest = true; // Store if the user has sent me friend request
+                    if(alreadyReceivedRequest){
+                        AddButton.GetComponentInChildren<Text>().text = "Handle Request"; // set button text
+                        AddButton.GetComponentInChildren<Button>().interactable = true;
+                    }
+                    else{
+                        // @TODO Get from server if I have sent a friend request to the user @STEPHEN
+                        alreadySentRequest = true; // Store if I sent the user a friend request
+                        if(alreadySentRequest){
+                            AddButton.GetComponentInChildren<Text>().text = "Request Sent"; // set button text
+                            AddButton.GetComponentInChildren<Button>().interactable = false;
+                        }
+                    }
                 }
             }
         }
     }
 
-    public void handleAddFriend(){ // add friend/unfriend & handle button
+    public void handleAddFriend(){ // friend/unfriend/handleRequest button
         if(alreadyFriend){ // unfriend user
             // @TODO Unfriend user through server @STEPHEN
             // @TODO Let me know if server didn't work as expected @STEPHEN
@@ -252,20 +271,32 @@ public class ProfileScript : MonoBehaviour
             }
             else{
                 AddButton.GetComponentInChildren<Text>().text = "Add Friend"; // set button text
+                AddButton.GetComponentInChildren<Button>().interactable = true;
                 alreadyFriend = false;  // since we unfriended the user, set alreadyFriend to false
+                alreadySentRequest = false; // just to make sure
+                alreadyReceivedRequest = false; // just to make sure
             }
         }
-        else{ // add user as friend
-            // @TODO Add user as friend through server @STEPHEN
-            // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool friendFailed = false;
-            if(friendFailed){
-                StartCoroutine(showError("Could not add user as friend, please try again")); // set error message
+        else{ // user is not a friend
+            if(alreadyReceivedRequest){ // The user has sent me a friend request
+                handleRequestPanel.SetActive(true); // unhide handle request panel
+                userRequestButton.SetActive(false); // hide username button
             }
-            else{
-                AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
-                alreadyFriend = true; // since we added user as friend, set alreadyFriend to true
-            }
+            else{ // sent a friend reqiest to the user
+                // @TODO Add user as friend through server @STEPHEN
+                // @TODO Let me know if server didn't work as expected @STEPHEN
+                bool friendFailed = false;
+                if(friendFailed){
+                    StartCoroutine(showError("Could not add user as friend, please try again")); // set error message
+                }
+                else{
+                    AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
+                    AddButton.GetComponentInChildren<Button>().interactable = true;
+                    alreadyFriend = true; // since we added user as friend, set alreadyFriend to true
+                    alreadySentRequest = false; // just to be sure
+                    alreadyReceivedRequest = false; // just to be sure
+                }
+            } 
         }
     }
 
@@ -363,6 +394,7 @@ public class ProfileScript : MonoBehaviour
         ErrorText.text = value;
         ErrorText.GetComponent<Text>().enabled = true;
         yield return new WaitForSeconds(3f); 
+        ErrorText.text = "";
         ErrorText.GetComponent<Text>().enabled = false;
     }
 
@@ -489,9 +521,12 @@ public class ProfileScript : MonoBehaviour
             requestsPanelHolder.SetActive(false); // hide friend requests list
         }
         else if(requestsPanelHolder.activeSelf){
+            ErrorText.GetComponent<Text>().enabled = false;
             requestsPanelHolder.SetActive(false); // hide friend requests list
         }
         else{
+            ErrorText.text = "Click on username to handle friend request";
+            ErrorText.GetComponent<Text>().enabled = true;
             requestsPanelHolder.SetActive(true); // unhide friend requests list
         }
     }
@@ -500,24 +535,85 @@ public class ProfileScript : MonoBehaviour
         Debug.Log(btn.GetComponentInChildren<Text>().text); 
         requestsPanelHolder.SetActive(false); // hide friend requests list
         handleRequestPanel.SetActive(true);
+        ErrorText.text = "Click on username to go to their profile";
+        ErrorText.GetComponent<Text>().enabled = true;
         userRequestButton.GetComponentInChildren<Text>().text = btn.GetComponentInChildren<Text>().text; // set username
     }
 
     public void acceptRequest(){ // accept a friend request
-        // @TODO accept the friend request & add to friend list on server @STEPHEN
-        handleRequestPanel.SetActive(false); // hide handle request panel UI
-        loadRequestsList(); // to update the requests list
+        if(isMe){
+            // @TODO accept the friend request & add to friend list on server @STEPHEN
+            // @TODO Let me know if server didn't work as expected @STEPHEN
+            // bool myAcceptFailed = false;
+            // if(myAcceptFailed){ // server request failed
+            //     StartCoroutine(showError("Could not accept friend request, please try again")); // set error message
+            // }
+            // else{
+            handleRequestPanel.SetActive(false); // hide handle request panel UI
+            StartCoroutine(showError("Friend Request Accepted")); // set message
+            loadRequestsList(); // to update the requests list
+            //}
+        }
+        else{
+            // @TODO accept the friend through server @STEPHEN
+            // @TODO Let me know if server didn't work as expected @STEPHEN
+            // bool userAcceptFailed = false;
+            // if(userAcceptFailed){ // server request failed
+            //     StartCoroutine(showError("Could not accept friend request, please try again")); // set error message
+            // }
+            // else{
+            handleRequestPanel.SetActive(false); // hide handle request panel UI
+            StartCoroutine(showError("Friend Request Accepted")); // set message
+            AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
+            AddButton.GetComponentInChildren<Button>().interactable = true;
+            alreadyFriend = true; // now the user is a friend, set to true
+            alreadyReceivedRequest = false; // just to be sure
+            alreadySentRequest = false; // just to be sure
+            //}
+        }
+        
     }
 
     public void rejectRequest(){ // reject a friend request
-        // @TODO reject the friend request & remove from friend list on server @STEPHEN
-        handleRequestPanel.SetActive(false); // hide handle request panel UI
-        loadRequestsList(); // to update the requests list
+        if(isMe){
+            // @TODO reject the friend request & remove from friend list on server @STEPHEN
+            // @TODO Let me know if server didn't work as expected @STEPHEN
+            // bool myRejectFailed = false;
+            // if(myRejectFailed){ // server request failed
+            //     StartCoroutine(showError("Could not reject request, please try again")); // set error message
+            // }
+            // else{
+            handleRequestPanel.SetActive(false); // hide handle request panel UI
+            StartCoroutine(showError("Friend Request Rejected")); // set message
+            loadRequestsList(); // to update the requests list
+            //}
+        }
+        else{
+            // @TODO reject the friend request on server @STEPHEN
+            // @TODO Let me know if server didn't work as expected @STEPHEN
+            // bool userRejectFailed = false;
+            // if(userRejectFailed){ // server request failed
+            //     StartCoroutine(showError("Could not reject request, please try again")); // set error message
+            // }
+            // else{
+            handleRequestPanel.SetActive(false); // hide handle request panel UI
+            StartCoroutine(showError("Friend Request Rejected")); // set message
+            AddButton.GetComponentInChildren<Text>().text = "Add Friend"; // set button text
+            AddButton.GetComponentInChildren<Button>().interactable = true;
+            alreadyFriend = false; // now the user is not a friend, set to false
+            alreadyReceivedRequest = false; // just to be sure
+            alreadySentRequest = false; // just to be sure
+            //}
+        }
+        
     }
 
     public void cancelRequest(){ // hide handle request panel UI
+        ErrorText.text = "";
+        ErrorText.GetComponent<Text>().enabled = false;
         handleRequestPanel.SetActive(false);
-        requestsPanelHolder.SetActive(true); // unhide requests list
+        if(isMe) {
+            requestsPanelHolder.SetActive(true); // unhide requests list
+        }
     }
-
 }
