@@ -35,4 +35,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DuelScene.unity
     guid: a2d5b4231b920a140aae0d199733c52b
+  - enabled: 1
+    path: Assets/Scenes/MarketScene.unity
+    guid: dfb1c6a83698260409628a543c9e3ab2
+  - enabled: 1
+    path: Assets/Scenes/OpenPack.unity
+    guid: 8e35a9392addb0b478de88ac171ace19
   m_configObjects: {}

@@ -5,11 +5,6 @@ const generator = require('generate-password');
 const nodemailer = require('nodemailer');
 const myEmail = 'eldritch.duels@gmail.com';
 
-var startCollection = {
-    "Test 0": 30,
-    "Test 1": 30
-};
-
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -47,8 +42,24 @@ const signup = (data, sock) => {
                     var startCollection = {         // The collection they start with
                         "Test 0": 30,
                         "Test 1": 30,
-                        //"testing": 1,
-                        //"fake": 0
+                        "Test 2": 24,
+                        "Test 3": 21,
+                        "Test 4": 6,
+                        "Test 5": 12,
+                        "Test 6": 3,
+                        "Test 7": 9,
+                        "Test 8": 13,
+                        "Test 9": 25,
+                        "Test 10": 15,
+                        "Test 11": 2,
+                        "Test 12": 1,
+                        "Test 13": 16,
+                        "Test 14": 27,
+                        "Test 15": 15,
+                        "Test 16": 9,
+                        "Test 17": 10,
+                        "Test 18": 5,
+                        "Test 19": 20,
                     };
 
                     var startDecks = [              // The decks they will start with
@@ -81,7 +92,14 @@ const signup = (data, sock) => {
                         currency: 500,                       // int
                         bio: "enter_bio",                   // string
                         verified: false,                     // boolean of whether they verified their account
-                        verifyStr: str                      // string
+                        verifyStr: str,                      // string
+                        blocked: [],                        // array of user emails I've blocked
+                        blockedBy: [],                      // array of user emails I've been blocked by
+                        friendRequests: [],                 // array of user emails who want to friend me
+                        friends: [],                        // array of user emails who are my friend
+                        friendRequestsSent: [],             // array of user emails who I've sent friend requests to
+                        reports: [],                        // array of reports I have of { user, time }
+                        banLength: 0                          // length of current tempBan
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);

@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
                 if (result != 0) {                                      // Fail if the email already exists
                     console.log(`User with email ${email} already exists`);
                     res.status(400).send('User with that email already exists');
-                    client.close();
+                    // client.close()
                     return;
                 } else {                                                // Create user using our user schema
                     db.collection('users').insertOne({
@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
                     }).then(result => {
                         console.log(`User with email ${email} successfully created`);
                         res.status(201).send('User successfully created');
-                        client.close();
+                        // client.close()
                         return;
                     }).catch(err => {
                         console.log(err);

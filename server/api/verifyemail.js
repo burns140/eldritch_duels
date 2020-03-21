@@ -11,8 +11,8 @@ router.get('/:verify', (req, res) => {
     console.log('verifying email');
 
     try {
-        MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-            assert.equal(null, err);
+        //MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             /* Find a user with given verification string. That user will be marked
@@ -28,12 +28,12 @@ router.get('/:verify', (req, res) => {
                     console.log('verified email');
                     res.status(200).send('successfully verified email');
                 }
-                client.close();
+                // client.close()
                 return;
             }).catch(err => {
                 console.log(err);
                 res.status(400).send(err);
-                client.close();
+                // client.close()
                 return;
             });
         });

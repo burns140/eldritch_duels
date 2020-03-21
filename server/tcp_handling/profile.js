@@ -1,7 +1,8 @@
-const assert = require('assert');
 const bcrypt = require('bcrypt');
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
+const TEMP_BAN_MARKS = [1, 3, 5, 10, 12] 
+const TEMP_BAN_LENGTHS_MINS = [1, 10, 300, 1440, -1];
 
 /**
  * Change configurable profile information
@@ -26,7 +27,7 @@ const editProfile = (data, sock) => {
                     $set: { username: username, avatar: avatar, bio: bio }
                 }
             ).then(result => {
-                if (result.modifiedCount != 1) {            // No document was modified, so error
+                if (result.matchedCount != 1) {            // No document was modified, so error
                     console.log('modified not 1');
                     sock.write(`Failed to update profile correctly`);
                 } else {
@@ -184,7 +185,139 @@ const changeEmail = (data, sock) => {
     }
 }
 
+/**
+ * View information on another user's profile
+ * @param {object} data 
+ * @param {object} sock 
+ */
+const viewProfile = (data, sock) => {
+    const theirEmail = data.theirEmail;
+    const errString = `couldn't retrieve profile`;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            /* Get the other user's avatar, bio, and username */
+            db.collection('users').findOne(
+                { email: theirEmail }
+            ).then(result => {
+                if (!result) {
+                    throw new Error(errString);
+                }
+                var temparr = [];
+                temparr.push(`avatar-${result.avatar}`);
+                temparr.push(`bio-${result.bio}`);
+                temparr.push(`username-${result.username}`);
+                sock.write(temparr.toString());
+                console.log('profile found successfully');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
+                return;
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
+/**
+ * Report a player. Add this report to their array. If they have reached a mark, temp ban them.
+ * @param {object} data 
+ * @param {object} sock 
+ */
+const reportPlayer = (data, sock) => {
+    var theirEmail = data.theirEmail;
+    var myEmail = data.myEmail;
+    var errString = 'failed to report player';
+
+    MongoClient.get().then(client => {
+        const db = client.db('eldritch_data');
+
+        var report = {
+            user: myEmail,
+            date: Date.now()
+        }
+
+        console.log(report);
+
+        /* Add this new report to their reports array */
+        db.collection('users').updateOne(
+            { email: theirEmail },
+            { $push: { reports: report } }
+        ).then(result => {
+            if (result.modifiedCount != 1) {
+                throw new Error(`couldn't find user with that email OR user already reported by you`);
+            }
+
+            /* Add this user to my reported array */
+            db.collection('users').updateOne(
+                { email: myEmail },
+                { $push: { reported: theirEmail } }
+            ).then(result => {
+                if (result.modifiedCount != 1) {
+                    throw new Error(`couldn't add them to my reported`);
+                }
+
+                /* Find the user who has been reported to see if they should be banned */
+                db.collection('users').findOne(
+                    { email: theirEmail }
+                ).then(result => {
+                    if (result == null) {
+                        throw new Error(`couldn't find user with that email`);
+                    }
+
+                    var reports = result.reports;
+
+                    for (var i = 0; i < TEMP_BAN_MARKS.length; i++) {
+                        if (TEMP_BAN_MARKS[i] == reports.length) {
+                            
+                            /* The user should be temp banned. Update their banLength field */
+                            db.collection('users').updateOne(
+                                { email: theirEmail },
+                                { $set: { banLength: Date.now() + TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
+                                //{ $set: { banLength: TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
+                            ).then(result => {
+                                if (result.modifiedCount != 1) {
+                                    throw new Error(`could not update ban field`);
+                                }
+                                console.log('temp ban added successfully');
+                            }).catch(err => {
+                                console.log(err);
+                                sock.write(err);
+                                return;
+                            });
+                            break;
+
+                        }
+                    }
+
+                    console.log('user reported successfullly');
+                    sock.write('user reported successfully');
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err);
+                    return;
+                });
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+                return;
+            });
+        }).catch(err => {
+            console.log(err);
+            sock.write(err);
+        });
+
+            
+    });
+}
+
+exports.reportPlayer = reportPlayer;
 exports.deleteAccount = deleteAccount;
 exports.editProfile = editProfile;
 exports.changePassword = changePassword;
 exports.changeEmail = changeEmail;
+exports.viewProfile = viewProfile;

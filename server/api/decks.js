@@ -23,11 +23,11 @@ router.get('/get/:id', (req, res) => {
             }).then(result => {
                 console.log(result.decks);
                 res.status(200).json({"decks": result.decks});
-                client.close();
+                // client.close()
             }).catch(err => {
                 console.log(err);
                 res.status(400).send(err);
-                client.close();
+                // client.close()
             });
         });
     } catch (err) {
@@ -53,7 +53,7 @@ router.post('/save/:id', (req, res) => {
                     if (el.name == deck.name) {
                         console.log(`Deck with name ${el.name} already exists for id ${id}`);
                         res.status(400).send('Deck with that name already exists');
-                        client.close();
+                        // client.close()
                         return;
                     }
                 }
@@ -67,18 +67,18 @@ router.post('/save/:id', (req, res) => {
                 ).then(result => {
                     console.log(`Deck w/ name ${deck.name} added successfully`);
                     res.status(200).send('Deck added succesfully');
-                    client.close();
+                    // client.close()
                     return;
                 }).catch(err => {
                     console.log(err);
                     res.status(400).send(err);
-                    client.close();
+                    // client.close()
                     return;
                 });
             }).catch(err => {
                 console.log(err);
                 res.status(400).send(err);
-                client.close();
+                // client.close()
                 return;
             });
         });
@@ -105,12 +105,12 @@ router.post('/delete/:id', (req, res) => {
             ).then(result => {
                 console.log(`Deck ${deckname} successfully deleted`);
                 res.status(200).send('deck successfully deleted');
-                client.close();
+                // client.close()
                 return;
             }).catch(err => {
                 console.log(err);
                 res.status(400).send(err);
-                client.close();
+                // client.close()
                 return;
             });
         });

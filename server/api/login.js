@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
             }).then(result => {
                 if (!result) {
                     res.status(404).send('Account with that email doesn\'t exist');     // No result
-                    client.close();
+                    // client.close()
                     return;
                 } else {
                     if (bcrypt.compareSync(password, result.password)) {                // Password matched hash
@@ -33,17 +33,17 @@ router.post('/', (req, res) => {
                         }, dbconfig.jwt_key, {expiresIn: '1d'});
                         res.status(200).json({token: token});
                         console.log('login successful; token returned');
-                        client.close();
+                        // client.close()
                         return;
                     } else {                                                            // Password didn't match hash
                         res.status(404).send('Incorrect password');
-                        client.close();
+                        // client.close()
                         return;
                     }
                 }
             }).catch(err => {
                 console.log(err);
-                client.close();
+                // client.close()
                 return;
             })
         });

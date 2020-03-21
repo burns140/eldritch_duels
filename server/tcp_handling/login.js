@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const dbconfig = require('../dbconfig.json');
 const jwt = require('jsonwebtoken');
-const AllPlayerList = require('../classes/AllPlayerList.js');
 const server = require('../tcp_server.js');
 const MongoClient = require('../mongo_connection');
 
@@ -47,7 +46,35 @@ const login = (data, sock) => {
 
                         const idString = result._id.toString();
 
+                        /* Negative ban length mean this is a perma-ban */
+                        if (result.banLength < 0) {
+                            console.log('account permanently banned');
+                            sock.write('This account has been permanently banned');
+                        } else if (result.banLength > 0) {
+
+                            /* If the current date is later than the date of the end of the ban, they can play */
+                            if (Date.now() > result.banLength) {
+                                db.collection('users').updateOne(
+                                    { email: email },
+                                    { $set: {banLength: 0 } }
+                                ).then(result => {
+                                    if (result.modifiedCount != 1) {
+                                        throw new Error('failed to update ban length');
+                                    }
+                                    console.log('temp ban lifted');
+                                }).catch(err => {
+                                    console.log(err);
+                                    sock.write(err.toString());
+                                });
+                            } else {
+                                console.log('this account is temp banned');
+                                sock.write('This account is temporarily banned');
+                                return;
+                            }
+                        }
+
                         if (!result.verified) {
+                            console.log('account not verified');
                             sock.write("Not verified, can't login");
                             return; 
                         }
@@ -60,13 +87,15 @@ const login = (data, sock) => {
                         /* Check if player is already logged in somewhere */
                         if (playList.isLoggedIn(idString)) {
                             var prevSocket = playList.getSocketByKey(idString);
-                            try {
-                                //prevSocket.end('Another device has logged in with this account');
-                                console.log('forcing socket to close');
-                            } catch (err) {
-                                console.log(err);
+                            if (prevSocket != sock) {
+                                try {
+                                    prevSocket.end('Another device has logged in with this account');
+                                    console.log('forcing socket to close');
+                                } catch (err) {
+                                    console.log(err);
+                                }
+                                playList.removePlayer(idString);
                             }
-                            playList.removePlayer(idString);
                         }
 
                         /* Add username: socket pair to a map in case we need to force
