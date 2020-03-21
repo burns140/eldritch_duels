@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Newtonsoft.Json;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using System.IO;
+using eldritch;
+using UnityEngine.SceneManagement;
 
 public class SearchFriendsScript : MonoBehaviour
 {
+    #region UI & script variables
     public GameObject lastPlayedPanel; // Last played users Panel in UI
     public GameObject searchPanel; // Search users result panel in UI
     public GameObject inputField; // Search input field in UI
@@ -16,9 +26,9 @@ public class SearchFriendsScript : MonoBehaviour
 
     private List<string> searchPlayersList = new List<string>(); // To store all searched users
     private List<string> lastPlayedList = new List<string>(); // To store last 3 opponents played
+    #endregion
 
-    // Awake is called when the script instance is being loaded
-    void Awake()
+    void Awake() // Awake is called when the script instance is being loaded
     {
         // @TODO Get the 3 last played users from server
         string user1 = "user1"; // temp users
@@ -60,9 +70,8 @@ public class SearchFriendsScript : MonoBehaviour
         userButton3.transform.SetParent(lastPlayedPanel.transform, false); 
 
     }
-    
-    // Search button onClick() listener to display search results
-    public void searchUser(){
+      
+    public void searchUser(){ // Search button onClick() listener to display search results
         Button[] gameObjects = searchPanel.GetComponentsInChildren<Button>(); // Get previous search results
         foreach(Button o in gameObjects){ 
             Destroy(o.gameObject); // Destroy all previous search results
@@ -73,6 +82,11 @@ public class SearchFriendsScript : MonoBehaviour
             StartCoroutine(showError());
         }
         else{
+            // @TODO get my username @STEPHEN/@KEVING
+            string myUsername = "me"; // store my username here
+            if(searchPlayersList.Contains(myUsername)){ 
+                searchPlayersList.Remove(myUsername); // do not display my username in the search
+            }
             foreach(string value in searchPlayersList){
                 if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
                     GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
@@ -84,19 +98,19 @@ public class SearchFriendsScript : MonoBehaviour
         }
     }
 
-    IEnumerator showError(){
+    IEnumerator showError(){ // set up error message
         ErrorText.text = "*please input something";
         ErrorText.GetComponent<Text>().enabled = true;
         yield return new WaitForSeconds(3f); 
         ErrorText.GetComponent<Text>().enabled = false;
     }
 
-    public void buttonClicked(Button btn){
+    public void buttonClicked(Button btn){ // clicked on a user
         Debug.Log(btn.GetComponentInChildren<Text>().text);
         loadUserProfile(); // Go to the user's profile page scene
     }
 
-    private void loadUserProfile(){
+    private void loadUserProfile(){ // load the clicked user's profile
         
     }
 
