@@ -57,8 +57,6 @@ public class ProfileScript : MonoBehaviour
             EditProfileButton.SetActive(true);
             FriendsButton.SetActive(true);
             FriendRequestsButton.SetActive(true);
-            setUpFriendsList();
-            setUpFriendRequestsList();
         }
         if(!getBlockedMe()){ // Hide profile if I am blocked by user
             displayPic();
@@ -373,7 +371,12 @@ public class ProfileScript : MonoBehaviour
         friendsPanelHolder.SetActive(false); // hide friends list
     }
 
-    private void setUpFriendsList(){ // Set up friends list
+    private bool setUpFriendsList(){ // Set up friends list
+        Button[] gameObjects = friendsPanel.GetComponentsInChildren<Button>(); // Get previous friend buttons
+        foreach(Button o in gameObjects){ 
+            Destroy(o.gameObject); // Destroy all previous friend buttons
+        }
+        
         // Add temporary users to friends list
         friendsList.Add("Hola");
         friendsList.Add("Amigo");
@@ -401,6 +404,7 @@ public class ProfileScript : MonoBehaviour
         // }
         if(friendsList.Count == 0){
             StartCoroutine(showError("No friends found, please search users & add friends!")); // show error
+            return false;
         }
         else{
             foreach(string value in friendsList){
@@ -409,11 +413,13 @@ public class ProfileScript : MonoBehaviour
                 friendObject.SetActive(true);
                 friendObject.transform.SetParent(friendsPanel.transform, false); // Add friend username buttons to friends panel
             }
+            return true;
         }
     }
 
-    public void loadFriendsList(){ // Handle button & hide/unhide friends list
-        if(friendsPanelHolder.activeSelf){
+    public void loadFriendsList(){ // handle button & hide/unhide friends list
+        bool done = setUpFriendsList();
+        if(friendsPanelHolder.activeSelf || !done){
             friendsPanelHolder.SetActive(false); // hide friends list
         }
         else{
@@ -422,7 +428,7 @@ public class ProfileScript : MonoBehaviour
         requestsPanelHolder.SetActive(false); // hide friend requests list
     }
 
-    public void buttonClicked(Button btn){ // click on a user from from friends list
+    public void friendButtonClicked(Button btn){ // click on a user from from friends list
         Debug.Log(btn.GetComponentInChildren<Text>().text);
         loadUserProfile(); 
     }
@@ -431,7 +437,12 @@ public class ProfileScript : MonoBehaviour
 
     }
 
-    private void setUpFriendRequestsList(){ // Set up friend requests list
+    private bool setUpFriendRequestsList(){ // Set up friend requests list
+        Button[] gameObjects = requestsPanel.GetComponentsInChildren<Button>(); // Get previous request buttons
+        foreach(Button o in gameObjects){ 
+            Destroy(o.gameObject); // Destroy all previous friend request buttons
+        }
+
         // Add temporary users to friend requests list
         friendRequestsList.Add("Hola");
         friendRequestsList.Add("Amigo");
@@ -459,6 +470,7 @@ public class ProfileScript : MonoBehaviour
         // }
         if(friendRequestsList.Count == 0){
             StartCoroutine(showError("No friend requests yet!")); // show error
+            return false;
         }
         else{
             foreach(string value in friendRequestsList){
@@ -467,11 +479,13 @@ public class ProfileScript : MonoBehaviour
                 requestObject.SetActive(true);
                 requestObject.transform.SetParent(requestsPanel.transform, false); // Add friend username buttons to friends panel
             }
+            return true;
         }
     }
 
     public void loadRequestsList(){ // Handle button & hide/unhide requests list
-        if(requestsPanelHolder.activeSelf){
+        bool done = setUpFriendRequestsList();
+        if(requestsPanelHolder.activeSelf || !done){
             requestsPanelHolder.SetActive(false); // hide friend requests list
         }
         else{
@@ -479,6 +493,10 @@ public class ProfileScript : MonoBehaviour
         }
         
         friendsPanelHolder.SetActive(false); // hide friend list
+    }
+
+    public void requestButtonClicked(Button btn){ // click on a friend request
+        Debug.Log(btn.GetComponentInChildren<Text>().text); 
     }
 
 }
