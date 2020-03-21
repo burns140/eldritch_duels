@@ -38,16 +38,20 @@ public class ProfileScript : MonoBehaviour
     public GameObject FriendsButton; // show friends list button
     private bool isMe; // True if it's my profile
     private bool hasPicIndex; // Check if picture was from default pictures
+    private List<string> friendsList = new List<string>(); // To store all my friends
+    public GameObject buttonPrefab; // Button prefab in UI
+    public GameObject friendsPanel; // panel to display friends list in UI
     public Text ErrorText; // Display error message on UI
     #endregion
 
-    // Awake is called when the script instance is being loaded
-    void Awake()
+    
+    void Awake() // Awake is called when the script instance is being loaded
     {
         isItMe();
         if(isMe){
             EditProfileButton.SetActive(true);
             FriendsButton.SetActive(true);
+            setUpFriendsList();
         }
         if(!getBlockedMe()){ // Hide profile if I am blocked by user
             displayPic();
@@ -59,13 +63,13 @@ public class ProfileScript : MonoBehaviour
         }
     }
 
-    private void isItMe(){
+    private void isItMe(){ // check if it's my profile
         // @TODO Check if it's me (@STEPHEN/@KEVING)
         isMe = true; // If it's my account 
         // isMe = false; // If it's not my account
     }
 
-    private bool getBlockedMe(){
+    private bool getBlockedMe(){ // check if I the user has blocked me
         // @TODO Check if I am blocked by this user
         // @TODO Let me know if server didn't work as expected @STEPHEN
         bool failed = false;
@@ -83,12 +87,12 @@ public class ProfileScript : MonoBehaviour
             // ErrorText.GetComponent<Text>().enabled = true; 
             //return true;
             // If I'm not blocked then
-            return false;
+            // return false;
         }
         return false; 
     }
 
-    private void displayPic(){
+    private void displayPic(){ // get profile pic & display it
         hasPicIndex = true; // Check if my pic is uploaded or has index (@KEVING)
         // @TODO Let me know if server didn't work as expected @KEVING
         bool failed = false;
@@ -101,8 +105,8 @@ public class ProfileScript : MonoBehaviour
                 if(isMe){ 
                     picIndex = 0; // get my pic index @STEPHEN/@KEVING
                     // @TODO Let me know if server didn't work as expected @STEPHEN
-                    bool failed = false;
-                    if(failed){
+                    bool myIndexFailed = false;
+                    if(myIndexFailed){
                         StartCoroutine(showError("Could not retreive my profile pic")); // set error message
                     }
                     else{
@@ -112,8 +116,8 @@ public class ProfileScript : MonoBehaviour
                 else{
                     picIndex = 0; // get user's pic index @STEPHEN
                     // @TODO Let me know if server didn't work as expected @STEPHEN
-                    bool failed = false;
-                    if(failed){
+                    bool userIndexFailed = false;
+                    if(userIndexFailed){
                         StartCoroutine(showError("Could not retreive user's profile pic")); // set error message
                     }
                     else{
@@ -127,8 +131,8 @@ public class ProfileScript : MonoBehaviour
                     // @TODO GET UPLOADED PICTURE FROM SERVER (@KEVING)
                     // newImage = ;
                     // @TODO Let me know if server didn't work as expected @KEVIN
-                    bool failed = false;
-                    if(failed){
+                    bool newImgFailed = false;
+                    if(newImgFailed){
                         StartCoroutine(showError("Could not retreive my profile pic")); // set error message
                     }
                     else{
@@ -139,8 +143,8 @@ public class ProfileScript : MonoBehaviour
                     // @TODO GET UPLOADED PICTURE FROM SERVER (@KEVING)
                     // newImage = ;
                     // @TODO Let me know if server didn't work as expected @KEVIN
-                    bool failed = false;
-                    if(failed){
+                    bool userImgFailed = false;
+                    if(userImgFailed){
                         StartCoroutine(showError("Could not retreive my profile pic")); // set error message
                     }
                     else{
@@ -151,13 +155,13 @@ public class ProfileScript : MonoBehaviour
         }
     }
 
-    private void displayBio(){
+    private void displayBio(){ // get bio & display it
         
         if(isMe){
             // @TODO Get my bio from server @STEPHEN/@KEVING
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool myBioFailed = false;
+            if(myBioFailed){
                 StartCoroutine(showError("Could not retreive my bio")); // set error message
             }
             else{
@@ -167,8 +171,8 @@ public class ProfileScript : MonoBehaviour
         else{
             // @TODO Get user's bio from server @STEPHEN
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool userBioFailed = false;
+            if(userBioFailed){
                 StartCoroutine(showError("Could not retreive user's bio")); // set error message
             }
             else{
@@ -179,13 +183,13 @@ public class ProfileScript : MonoBehaviour
         bio.text = bioText; // Set bio on UI
     }
 
-    private void displayScreenName(){
+    private void displayScreenName(){ // get username & display it
 
         if(isMe){
             // @TODO Get my username from server @STEPHEN/@KEVING
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool myUsernameFailed = false;
+            if(myUsernameFailed){
                 StartCoroutine(showError("Could not retreive my username")); // set error message
             }
             else{
@@ -195,8 +199,8 @@ public class ProfileScript : MonoBehaviour
         else{
             // @TODO Get user's username from server @STEPHEN/@KEVING
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool userUsernameFailed = false;
+            if(userUsernameFailed){
                 StartCoroutine(showError("Could not retreive user's username")); // set error message
             }
             else{
@@ -207,7 +211,7 @@ public class ProfileScript : MonoBehaviour
         username.text = usernameText; // Set username on UI
     }
 
-    private void setAddButton(){
+    private void setAddButton(){ // set up the add friend/unfriend button
 
         if(isMe){
             AddButton.SetActive(false); // cannot add myself as friend
@@ -229,12 +233,12 @@ public class ProfileScript : MonoBehaviour
         }
     }
 
-    public void handleAddFriend(){
+    public void handleAddFriend(){ // add friend/unfriend & handle button
         if(alreadyFriend){ // unfriend user
             // @TODO Unfriend user through server @STEPHEN
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool unFriendFailed = false;
+            if(unFriendFailed){
                 StartCoroutine(showError("Could not unfriend user, please try again")); // set error message
             }
             else{
@@ -245,8 +249,8 @@ public class ProfileScript : MonoBehaviour
         else{ // add user as friend
             // @TODO Add user as friend through server @STEPHEN
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool friendFailed = false;
+            if(friendFailed){
                 StartCoroutine(showError("Could not add user as friend, please try again")); // set error message
             }
             else{
@@ -256,7 +260,7 @@ public class ProfileScript : MonoBehaviour
         }
     }
 
-    private void setBlockButton(){ // set up the block button
+    private void setBlockButton(){ // set up the block/unblock button
         
         if(isMe){
             BlockButton.SetActive(false); // cannot block myself
@@ -284,8 +288,8 @@ public class ProfileScript : MonoBehaviour
         if(alreadyBlocked){ // unblock user
             // @TODO Unblock user through server @STEPHEN
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool unBlockFailed = false;
+            if(unBlockFailed){
                 StartCoroutine(showError("Could not unblock the user, please try again")); // set error message
             }
             else{
@@ -296,8 +300,8 @@ public class ProfileScript : MonoBehaviour
         else{ // block user
             // @TODO Block user through server @STEPHEN
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool failed = false;
-            if(failed){
+            bool blockFailed = false;
+            if(blockFailed){
                 StartCoroutine(showError("Could not block the user, please try again")); // set error message
             }
             else{
@@ -361,7 +365,38 @@ public class ProfileScript : MonoBehaviour
 
     }
 
+    private void setUpFriendsList(){ // Set up friends list
+        // Add temporary users to friends list
+        friendsList.Add("Hola");
+        friendsList.Add("Amigo");
+        friendsList.Add("Que Paso");
+        friendsList.Add("HolaAmigo");
+        friendsList.Add("HolaAmigo");
+        friendsList.Add("HolaAmigo");
+        friendsList.Add("HolaAmigo");
+        friendsList.Add("HolaAmigo");
+        friendsList.Add("HolaAmigo");
+    }
     public void loadFriendsList(){ // Load my friends list
+        if(friendsList.Count == 0){
+            StartCoroutine(showError("No friends found, please search users & add friends!")); // show error
+        }
+        else{
+            foreach(string value in friendsList){
+                GameObject friendObject = (GameObject)Instantiate(buttonPrefab); // Create friend user button
+                friendObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
+                friendObject.SetActive(true);
+                friendObject.transform.SetParent(friendsPanel.transform, false); // Add friend username buttons to friends panel
+            }
+        }
+    }
+
+    public void buttonClicked(Button btn){ // click on a user from from friends list
+        Debug.Log(btn.GetComponentInChildren<Text>().text);
+        loadUserProfile(); 
+    }
+
+    private void loadUserProfile(){ // Go to the user's profile page scene
 
     }
 }
