@@ -179,10 +179,6 @@ const rejectFriendRequest = (data, sock) => {
         console.log(err);
         sock.write(err);
     }
-
-    
-
-    
 }
 
 /**
@@ -270,6 +266,40 @@ const getAllFriends = (data, sock) => {
     }
     
 }
+
+/* Return a string comma separated that has all usernames and emails that exist */
+const getAllUsernames = (data, sock) => {
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+            
+            /* Return all users by passing in empty document */
+            db.collection('users').find(
+                {}
+            ).toArray().then(result => {
+                if (result.length == 0) {
+                    throw new Error("returned no users");
+                }
+                var usernames = [];
+
+                for (user of result) {
+                    usernames.push(`${user.username}-${user.email}`);
+                }
+
+                sock.write(usernames.toString());
+                console.log('list of users returned');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
+exports.getAllUsernames = getAllUsernames;
 exports.sendFriendRequest = sendFriendRequest;
 exports.acceptFriendRequest = acceptFriendRequest;
 exports.rejectFriendRequest = rejectFriendRequest;

@@ -213,6 +213,9 @@ function onClientConnected(sock) {
                     case "getAllFriends":               // Get a user's friends list
                         Friends.getAllFriends(obj, sock);
                         break;
+                    case "getAllUsernames":             // Get all usernames that exist
+                        Friends.getAllUsernames(obj, sock);
+                        break;
                     case "openPack":                    // Open a pack
                         Collection.openPack(obj, sock);
                         break;
