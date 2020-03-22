@@ -62,3 +62,59 @@ MonoBehaviour:
     type: 1
     rartiy: 0
     cardImage: {fileID: 2100000, guid: f20086bfd2f31ca439c04c0de7fa079b, type: 2}
+  - cardName: Mi_Go
+    id: 2
+    owned: 0
+    cost: 1
+    power: 100
+    defence: 200
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
+  - cardName: Mi_Go Worker
+    id: 3
+    owned: 0
+    cost: 2
+    power: 200
+    defence: 200
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
+  - cardName: Mi_Go Queen
+    id: 4
+    owned: 0
+    cost: 5
+    power: 500
+    defence: 500
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
+  recipes:
+  - BaseCard: Test 1
+    FodderCard: Test 1
+    CraftCost: 100
+    ResultCard: Mi_Go
+  - BaseCard: Test 0
+    FodderCard: Test 0
+    CraftCost: 50
+    ResultCard: Test 1
+  - BaseCard: Test 0
+    FodderCard: Test 1
+    CraftCost: 100
+    ResultCard: Mi_Go
+  - BaseCard: Mi_Go
+    FodderCard: Mi_Go
+    CraftCost: 500
+    ResultCard: Mi_Go Worker
+  - BaseCard: Mi_Go Worker
+    FodderCard: Mi_Go Worker
+    CraftCost: 50000
+    ResultCard: Mi_Go Queen
+  - BaseCard: Test 1
+    FodderCard: Mi_Go
+    CraftCost: 1000
+    ResultCard: Mi_Go Worker
+  - BaseCard: Test 0
+    FodderCard: Mi_Go Worker
+    CraftCost: 1000000000
+    ResultCard: Mi_Go Queen

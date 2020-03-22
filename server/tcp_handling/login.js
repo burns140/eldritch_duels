@@ -52,6 +52,7 @@ const login = (data, sock) => {
                             sock.write('This account has been permanently banned');
                         } else if (result.banLength > 0) {
 
+<<<<<<< HEAD
                             /* If the current date is later than the date of the end of the ban, they can play */
                             if (Date.now() > result.banLength) {
                                 db.collection('users').updateOne(
@@ -70,8 +71,24 @@ const login = (data, sock) => {
                                 console.log('this account is temp banned');
                                 sock.write('This account is temporarily banned');
                                 return;
+=======
+                        /* If the value of this time minus the ban length is greater than the time at which they are banned, they are past the end of ban
+                           Reset ban length to 0 to ensure they can login again */
+                           if(result.reports != null){
+                                var lastReport = result.reports[reports.length - 1];
+                                
+                                if (result.banLength > 0) {
+                                    if (Date.now() - result.banLength > lastReport.date) {
+                                        console.log('temp ban completed');
+                                        banLength = 0;
+                                    } else {
+                                        console.log('this account is temp banned');
+                                        sock.write('This account is temporarily banned');
+                                        return;
+                                    }
+                                }
+>>>>>>> 65807cd7d45c35187a47540fce3ace45a33e30a9
                             }
-                        }
 
                         if (!result.verified) {
                             console.log('account not verified');
