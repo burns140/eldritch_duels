@@ -30,7 +30,8 @@ public class DuelScript : MonoBehaviour
     public GameObject myPlayAreaPanel; // My Play Area UI
     public GameObject oppPlayAreaPanel; // Opponent's Play Area UI
 
-    public GameObject card; // Card object to create instances
+    public GameObject myCard; // my Card object to create instances
+    public GameObject oppCard; // opponent Card object to create instances
 
     private Queue<GameObject> deckList = new Queue<GameObject>(); // Store cards in Deck
     private List<GameObject> handList = new List<GameObject>(); // Store cards in Hand
@@ -103,7 +104,7 @@ public class DuelScript : MonoBehaviour
         int handCount=1;
         while(handCount<=6){ // To add 6 cards to hand
             Card b = Library.GetCard("Test 0");
-            GameObject c = (GameObject)Instantiate(card);
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.name = b.CardName;
@@ -119,7 +120,7 @@ public class DuelScript : MonoBehaviour
         int playCount=1;
         while(playCount<=6){ // To add 6 cards to my play area
             Card b = Library.GetCard("Test 0");
-            GameObject c = (GameObject)Instantiate(card);
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.name = b.CardName;
@@ -135,7 +136,7 @@ public class DuelScript : MonoBehaviour
         int oppPlayCount=1;
         while(oppPlayCount<=6){ // To add 6 cards to opp play area
             Card b = Library.GetCard("Test 0");
-            GameObject c = (GameObject)Instantiate(card);
+            GameObject c = (GameObject)Instantiate(oppCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.transform.SetParent(oppPlayAreaPanel.transform, false); // Add card to opponent play area
@@ -148,9 +149,9 @@ public class DuelScript : MonoBehaviour
     // Called at start of game to set up card list from deck being used
     private void setUpDeck(){
         int deckCount=1;
-        while(deckCount<=30){ // To add 6 cards to hand
+        while(deckCount<=30){ // To add 30 card from my deck to my list
             Card b = Library.GetCard("Test 0");
-            GameObject c = (GameObject)Instantiate(card);
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             deckList.Enqueue(c); // Add card to deck list
