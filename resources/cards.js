@@ -146,7 +146,7 @@ const cards = [
         Power: null,
         Defense: null,
         Type: TYPE_SPELL,
-        Rarity: RARE,
+        Rarity: LEGENDARY,
         Image: "GreatOnesWisdom"
     },
 
