@@ -276,7 +276,7 @@ public class DuelScript : MonoBehaviour
     //server sends request that opp played a card
     //this method ties the server request with the
     //client side
-    public void ServerPlayPlayOppCard(string cardName){
+    public void ServerPlayOppCard(string cardName){
         Card toPlay = Library.GetCard(cardName);
         playOppCard(toPlay);
     }
