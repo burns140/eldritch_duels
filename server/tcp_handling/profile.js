@@ -1,8 +1,21 @@
 const bcrypt = require('bcrypt');
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
+const generator = require('generate-password');
+const myEmail = 'eldritch.duels@gmail.com';
+const dbconfig = require('../dbconfig.json');
+const nodemailer = require('nodemailer');
 const TEMP_BAN_MARKS = [1, 3, 5, 10, 12] 
 const TEMP_BAN_LENGTHS_MINS = [1, 10, 300, 1440, -1];
+
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: myEmail,
+        pass: dbconfig.emailpass
+    }
+});
 
 /**
  * Change configurable profile information
@@ -135,6 +148,7 @@ const changePassword = (data, sock) => {
 const changeEmail = (data, sock) => {
     const id = data.id;
     const newemail = data.email;
+    const host = "localhost:7999";
 
     try {
         MongoClient.get().then(client => {
@@ -151,7 +165,7 @@ const changeEmail = (data, sock) => {
                 } else {
 
                     /* Find user with the given id and update their email */
-                    db.collection('users').updateOne(
+                    /* db.collection('users').updateOne(
                         { _id: ObjectID(id) },
                         {
                             $set: { email: newemail }
@@ -163,6 +177,53 @@ const changeEmail = (data, sock) => {
                         } else {
                             console.log('successfully updated');
                             sock.write('Email updated successfully');
+                        }
+                        return;
+                    }).catch(err => {
+                        console.log(err);
+                        sock.write(`Failed to update email`);
+                        return;
+                    }); */
+
+                    var str = generator.generate({  // The random string that will be appended to their verification link
+                        length: 30,
+                        numbers: true,
+                        symbols: false
+                    });
+
+                    /* Set html to be sent for verification email */
+                    var emailText = `<h1>Email Verification</h1>` +
+                    `<p>You have requested to change you email for Eldritch Duels. To change your email, ` +
+                    `click on the verification link below.</p>` +
+                    `<a href="http://${host}/verify/${str}">Verify Account</a>`;
+
+                    var mailOptions = {             // Options for verification email
+                        from: myEmail,
+                        to: newemail,
+                        subject: 'Verify Account',
+                        html: emailText
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {    // Send verification email
+                        if (error) {
+                            console.log(err);
+                        } else {
+                            console.log('Email send: ' + info.response);
+                        }
+                    });
+
+                    db.collection('users').updateOne(
+                        { _id: ObjectID(id) },
+                        {
+                            $set: { verifyStr: str, emailToChange: newemail }
+                        }
+                    ).then(result => {
+                        if (result.modifiedCount != 1) {
+                            console.log('modified not 1');
+                            sock.write(`failed to update email`);
+                        } else {
+                            console.log('successfully updated');
+                            sock.write('Email sent successfully');
                         }
                         return;
                     }).catch(err => {
