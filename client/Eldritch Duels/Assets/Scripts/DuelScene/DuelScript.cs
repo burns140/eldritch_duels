@@ -13,6 +13,7 @@ using eldritch;
 using eldritch.cards;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Linq;
 
 public struct PlayerState{
     public int mana;
@@ -24,13 +25,13 @@ public struct PlayerState{
 }
 
 public struct DuelRequest {
-    public string cardName;
+    public string cardName;     // Name of the played card
 
-    public string targetName;
+    public string targetName;   // Name of the target card
 
-    public int myArrPosition;
+    public int myArrPosition;   // Position in the array of my card I've played
 
-    public int theirArrPosition;
+    public string targetArrPosition; // Position in the array of the target card as well as whose array it's in 
 }
 
 public class DuelScript : MonoBehaviour 
@@ -74,12 +75,17 @@ public class DuelScript : MonoBehaviour
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
 
+    private const string[] needTargeter = { "Destroy", "Add defender", "Add fly", "Add stealth" };
+
     private const int MAX_HAND = 8; //max hand size
     private const int MAX_FIELD_SIZE = 7;
 
     public PlayerState OpponentState; //opp hp, mana
 
     public PlayerState MyState; //my hp, mana, library
+
+    static bool done;
+    static readonly object locker = new object();
 
     #endregion
 
@@ -93,21 +99,28 @@ public class DuelScript : MonoBehaviour
         System.Threading.Thread T = new System.Threading.Thread((new System.Threading.ThreadStart(Listener)));
     }
 
+    /* Need to spawn a separate thread to listen to the socket so that
+       the client can still interact with the game while the other player is taking their turn.
+       Need to kill the thread when the match dies. */
     private void Listener() {
-        Socket thisSock = Global.socket;
-        thisSock.Listen(100);
-        Socket accepted = thisSock.Accept();
+        while (true) {
+            Socket thisSock = Global.socket;
+            thisSock.Listen(500);
+            Socket accepted = thisSock.Accept();
 
-        Buffer buffer = new byte[accepted.SendBufferSize];
-        int bytesRead = accepted.Receive(buffer);
+            Buffer buffer = new byte[accepted.SendBufferSize];
+            int bytesRead = accepted.Receive(buffer);
 
-        byte[] formatted = new byte[bytesRead];
-        for (int i = 0; i < bytesRead; i++) {
-            formatted[i] = buffer[i];
+            byte[] formatted = new byte[bytesRead];
+            for (int i = 0; i < bytesRead; i++) {
+                formatted[i] = buffer[i];
+            }
+
+            string strData = Encoding.ASCII.GetString(formatted);
+            DuelRequest move = JsonConvert.DeserializeObject(strData);
+            playOppCard(move);
         }
-
-        string strData = Encoding.ASCII.GetString(formatted);
-        DuelRequest move = JsonConvert.DeserializeObject(strData);
+        
     }
     #endregion
 
@@ -266,38 +279,76 @@ public class DuelScript : MonoBehaviour
     }
 
     // Play card from my hand to my playing area
-    /*private void playMyCard(Card played){
+    private void playMyCard(Card played){
+
+        /* Do I have enough mana */
         if(!DuelFunctions.CanCast(played, MyState)){
             return;
         }
+
+        /* Is my field full */
         if(MyState.onField.Count >= MAX_FIELD_SIZE){
             return;
         }
-        Card b = DuelFunctions.RemoveFromHand(played, ref MyState);
+
+        Card targetCard = null;
+
+        /* If any of my abilities require me to target something, bring up
+           a targeter when I go to resolve that and then break. Currently,
+           this only will work if one of the abilities requires a target
+           but that can be changed once we confirm it works */
+        for (int i = 0; i < played.Abilities.Count; i++) {
+            string ability = played.Abilities[i].GetName();
+            if (needTargeter.Contains(ability)) {
+                // TODO: CREATE TARGETER @DHAIRYA
+                targetCard = null;
+            }
+        }
+
+        Card b = DuelFunctions.RemoveFromHand(played, ref MyState);     // Remove card from my hand
         GameObject c = (GameObject)Instantiate(card);
+        DuelRequest duelRequest = new DuelRequest();        // Instantiate struct that will be sent to other player
+        duelRequest.cardName = played.CardName;
+        duelRequest.targetName = "";
+        duelRequest.targetArrPosition = "";
+        duelRequest.myArrPosition = -1;
+        if (targetCard != null) {
+            duelRequest.targetName = targetCard.CardName;
+
+            // TODO: GET THE ARRAY POSITION OF THE TARGETED CREATURE
+            // Example: "me-3"
+            // Example: "opponent-2"
+            duelRequest.targetArrPosition = "";
+        }
+
+        // TODO: GET THE ARRAY POSITION OF MY NEWLY PLACED CREATURE
+        // Example: 4
+        duelRequest.myArrPosition = -1;
+
         c.GetComponent<Image>().sprite = null;
         c.GetComponent<Image>().material = played.CardImage;
         if(played.SpellType == CardType.SPELL){
-           ResolveAbilities(played, true);
+           ResolveAbilities(played, true, duelRequest, targetCard);
         }else{
             MyState.onField.Add(b);
             myPlayList.Add(c);
-            ResolveAbilities(played, true);
+            ResolveAbilities(played, true, duelRequest, targetCard);
         }
         MyState.mana -= played.CardCost;
 
         //TODO update ui
 
         //TODO tell oppenent to resolve card
-    }*/
+    }
 
-    private void playMyCard(GameObject played){
+    /* private void playMyCard(GameObject played){
         if(!DuelFunctions.CanCast(played, MyState)){
             return;
         }
         if(MyState.onField.Count >= MAX_FIELD_SIZE){
             return;
         }
+
         Card b = DuelFunctions.RemoveFromHand((Card) played, ref MyState);
         GameObject c = (GameObject)Instantiate(card);
         c.GetComponent<Image>().sprite = null;
@@ -315,26 +366,19 @@ public class DuelScript : MonoBehaviour
         //TODO update ui
 
         //TODO tell oppenent to resolve card
-    }
-
-    private void myResolveAbilites(DuelRequest myMove) {
-        switch (myMove.cardName) {
-            
-        }
-    }
-
-    
+    } */
 
     //server sends request that opp played a card
     //this method ties the server request with the
     //client side
-    public void ServerPlayOppCard(string cardName){
+/*    public void ServerPlayOppCard(DuelRequest req){
         Card toPlay = Library.GetCard(cardName);
         playOppCard(toPlay);
     }
 
+*/
     // Play opponent's card
-    private void playOppCard(Card played){
+    /*private void playOppCard(Card played){
         OpponentState.onField.Add(played);
         GameObject c = (GameObject)Instantiate(card);
         c.GetComponent<Image>().sprite = null;
@@ -351,10 +395,30 @@ public class DuelScript : MonoBehaviour
         OpponentState.mana -= played.CardCost;
 
         //TODO update ui
+    }*/
+
+    private void playOppCard(DuelRequest req) {
+        Card toPlay = Library.GetCard(cardName);
+        if (toPlay.SpellType != CardType.SPELL) {
+            OpponentState.onField.Add(toPlay);
+        }
+        GameObject c = (GameObject)Instantiate(card);
+        c.GetComponent<Image>().sprite = null;
+        c.GetComponent<Image>().material = toPlay.CardImage;
+        Card targetCard = null;
+        if (req.targetName != null) {
+            string[] split = req.targetName.Split('-');
+            if (String.Equals(split[0], "mine")) {
+                targetCard = (Card) oppPlayAreaPanel[Int32.Parse(split[1])];
+            } else {
+                targetCard = (Card) myPlayAreaPanel[Int32.Parse(split[1])];
+            }
+        }
+        ResolveAbilities(toPlay, false, req, targetCard);
     }
 
 
-    private void ResolveAbilities(Card played, bool iPlayed){
+    private void ResolveAbilities(Card played, bool iPlayed, DuelRequest selected, Card targetCard){
         foreach(Effect e in played.Abilities){
             switch(e.GetTargetType()){
                 case EffectTarget.OPPONENT:
@@ -364,13 +428,28 @@ public class DuelScript : MonoBehaviour
                     e.execute(ref MyState);
                     break;
                 case EffectTarget.CARD:
-                    //TODO select card and execute
+                    if (targetCard != null) {
+                        e.execute(targetCard);
+                    } else {
+                        e.execute(played);
+                    }
+                    //TODO select card and execute if we want to select more than one person
                     break;
                 default:
                     break;
 
             }
+            if (iPlayed) {
+                string json = JsonConvert.SerializeObject(selected);
+                sendNetworkRequest(json);
+            }
+            
         }
+    }
+
+    public string sendNetworkRequest(string obj) {
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(obj);
+        Global.stream.Write(data, 0, data.Length);
     }
 
     #endregion
