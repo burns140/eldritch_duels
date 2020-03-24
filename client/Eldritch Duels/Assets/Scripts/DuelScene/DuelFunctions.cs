@@ -14,6 +14,9 @@ public static class DuelFunctions
     }
 
     public static bool CanBlock(Card attacker, Card blocker){
+        if(attacker.HasStealth){
+            return false;
+        }
         if(attacker.HasFly && !blocker.HasFly){
             return false;
         }
