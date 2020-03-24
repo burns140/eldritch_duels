@@ -23,6 +23,16 @@ public struct PlayerState{
     
 }
 
+public struct DuelRequest {
+    public string cardName;
+
+    public string targetName;
+
+    public int myArrPosition;
+
+    public int theirArrPosition;
+}
+
 public class DuelScript : MonoBehaviour 
 {
     #region UI & Script Variables
