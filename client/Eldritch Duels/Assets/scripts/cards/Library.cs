@@ -12,32 +12,55 @@ namespace eldritch.cards
         private static Hashtable _cardID = new Hashtable();
         public static void AddCard(Card card)
         {
-            Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().AddCard(card);
+            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().AddCard(card);
         }
 
         public static Card GetCard(int cardID)
         {
-            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetCard(cardID);
+            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetCard(cardID);
         }
         public static Card GetCard(string cardName)
         {
-            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetCard(cardName);
+            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetCard(cardName);
         }
         public static List<Card> GetAllCards()
         {
-            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetAllCards();
+            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetAllCards();
         }
         public static void RemoveCard(string cardName)
         {
-            Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().RemoveCard(cardName);
+            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().RemoveCard(cardName);
         }
         public static int GetNextID()
         {
-            return Resources.Load<GameObject>("ContentManager").GetComponent<ContentLibrary>().GetNextID();
+            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetNextID();
+        }
+        #endregion
+
+        #region crafting
+        public static CraftingRecipe PreviewCraft(string baseCard, string fodderCard)
+        {
+           return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().PreviewCraft(baseCard, fodderCard);
+        }
+        public static void AddRecipe(CraftingRecipe cr)
+        {
+            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().AddRecipe(cr);
+        }
+        public static void AddRecipe(string baseCard, string fodderCard, string resultCard, int craftCost)
+        {
+            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().AddRecipe(baseCard, fodderCard, resultCard, craftCost);
+        }
+        public static void RemoveRecipe(CraftingRecipe cr)
+        {
+            GameObject.Find("ContentManager").GetComponent<ContentLibrary>().RemoveRecipe(cr);
+        }
+        public static List<CraftingRecipe> GetAllRecipes()
+        {
+            return GameObject.Find("ContentManager").GetComponent<ContentLibrary>().GetAllRecipes();
         }
         #endregion
 
     }
 
-    
+
 }

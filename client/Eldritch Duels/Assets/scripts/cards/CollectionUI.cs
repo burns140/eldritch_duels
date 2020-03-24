@@ -67,6 +67,7 @@ namespace eldritch {
                     if (c != null)
                     {
                         child.gameObject.GetComponent<UnityEngine.UI.Image>().material = c.CardImage;
+                        child.gameObject.GetComponent<CardEnlarge>().c = c;
                     }
                 }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace eldritch.cards {
     public class DeckMenuController : MonoBehaviour
@@ -22,6 +23,10 @@ namespace eldritch.cards {
             nameText.GetComponent<UnityEngine.UI.Text>().text = this.deck.DeckName;
         }
 
+        public void ShareDeck(){
+            Controller.GetComponent<DeckMenuUI>().ShareDeck(this.deck);
+        }
+
         public void DeleteDeck()
         {
             Controller.GetComponent<DeckMenuUI>().DeleteDeck(this.deck);
@@ -31,6 +36,10 @@ namespace eldritch.cards {
             Global.selectedDeck = this.deck;
             SceneManager.LoadScene("DeckBuilder");
 
+        }
+        public void CopyDeck()
+        {
+            Global.CopySharedDeck(this.deck);
         }
     }
 }

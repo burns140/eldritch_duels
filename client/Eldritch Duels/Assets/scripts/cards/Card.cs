@@ -9,8 +9,6 @@ namespace eldritch.cards
     {
         CREATURE,
         SPELL,
-        ARTIFACT,
-        ARTIFACT_CREATURE,
         PLAYER,
         NULL
     }
@@ -90,6 +88,52 @@ namespace eldritch.cards
             set { if (value != null) { this.cardImage = value; } }
         }
 
+        [SerializeField]
+        private bool canFly = false;
+        public bool HasFly{
+            get {return this.canFly;}
+            set {this.canFly = value;}
+
+        }
+        [SerializeField]
+        private List<Effect> effects = new List<Effect>();
+        public List<Effect> Abilities{
+            get {return this.effects;}
+        }
+
+        public void AddAbility(Effect ability){
+            this.effects.Add(ability);
+        }
+
+        public void RemoveAbility(string abilityName){
+            for(int i = 0; i < effects.Count;i++){
+                if(effects[i].GetName().Equals(abilityName)){
+                    effects.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+
+        //get the number of cards not in a deck
+        //returns the number of cards that can be used in card crafting
+        public int SurplusCopies
+        {
+            get
+            {
+                int count = 0;
+                foreach (Deck d in Global.userDecks)
+                {
+                    int tmp = d.AmountInDeck(this.cardName);
+                    if (tmp > count)
+                        count = tmp;
+                }
+                if (count > CopiesOwned)
+                    count = CopiesOwned;
+                return CopiesOwned - count;
+            }
+        }
+
 
         #endregion
 
@@ -99,36 +143,13 @@ namespace eldritch.cards
             this.cardName = name;
         }
 
-        public void CardDestroyed()
-        {
-            if(this.type == CardType.PLAYER)
-            {
-                //TODO add player loss
-            }else
-            {
-                //TODO move card to graveyard
+        public bool IsDestroyed(Card attacker){
+            if(attacker.power >= this.defence){
+                return true;
             }
-        }
-
-        public void DealDamage(int amount)
-        {
-            if(this.type != CardType.NULL && this.type != CardType.ARTIFACT)
-            {
-                this.defence -= amount;
-            }
-
-            if (this.defence <= 0 && this.type == CardType.PLAYER)
-            {
-                //TODO player loss
-            }
+            return false;
         }
 
 
-        //reset values and check if card is alive
-        public void EndOfTurn()
-        {
-            this.defence = this.maxDef;
-
-        }
     }
 }
