@@ -59,6 +59,7 @@ namespace eldritch {
         public static Deck selectedDeck = new Deck();
         public static List<Deck> userDecks = new List<Deck>();
         public static TcpClient client;
+        public static Socket socket;
         public static NetworkStream stream;
         public static string tokenfile = "";
         public static int avatar = 0;
@@ -73,6 +74,7 @@ namespace eldritch {
                 //Connects to server and sets global variables, change localhost and port if connecting remotely.
                 Global.client = new TcpClient("localhost", 8000);
                 Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                Global.socket = Global.client.Client;
                 Global.stream = Global.client.GetStream();
                 Debug.Log("Connected to: " + "localhost");
             } catch(Exception e)
@@ -83,6 +85,7 @@ namespace eldritch {
                     Global.client = new TcpClient(hostIP, 8000);
                     Global.client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                     Global.stream = Global.client.GetStream();
+                    Global.socket = Global.client.Client;
                     Debug.Log("Connected to: " + hostIP);
                 }
                 catch (Exception e2)
