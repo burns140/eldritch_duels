@@ -90,6 +90,24 @@ public class DuelScript : MonoBehaviour
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
+        System.Threading.Thread T = new System.Threading.Thread((new System.Threading.ThreadStart(Listener)));
+    }
+
+    private void Listener() {
+        Socket thisSock = Global.socket;
+        thisSock.Listen(100);
+        Socket accepted = thisSock.Accept();
+
+        Buffer buffer = new byte[accepted.SendBufferSize];
+        int bytesRead = accepted.Receive(buffer);
+
+        byte[] formatted = new byte[bytesRead];
+        for (int i = 0; i < bytesRead; i++) {
+            formatted[i] = buffer[i];
+        }
+
+        string strData = Encoding.ASCII.GetString(formatted);
+        DuelRequest move = JsonConvert.DeserializeObject(strData);
     }
     #endregion
 
@@ -248,7 +266,7 @@ public class DuelScript : MonoBehaviour
     }
 
     // Play card from my hand to my playing area
-    private void playMyCard(Card played){
+    /*private void playMyCard(Card played){
         if(!DuelFunctions.CanCast(played, MyState)){
             return;
         }
@@ -271,7 +289,41 @@ public class DuelScript : MonoBehaviour
         //TODO update ui
 
         //TODO tell oppenent to resolve card
+    }*/
+
+    private void playMyCard(GameObject played){
+        if(!DuelFunctions.CanCast(played, MyState)){
+            return;
+        }
+        if(MyState.onField.Count >= MAX_FIELD_SIZE){
+            return;
+        }
+        Card b = DuelFunctions.RemoveFromHand((Card) played, ref MyState);
+        GameObject c = (GameObject)Instantiate(card);
+        c.GetComponent<Image>().sprite = null;
+        c.GetComponent<Image>().material = played.CardImage;
+        DuelRequest myMove = new DuelRequest();
+        myMove.cardName = played.CardName;
+        myMove.myArrPosition = -1; // TODO: Get the array position of my card @DHAIRYA
+        if (played.SpellType != CardType.SPELL) {
+            MyState.onField.Add(b);
+            myPlayList.Add(c);
+        }
+
+        MyState.mana -= played.CardCost;
+
+        //TODO update ui
+
+        //TODO tell oppenent to resolve card
     }
+
+    private void myResolveAbilites(DuelRequest myMove) {
+        switch (myMove.cardName) {
+            
+        }
+    }
+
+    
 
     //server sends request that opp played a card
     //this method ties the server request with the
