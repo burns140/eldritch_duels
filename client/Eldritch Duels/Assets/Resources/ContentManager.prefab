@@ -114,7 +114,3 @@ MonoBehaviour:
     FodderCard: Mi_Go
     CraftCost: 1000
     ResultCard: Mi_Go Worker
-  - BaseCard: Test 0
-    FodderCard: Mi_Go Worker
-    CraftCost: 1000000000
-    ResultCard: Mi_Go Queen

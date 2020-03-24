@@ -88,6 +88,33 @@ namespace eldritch.cards
             set { if (value != null) { this.cardImage = value; } }
         }
 
+        [SerializeField]
+        private bool canFly = false;
+        public bool HasFly{
+            get {return this.canFly;}
+            set {this.canFly = value;}
+
+        }
+        [SerializeField]
+        private List<Effect> effects = new List<Effect>();
+        public List<Effect> Abilities{
+            get {return this.effects;}
+        }
+
+        public void AddAbility(Effect ability){
+            this.effects.Add(ability);
+        }
+
+        public void RemoveAbility(string abilityName){
+            for(int i = 0; i < effects.Count;i++){
+                if(effects[i].GetName().Equals(abilityName)){
+                    effects.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+
         //get the number of cards not in a deck
         //returns the number of cards that can be used in card crafting
         public int SurplusCopies

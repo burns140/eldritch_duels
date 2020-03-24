@@ -24,5 +24,6 @@ namespace eldritch.cards
             }
         }
         public abstract void execute();
+        public abstract string GetName();
     }
 }

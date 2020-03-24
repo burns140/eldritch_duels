@@ -93,10 +93,14 @@ namespace eldritch.editor
                             c.SpellRarity = this.rarity;
                             c.CardImage = this.cardMat;
                             c.SpellType = this.cardType;
+                            foreach(Effect e in effects){
+                                c.AddAbility(e);
+                            }
                             Library.AddCard(c);
                             EditorUtility.SetDirty(this);
                             EditorSceneManager.MarkSceneDirty(GameObject.Find("ContentManager").scene);
                             PrefabUtility.ApplyPrefabInstance(GameObject.Find("ContentManager"), InteractionMode.AutomatedAction);
+                            
                         }
                         else
                         {
