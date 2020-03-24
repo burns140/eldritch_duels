@@ -14,6 +14,15 @@ using eldritch.cards;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+public struct PlayerState{
+    public int mana;
+    public int hp;
+    public List<Card> library;
+    public List<Card> inHand;
+    public List<Card> onField;
+    
+}
+
 public class DuelScript : MonoBehaviour 
 {
     #region UI & Script Variables
@@ -52,14 +61,21 @@ public class DuelScript : MonoBehaviour
     public Sprite[] availablePictures; // Available profile pics
     private float myCurrentHP; // My Current HP
     private float oppCurrentHP; // Opp Current HP
-    private const float MAX_HEALTH = 30; // Max Health for a user
-    private const float MAX_MANA = 1; // Max Mana for a user
+    private const int MAX_HEALTH = 30; // Max Health for a user
+    private const int MAX_MANA = 1; // Max Mana for a user
+
+    private const int MAX_HAND = 8; //max hand size
+    private const int MAX_FIELD_SIZE = 7;
+
+    public PlayerState OpponentState; //opp hp, mana
+
+    public PlayerState MyState; //my hp, mana, library
 
     #endregion
 
     #region Awake
     // Awake is called when the script instance is being loaded.
-    void Awake(){
+    void Start(){
         setUpDeck(); // Set up card list from deck being used
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
@@ -102,13 +118,14 @@ public class DuelScript : MonoBehaviour
     IEnumerator initalDraw(){
         int handCount=1;
         while(handCount<=6){ // To add 6 cards to hand
-            Card b = Library.GetCard("Test 0");
+            Card b = DuelFunctions.DrawCard(ref MyState);
             GameObject c = (GameObject)Instantiate(card);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.name = b.CardName;
             c.transform.SetParent(handAreaPanel.transform, false); // Add card to hand
             handList.Add(c); // Add card to hand list
+            MyState.inHand.Add(b);
             handCount++; 
             yield return new WaitForSeconds(0.5f); 
         }
@@ -147,9 +164,10 @@ public class DuelScript : MonoBehaviour
 
     // Called at start of game to set up card list from deck being used
     private void setUpDeck(){
-        int deckCount=1;
-        while(deckCount<=30){ // To add 6 cards to hand
-            Card b = Library.GetCard("Test 0");
+        MyState.library = DuelFunctions.ShuffleLibrary(DuelFunctions.GetLibrary());        
+        int deckCount=0;
+        while(deckCount< MyState.library.Count){ // add cards to deck
+            Card b =MyState.library[deckCount];
             GameObject c = (GameObject)Instantiate(card);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
@@ -160,6 +178,11 @@ public class DuelScript : MonoBehaviour
     
     // Set up health and mana text for both users to max values
     private void setUpHealthMana(){
+        MyState.hp = MAX_HEALTH;
+        MyState.mana = MAX_MANA;
+        OpponentState.hp = MAX_HEALTH;
+        OpponentState.mana = MAX_MANA;
+
         myHPText.text = MAX_HEALTH + " HP";
         myManaText.text = MAX_MANA + " MANA";
         oppHPText.text = MAX_HEALTH + " HP";
@@ -203,19 +226,83 @@ public class DuelScript : MonoBehaviour
     // Called at the beginning of every turn
     private void drawCard(){
         if(deckList.Count>0){
-            handList.Add(deckList.Dequeue()); // Move 1 card from deck to hand
+            Card b = DuelFunctions.DrawCard(ref MyState);
+            if(b == null)
+                return;
+            GameObject c = (GameObject)Instantiate(card);
+            c.GetComponent<Image>().sprite = null;
+            c.GetComponent<Image>().material = b.CardImage;
+            handList.Add(c); // Move 1 card from deck to hand
+            MyState.inHand.Add(b);
         }
     }
 
     // Play card from my hand to my playing area
-    private void playMyCard(){
-        
+    private void playMyCard(Card played){
+        if(!DuelFunctions.CanCast(played, MyState)){
+            return;
+        }
+        if(MyState.onField.Count >= MAX_FIELD_SIZE){
+            return;
+        }
+        Card b = DuelFunctions.RemoveFromHand(played, ref MyState);
+        GameObject c = (GameObject)Instantiate(card);
+        c.GetComponent<Image>().sprite = null;
+        c.GetComponent<Image>().material = played.CardImage;
+        if(played.SpellType == CardType.SPELL){
+           ResolveAbilities(played, true);
+        }else{
+            MyState.onField.Add(b);
+            myPlayList.Add(c);
+            ResolveAbilities(played, true);
+        }
+        MyState.mana -= played.CardCost;
+
+        //TODO update ui
+
+        //TODO tell oppenent to resolve card
     }
 
     // Play opponent's card
-    private void playOppCard(){
-        
+    private void playOppCard(Card played){
+        OpponentState.onField.Add(played);
+        GameObject c = (GameObject)Instantiate(card);
+        c.GetComponent<Image>().sprite = null;
+        c.GetComponent<Image>().material = played.CardImage;
+        if(played.SpellType == CardType.SPELL){
+            ResolveAbilities(played, false);
+        }else{
+            oppPlayList.Add(c);
+            OpponentState.onField.Add(played);
+            ResolveAbilities(played, false);
+
+        }
+
+        OpponentState.mana -= played.CardCost;
+
+        //TODO update ui
     }
+
+
+    private void ResolveAbilities(Card played, bool iPlayed){
+        foreach(Effect e in played.Abilities){
+            switch(e.GetTargetType()){
+                case EffectTarget.OPPONENT:
+                    e.execute(ref OpponentState);
+                    break;
+                case EffectTarget.SELF:
+                    e.execute(ref MyState);
+                    break;
+                case EffectTarget.CARD:
+                    //TODO select card and execute
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }
+
     #endregion
 
     #region Attack & Update Health

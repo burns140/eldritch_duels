@@ -366,6 +366,15 @@ namespace eldritch {
             }
             return null;
         }
+
+        public static Deck GetUserDeck(string deckName){
+            foreach(Deck d in userDecks){
+                if(d.DeckName.Equals(deckName)){
+                    return d;
+                }
+            }
+            return null;
+        }
         //convert a string to deck card list
         private static List<CardContainer> StringToDeck(string cards)
         {

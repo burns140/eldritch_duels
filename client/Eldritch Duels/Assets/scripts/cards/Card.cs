@@ -143,35 +143,13 @@ namespace eldritch.cards
             this.cardName = name;
         }
 
-        public void CardDestroyed()
-        {
-            if(this.type == CardType.PLAYER)
-            {
-                //TODO add player loss
-            }else
-            {
-                //TODO move card to graveyard
+        public bool IsDestroyed(Card attacker){
+            if(attacker.power >= this.defence){
+                return true;
             }
-        }
-
-        public void DealDamage(int amount)
-        {
-            if(this.type != CardType.NULL)
-            {
-                this.defence -= amount;
-            }
-
-            if (this.defence <= 0 && this.type == CardType.PLAYER)
-            {
-                //TODO player loss
-            }
+            return false;
         }
 
 
-        public void EndTurn()
-        {
-            //restor values
-
-        }
     }
 }

@@ -56,6 +56,9 @@
      <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
      <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\NamePickGui.cs" />
      <Compile Include="Assets\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
+     <Compile Include="Assets\Scripts\Abilities\DealDamage.cs" />
+     <Compile Include="Assets\Scripts\Abilities\DrawCard.cs" />
+     <Compile Include="Assets\Scripts\Abilities\GainHealth.cs" />
      <Compile Include="Assets\Scripts\Card Crafting\CardCrafter.cs" />
      <Compile Include="Assets\Scripts\Card Crafting\CardSelector.cs" />
      <Compile Include="Assets\Scripts\Card Crafting\RecipePanel.cs" />
@@ -77,6 +80,7 @@
      <Compile Include="Assets\Scripts\DuelScene\CreditCalculation.cs" />
      <Compile Include="Assets\Scripts\DuelScene\Draggable.cs" />
      <Compile Include="Assets\Scripts\DuelScene\Dropzone.cs" />
+     <Compile Include="Assets\Scripts\DuelScene\DuelFunctions.cs" />
      <Compile Include="Assets\Scripts\DuelScene\DuelScript.cs" />
      <Compile Include="Assets\Scripts\EditProfile\Delete.cs" />
      <Compile Include="Assets\Scripts\EditProfile\EditProfileCancelButton.cs" />
