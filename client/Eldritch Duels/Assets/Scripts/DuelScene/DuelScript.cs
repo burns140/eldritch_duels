@@ -263,6 +263,14 @@ public class DuelScript : MonoBehaviour
         //TODO tell oppenent to resolve card
     }
 
+    //server sends request that opp played a card
+    //this method ties the server request with the
+    //client side
+    public void ServerPlayPlayOppCard(string cardName){
+        Card toPlay = Library.GetCard(cardName);
+        playOppCard(toPlay);
+    }
+
     // Play opponent's card
     private void playOppCard(Card played){
         OpponentState.onField.Add(played);
