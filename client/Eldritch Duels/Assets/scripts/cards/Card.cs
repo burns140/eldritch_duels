@@ -103,6 +103,15 @@ namespace eldritch.cards
             set {this.isStealth = value;}
 
         }
+
+        [SerializeField]
+        private bool isDefender = false;
+        public bool HasDefender {
+            get { return this.isDefender; }
+            set { this.isDefender = value; }
+        }
+
+
         [SerializeField]
         private List<Effect> effects = new List<Effect>();
         public List<Effect> Abilities{

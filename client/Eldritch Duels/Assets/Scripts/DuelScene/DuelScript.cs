@@ -325,14 +325,28 @@ public class DuelScript : MonoBehaviour
 
     #region Attack & Update Health
     // Play card animations when I attack 
-    private void myAttack(){
+    /* private void myAttack(){
         foreach(GameObject value in myPlayList){
             // @TODO some attack animations (@BRANDON)
             float hit=0; // @TODO get attack value of the card (@DHAIRYA)
+            float defense = 0; // @TODO get defense value of targeted card (@DHAIRYA)
+            if (hit >= defense) {
+                destroyMinion(value);
+            }
             // @TODO send attack value to server (@KEVIN M)
             updateOppHealth(hit); // After each card's attack, update opponent's health
         }
+    } */
+
+    private void myAttack(GameObject attacker, GameObject defender) {
+        float attack = 0; // TODO: GET attacker ATTACK @Dhairya
+        float defense = 0; // TODO: GET defender DEFENSE @Dhairya
+
+        if (attack >= defense) {
+            DuelFunctions.destroyMinion(defender);
+        }
     }
+
 
     // After my card attacks opponent
     private void updateOppHealth(float hit){
