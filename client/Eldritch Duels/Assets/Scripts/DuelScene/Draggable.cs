@@ -51,11 +51,17 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     }
 
     public void OnEndDrag(PointerEventData eventData) {
-
-        this.transform.SetParent( parentToReturnTo ); 
-		this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
-		GetComponent<CanvasGroup>().blocksRaycasts = true;
-
+		//int childCount = this.GetComponent<GridLayoutGroup>().transform.childCount;
+		Debug.Log("this:"+this.name);
+		Debug.Log("parentToReturnTo:"+parentToReturnTo.name);
+		Debug.Log("placeholder:"+placeholder.name);
+		Debug.Log("placeholder_siblingindex:"+placeholder.transform.GetSiblingIndex());
+		//if(childCount < 7){
+			this.transform.SetParent( parentToReturnTo ); 
+			this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
+			GetComponent<CanvasGroup>().blocksRaycasts = true;
+		//}
+        
 		Destroy(placeholder); // Destory the temporary placeholder
     }
 }
