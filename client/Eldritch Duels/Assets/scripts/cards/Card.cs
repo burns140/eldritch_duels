@@ -104,10 +104,13 @@ namespace eldritch.cards
 
         }
         [SerializeField]
-        private List<Effect> effects = new List<Effect>();
+        public List<Effect> effects = new List<Effect>();
+        [SerializeField]
         public List<Effect> Abilities{
             get {return this.effects;}
+            set {this.effects = value;}
         }
+
 
         public void AddAbility(Effect ability){
             this.effects.Add(ability);

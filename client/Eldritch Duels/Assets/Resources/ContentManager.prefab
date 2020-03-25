@@ -53,6 +53,8 @@ MonoBehaviour:
     type: 0
     rartiy: 2
     cardImage: {fileID: 2100000, guid: 133104de352359e46a810bdc61a8b63c, type: 2}
+    canFly: 0
+    isStealth: 0
   - cardName: Test 1
     id: 1
     owned: 0
@@ -62,6 +64,8 @@ MonoBehaviour:
     type: 1
     rartiy: 0
     cardImage: {fileID: 2100000, guid: f20086bfd2f31ca439c04c0de7fa079b, type: 2}
+    canFly: 0
+    isStealth: 0
   - cardName: Mi_Go
     id: 2
     owned: 0
@@ -71,6 +75,8 @@ MonoBehaviour:
     type: 0
     rartiy: 0
     cardImage: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
+    canFly: 0
+    isStealth: 0
   - cardName: Mi_Go Worker
     id: 3
     owned: 0
@@ -80,6 +86,8 @@ MonoBehaviour:
     type: 0
     rartiy: 1
     cardImage: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
+    canFly: 0
+    isStealth: 0
   - cardName: Mi_Go Queen
     id: 4
     owned: 0
@@ -89,6 +97,74 @@ MonoBehaviour:
     type: 0
     rartiy: 2
     cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
+    canFly: 0
+    isStealth: 0
+  - cardName: Beast Patient
+    id: 5
+    owned: 0
+    cost: 5
+    power: 5
+    defence: 5
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: 2a1a4e245c0ef1a40a68e65549068961, type: 2}
+    canFly: 0
+    isStealth: 0
+  - cardName: Blood_Starved Beast
+    id: 6
+    owned: 0
+    cost: 13
+    power: 13
+    defence: 13
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: f6ef397774c8b6843ac1d7345ef17970, type: 2}
+    canFly: 0
+    isStealth: 0
+  - cardName: Brain of Mensis
+    id: 7
+    owned: 0
+    cost: 7
+    power: 7
+    defence: 7
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: d3960105a387e0a418430780181bef97, type: 2}
+    canFly: 0
+    isStealth: 0
+  - cardName: Chime Maiden
+    id: 8
+    owned: 0
+    cost: 6
+    power: 6
+    defence: 6
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: a62b5b2a94e62ef459234a80883d812f, type: 2}
+    canFly: 0
+    isStealth: 0
+  - cardName: Lady Maria
+    id: 9
+    owned: 0
+    cost: 17
+    power: 17
+    defence: 17
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: ec410aa89a045724dbb1327609d949bd, type: 2}
+    canFly: 0
+    isStealth: 0
+  - cardName: Ludwig Holy Blade
+    id: 10
+    owned: 0
+    cost: 15
+    power: 15
+    defence: 15
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 9f2f89249f7d11a40bbcb28154a12dce, type: 2}
+    canFly: 0
+    isStealth: 0
   recipes:
   - BaseCard: Test 1
     FodderCard: Test 1

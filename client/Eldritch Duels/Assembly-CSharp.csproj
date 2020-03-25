@@ -56,6 +56,7 @@
      <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
      <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\NamePickGui.cs" />
      <Compile Include="Assets\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
+     <Compile Include="Assets\Scripts\Abilities\AddFlying.cs" />
      <Compile Include="Assets\Scripts\Abilities\DealDamage.cs" />
      <Compile Include="Assets\Scripts\Abilities\DrawCard.cs" />
      <Compile Include="Assets\Scripts\Abilities\GainHealth.cs" />
