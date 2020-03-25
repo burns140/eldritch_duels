@@ -109,7 +109,6 @@
     <Compile Include="Assets\Scripts\EditProfile\Delete.cs" />
     <Compile Include="Assets\Scripts\EditProfile\EditProfileCancelButton.cs" />
     <Compile Include="Assets\Scripts\EditProfile\EditProfilePicScript.cs" />
-    <Compile Include="Assets\Scripts\EditProfile\Upload.cs" />
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\GlobalCheckMusic.cs" />
     <Compile Include="Assets\Scripts\Loading Scene\GotoDuel.cs" />

@@ -51,32 +51,7 @@ public class Login : MonoBehaviour
         login.onClick.AddListener(clicked);
     }
 
-    public void clicked()
-    {
-        string result = ServerLogin(email, pass); 
-        if(result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
-        {
-            Debug.Log("Login successful! Temp file is: " + result);
-            Global.tokenfile = result;
-            string tmp = Global.GetCollection();
-            Global.InitUserCards(tmp, 1);
-            SceneManager.LoadScene("Lobby");
-        }
-        else if (String.Equals("Not verified, can't login", result))
-        {
-            Debug.Log("Your account is not verified");
-            ErrorPanel.gameObject.SetActive(true);
-            ErrorText.text = "Invalid Email/Password";
-            ErrorText.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.Log("Login failed");
-            ErrorPanel.gameObject.SetActive(true);
-            ErrorText.text = "Invalid Email/Password";
-            ErrorText.gameObject.SetActive(true);
-        }
-    }
+    
 
     // Updates email and password variables every frame
     public void Update()
@@ -136,6 +111,33 @@ public class Login : MonoBehaviour
             Debug.Log(e);
             Console.WriteLine("Unable to create login file or set its attributes: " + e.Message);
             return String.Empty;
+        }
+    }
+
+    public void clicked()
+    {
+        string result = ServerLogin(email, pass);
+        if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
+        {
+            Debug.Log("Login successful! Temp file is: " + result);
+            Global.tokenfile = result;
+            string tmp = Global.GetCollection();
+            Global.InitUserCards(tmp, 1);
+            SceneManager.LoadScene("Lobby");
+        }
+        /*else if (String.Equals("Not verified, can't login", result))
+        {
+            Debug.Log("Your account is not verified");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "Invalid Email/Password";
+            ErrorText.gameObject.SetActive(true);
+        }*/
+        else
+        {
+            Debug.Log("Login failed");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = result;
+            ErrorText.gameObject.SetActive(true);
         }
     }
 }
