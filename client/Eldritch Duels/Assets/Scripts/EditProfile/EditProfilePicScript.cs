@@ -57,8 +57,8 @@ public class EditProfilePicScript : MonoBehaviour
     public Sprite[] pictures; // List of available pictures
     public InputField screenNameInput; // Screenname field on the UI
     public InputField bioInput; // Bio field on the UI
-    public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
-    public UnityEngine.UI.Button upload;
+    public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" }; // for checking picture files
+    public UnityEngine.UI.Button upload; // upload button
     private string bio; // save new bio to this string
     private string screenname; // save new screenname to this string
     private int picnum=0; // default profile pic is the first option
@@ -104,6 +104,8 @@ public class EditProfilePicScript : MonoBehaviour
         }
 
         dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
+
+        //TODO: ADD USER UPLOADED PROFILE PICTURE
     }
 
     public void handlePicName(int val){
@@ -154,8 +156,6 @@ public class EditProfilePicScript : MonoBehaviour
         {
             if (ImageExtensions.Contains(Path.GetExtension(path).ToUpperInvariant()))
             {
-                //SEND REQUEST WITH IMAGE
-                //UPDATE UI
                 Debug.Log("Valid image!");
 
                 byte[] imagebytes = File.ReadAllBytes(path);
@@ -172,6 +172,8 @@ public class EditProfilePicScript : MonoBehaviour
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                dropdownSetup();
             }
             else
             {
