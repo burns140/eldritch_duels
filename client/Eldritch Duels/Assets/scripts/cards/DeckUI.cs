@@ -19,14 +19,16 @@ namespace eldritch.cards {
         public string cmd;
         public string name;
         public string[] deck;
+        public bool shared;
 
-        public deckupload(string cmd, string id, string token, string[] deck, string name)
+        public deckupload(string cmd, string id, string token, string[] deck, string name, bool shared)
         {
             this.id = id;
             this.token = token;
             this.cmd = cmd;
             this.deck = deck;
             this.name = name;
+            this.shared = shared;
         }
     }
 
@@ -51,20 +53,12 @@ namespace eldritch.cards {
                 DeckNameInput.GetComponent<UnityEngine.UI.InputField>().text = Global.selectedDeck.DeckName;
                 if(Global.selectedDeck.CardsInDeck.Count == 0)
                 {
-                    Debug.Log(Global.GetDeckByNameFromServer(Global.selectedDeck.DeckName).Length);
+                    Debug.Log(Global.GetDeckByNameFromServer(Global.selectedDeck.DeckName, false).Length);
                 }
             }
             if (Global.selectedDeck == null)
                 Global.selectedDeck = new Deck();
 
-            
-            /*foreach (string s in temp)
-            {
-                string[] temp2 = s.Split('-');
-                string cardsomething = temp2[0];
-                string amount = temp2[1];
-                //TODO: POPULATE UI WITH THIS
-            }*/
 
             foreach (Card c in Global.userCards)
             {
@@ -98,14 +92,18 @@ namespace eldritch.cards {
                 deckPage = maxDeckPage;
             if (collectPage > maxCollectPage)
                 collectPage = maxCollectPage;
+            //get UI panels
             GameObject col = GameObject.Find("Collection");
             GameObject deck = GameObject.Find("Deck");
             int pos = collectPage * 8;
+            //scan each collection ui placeholders
             foreach(Transform t in col.transform)
             {
                 t.gameObject.SetActive(false);
+                //if card exists at position
                 if(pos < inCollection.Count)
                 {
+                    //add card to ui with amount available
                     t.gameObject.SetActive(true);
                     t.gameObject.GetComponent<UnityEngine.UI.Image>().material = inCollection[pos].c.CardImage;
                     t.gameObject.GetComponent<DeckControl>().setCard(inCollection[pos].c);
@@ -114,11 +112,14 @@ namespace eldritch.cards {
                 pos++;
             }
             pos = deckPage * 8;
+            //scan each placeholder in deck panel
             foreach (Transform t in deck.transform)
             {
                 t.gameObject.SetActive(false);
+                //check is card in deck exists at position
                 if (pos < inDeck.Count)
                 {
+                    //add card to ui
                     t.gameObject.SetActive(true);
                     t.gameObject.GetComponent<UnityEngine.UI.Image>().material = inDeck[pos].c.CardImage;
                     t.gameObject.GetComponent<DeckControl>().setCard(inDeck[pos].c);
@@ -129,6 +130,7 @@ namespace eldritch.cards {
 
             
         }
+        //scroll panel controls
         public void CollectLeft()
         {
             collectPage--;
@@ -157,7 +159,7 @@ namespace eldritch.cards {
                 deckPage = 0;
             updateUI();
         }
-
+        //add card to deck being added
         public void AddCard(Card c)
         {
             if(deckSize >= Constants.MAX_DECK_SIZE)
@@ -171,8 +173,14 @@ namespace eldritch.cards {
                 {
                     for(int j = 0; j < inDeck.Count; j++)
                     {
+                        //check id deck already contains same card
                         if(inDeck[j].c.CardID == c.CardID)
                         {
+                            if(inDeck[i].count >= Constants.MAX_CARD_ALLOWED)
+                            {
+                                return;
+                            }
+                            //increament amount in deck
                             CardContainer temp = inDeck[j];
                             temp.count++;
                             inDeck[j] = temp;
@@ -186,6 +194,7 @@ namespace eldritch.cards {
                             return;
                         }
                     }
+                    //new card being added so add new container
                     CardContainer co = inCollection[i];
                     co.count--;
                     inCollection[i] = co;
@@ -201,6 +210,8 @@ namespace eldritch.cards {
                 }
             }
         }
+
+        //remove card from deck being edited
         public void RemoveCard(Card c)
         {
             
@@ -237,6 +248,7 @@ namespace eldritch.cards {
 
         public void SaveDeck()
         {
+            //find input elements
             if (GameObject.Find("Deck Name Text").GetComponent<UnityEngine.UI.Text>().text.Trim().Equals(""))
             {
                 UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Deck Name Cannot Be Empty";
@@ -249,7 +261,7 @@ namespace eldritch.cards {
                 UIError.SetActive(true);
                 return;
             }
-            if (deckSize != Constants.MIN_DECK_SIZE)
+            if (deckSize < Constants.MIN_DECK_SIZE)
             {
                 UIError.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Text>().text = "Not Enough Cards In Deck!";
                 UIError.SetActive(true);
@@ -264,9 +276,10 @@ namespace eldritch.cards {
                     Deck updatedDeck = Global.userDecks[i];
                     updatedDeck.CardsInDeck = inDeck;
                     Global.userDecks[i] = updatedDeck;
+                    //sync with server
                     try
                     {
-                        deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(updatedDeck), updatedDeck.DeckName);
+                        deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(updatedDeck), updatedDeck.DeckName, false);
                         string json = JsonConvert.SerializeObject(saved);
                         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                         Global.stream.Write(data, 0, data.Length);
@@ -286,14 +299,16 @@ namespace eldritch.cards {
 
             }
 
-            
+            //sets new deck values
             newDeck.DeckName = GameObject.Find("Deck Name Text").gameObject.GetComponent<UnityEngine.UI.Text>().text;
             newDeck.CardsInDeck = inDeck;
             Debug.Log(newDeck);
+            //add to local deck list
             Global.AddDeck(newDeck);
+            //sync with server
             try
             {
-                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(newDeck), newDeck.DeckName);
+                deckupload saved = new deckupload("saveDeck", Global.getID(), Global.getToken(), deckToString(newDeck), newDeck.DeckName, false);
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
@@ -310,6 +325,7 @@ namespace eldritch.cards {
             SceneManager.LoadScene("Decks");
         }
 
+        //takes a deck and converts it to a string[] representation
         string[] deckToString(Deck d)
         {
             List<CardContainer> cards = d.CardsInDeck;
@@ -322,21 +338,7 @@ namespace eldritch.cards {
             return temp;
         }
 
-        void testDeck()
-        {
-            return;
-            /*for(int i = 0; i < 10; i++)
-            {
-                Card c = new Card(i, "test card " + i);
-                c.AttackPower = 100;
-                c.DefencePower = 100;
-                c.SpellRarity = CardRarity.LEGENDARY;
-                c.CopiesOwned = i;
-                c.CardImage = testMat;
-                Global.userCards.Add(c);
-
-            }*/
-        }
+       
 
 
     }
