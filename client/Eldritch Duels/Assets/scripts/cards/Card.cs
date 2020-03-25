@@ -9,8 +9,6 @@ namespace eldritch.cards
     {
         CREATURE,
         SPELL,
-        ARTIFACT,
-        ARTIFACT_CREATURE,
         PLAYER,
         NULL
     }
@@ -90,6 +88,25 @@ namespace eldritch.cards
             set { if (value != null) { this.cardImage = value; } }
         }
 
+        //get the number of cards not in a deck
+        //returns the number of cards that can be used in card crafting
+        public int SurplusCopies
+        {
+            get
+            {
+                int count = 0;
+                foreach (Deck d in Global.userDecks)
+                {
+                    int tmp = d.AmountInDeck(this.cardName);
+                    if (tmp > count)
+                        count = tmp;
+                }
+                if (count > CopiesOwned)
+                    count = CopiesOwned;
+                return CopiesOwned - count;
+            }
+        }
+
 
         #endregion
 
@@ -112,7 +129,7 @@ namespace eldritch.cards
 
         public void DealDamage(int amount)
         {
-            if(this.type != CardType.NULL && this.type != CardType.ARTIFACT)
+            if(this.type != CardType.NULL)
             {
                 this.defence -= amount;
             }
@@ -124,10 +141,9 @@ namespace eldritch.cards
         }
 
 
-        //reset values and check if card is alive
-        public void EndOfTurn()
+        public void EndTurn()
         {
-            this.defence = this.maxDef;
+            //restor values
 
         }
     }

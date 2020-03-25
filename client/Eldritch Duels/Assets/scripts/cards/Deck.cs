@@ -23,6 +23,17 @@ namespace eldritch.cards {
         {
             get { int c = 0; foreach (CardContainer cc in CardsInDeck) { c += cc.count; } return c; }
         }
+        public int AmountInDeck(string cardName)
+        {
+            foreach(CardContainer cc in CardsInDeck)
+            {
+                if (cc.c.CardName.Equals(cardName))
+                {
+                    return cc.count;
+                }
+            }
+            return 0;
+        }
 
     }
 }
