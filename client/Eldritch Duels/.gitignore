@@ -113,7 +113,7 @@ server/dbconfig.json
 bin/
 obj/
 *.sln
-
+client/Eldritch Duels/.history/
 
 
 ###################
