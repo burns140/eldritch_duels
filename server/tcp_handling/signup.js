@@ -99,7 +99,8 @@ const signup = (data, sock) => {
                         friends: [],                        // array of user emails who are my friend
                         friendRequestsSent: [],             // array of user emails who I've sent friend requests to
                         reports: [],                        // array of reports I have of { user, time }
-                        banLength: 0                          // length of current tempBan
+                        banLength: 0,                          // length of current tempBan
+                        emailToChange: ""                   // Email they are trying to change to
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
@@ -107,7 +108,7 @@ const signup = (data, sock) => {
                         /* Set html to be sent for verification email */
                         var emailText = `<h1>Email Verification</h1>` +
                                     `<p>You have created an account for Eldritch Duels. Before you can ` +
-                                    `access matchmaking, you must verify your account by clicking on the link below.</p>` +
+                                    `login, you must verify your account by clicking on the link below.</p>` +
                                     `<a href="http://${host}/verify/${str}">Verify Account</a>`;
 
                         var mailOptions = {             // Options for verification email

@@ -117,7 +117,7 @@ function onClientConnected(sock) {
 
     /* Determine what needs to be done every time
        data is received from a client */
-    sock.on('data', (data) => {        
+    sock.on('data', (data) => {       
         try {     
 			const obj = JSON.parse(data);               // Turn data into a JSON object		
             console.log(obj);
