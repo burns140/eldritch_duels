@@ -102,6 +102,9 @@ const addCard = (data, sock) => {
             }).then(result => {
                 let temp = result.collection;
                 console.log(temp);
+                if(temp[cardid] == NaN){
+                    temp[cardid] = 0;
+                }
                 temp[cardid]++;                         // iterate value in collection
 
                 /* Set updated collection in db */

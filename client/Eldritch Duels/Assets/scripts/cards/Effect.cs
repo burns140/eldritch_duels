@@ -13,9 +13,17 @@ namespace eldritch.cards
         NULL
 
     }
+
+    public enum EffectTarget{
+        SELF,
+        OPPONENT,
+        CARD,
+        NULL
+    }
     public abstract class Effect
     {
         protected GameObject target = null;
+        protected EffectTarget toTarget = EffectTarget.NULL;
         public virtual void SetTarget(GameObject target)
         {
             if (target != null && target.tag.Equals("targetable"))
@@ -23,6 +31,9 @@ namespace eldritch.cards
                 this.target = target;
             }
         }
-        public abstract void execute();
+        public abstract void execute(ref Card target);
+        public abstract void execute(ref PlayerState ps);
+        public abstract string GetName();
+        public abstract EffectTarget GetTargetType();
     }
 }
