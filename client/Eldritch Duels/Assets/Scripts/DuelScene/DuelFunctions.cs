@@ -68,11 +68,11 @@ public static class DuelFunctions
         return null;
     }
 
-    public static void destroyMinion(GameObject destroyed, ref PlayerState ps, bool iAttacked) {
+    public static void destroyMinion(Card destroyed, ref PlayerState ps, bool iAttacked) {
         if (iAttacked) {
-            ps.oppPlayAreaPanel.Remove(destroyed);
+            //ps.oppPlayAreaPanel.Remove(destroyed);
         } else {
-            ps.myPlayAreaPanel.Remove(destroyed);
+            //ps.myPlayAreaPanel.Remove(destroyed);
         }
         return;
     }

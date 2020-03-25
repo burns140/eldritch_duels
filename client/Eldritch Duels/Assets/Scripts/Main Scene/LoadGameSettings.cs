@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class LoadGameSettings : MonoBehaviour
 {
     private const string WINDOW_PREF_KEY = "window"; // PLAYER PREF KEY to store window mode
     private const string RESOLUTION_PREF_KEY = "resolution"; // PLAYER PREF KEY to store resolution
+    private const string MUSIC_PREF_KEY = "music"; // PLAYER PREF KEY to store music volume
     private int width = 1920; // Default resoultion width
     private int height = 1080; // Default resolution height
     private string window = "fullScreen"; // Default screen mode
@@ -17,6 +19,9 @@ public class LoadGameSettings : MonoBehaviour
         string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY); // Get the resolution from PLAYER PREFS
        
         window = PlayerPrefs.GetString(WINDOW_PREF_KEY); // Get the windowed mode from PLAYER PREFS
+
+        int musicVolume = PlayerPrefs.GetInt(MUSIC_PREF_KEY); // Get the music volume from PLAYER PREFS
+        AudioListener.volume = musicVolume; // Set music volume to saved volume
 
         // Set the width and height based on saved resolution
         if (res == "1920x1080")

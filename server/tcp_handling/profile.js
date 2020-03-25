@@ -60,6 +60,34 @@ const editProfile = (data, sock) => {
     }
 }
 
+const uploadProfilePicture = (data, sock) => {
+    const id = data.id;
+    const art = data.art;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').updateOne(
+                { _id: ObjectID(id) },
+                { $set: { customArt: art } }
+            ).then(result => {
+                if (result.matchedCount != 1) {
+                    throw new Error("Didn't match anyone");
+                }
+                sock.write("custom art uploaded");
+                console.log("custom art uploaded");
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
 /**
  * Delete a user's account
  * @param {object} data 
@@ -382,3 +410,4 @@ exports.editProfile = editProfile;
 exports.changePassword = changePassword;
 exports.changeEmail = changeEmail;
 exports.viewProfile = viewProfile;
+exports.uploadProfilePicture = uploadProfilePicture;

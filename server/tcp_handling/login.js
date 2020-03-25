@@ -137,12 +137,13 @@ const login = (data, sock) => {
                 }
             }).catch(err => {
                 console.log(err);
+                sock.write(err.toString());
                 return;
             });
         });
     } catch (err) {
         console.log(err);
-        sock.write(err.msg);
+        sock.write(err);
     }
 }
 

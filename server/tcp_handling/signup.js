@@ -42,13 +42,13 @@ const signup = (data, sock) => {
                     var startCollection = {         // The collection they start with
                         "Test 0": 30,
                         "Test 1": 30,
-                        "Mi-Go": 24,
-                        "Mi-Go Worker": 21,
-                        "Mi-Go Queen": 6,
+                        "Mi_Go": 24,
+                        "Mi_Go Worker": 21,
+                        "Mi_Go Queen": 6,
                         "Beast Patient": 12,
                         "Chime Maiden": 3,
                         "Brain of Mensis": 9,
-                        "Mi-Go Zombie": 13,
+                        "Mi_Go Zombie": 13,
                         "Snatcher": 25,
                         "Nightmare Apostle": 15,
                         "Quicksilver Bullets": 2,
@@ -100,7 +100,8 @@ const signup = (data, sock) => {
                         friendRequestsSent: [],             // array of user emails who I've sent friend requests to
                         reports: [],                        // array of reports I have of { user, time }
                         banLength: 0,                          // length of current tempBan
-                        emailToChange: ""                   // Email they are trying to change to
+                        emailToChange: "",                   // Email they are trying to change to
+                        customArt: []
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
@@ -120,7 +121,7 @@ const signup = (data, sock) => {
 
                         transporter.sendMail(mailOptions, (error, info) => {    // Send verification email
                             if (error) {
-                                console.log(err);
+                                console.log(error);
                             } else {
                                 console.log('Email send: ' + info.response);
                             }

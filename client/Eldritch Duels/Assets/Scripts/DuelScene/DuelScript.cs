@@ -75,7 +75,7 @@ public class DuelScript : MonoBehaviour
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
 
-    private const string[] needTargeter = { "Destroy", "Add defender", "Add fly", "Add stealth" };
+    private string[] needTargeter = { "Destroy", "Add defender", "Add fly", "Add stealth" };
 
     private const int MAX_HAND = 8; //max hand size
     private const int MAX_FIELD_SIZE = 7;
@@ -108,12 +108,12 @@ public class DuelScript : MonoBehaviour
         
     }
 
-    public static async Task readStreamAsync() {
+    public async Task readStreamAsync() {
         while (true) {
             Byte[] data = new Byte[256];
             int read_bytes = await Global.stream.ReadAsync(data, 0, 256);
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
-            DuelRequest dreq = JsonConvert.DeserializeObject(trimmed);
+            DuelRequest dreq = (DuelRequest) JsonConvert.DeserializeObject(trimmed);
             playOppCard(dreq);
         }
     }
@@ -393,7 +393,7 @@ public class DuelScript : MonoBehaviour
     }*/
 
     private void playOppCard(DuelRequest req) {
-        Card toPlay = Library.GetCard(cardName);
+        Card toPlay = Library.GetCard(req.cardName);
         if (toPlay.SpellType != CardType.SPELL) {
             OpponentState.onField.Add(toPlay);
         }
@@ -404,9 +404,9 @@ public class DuelScript : MonoBehaviour
         if (req.targetName != null) {
             string[] split = req.targetName.Split('-');
             if (String.Equals(split[0], "mine")) {
-                targetCard = (Card) oppPlayAreaPanel[Int32.Parse(split[1])];
+                //targetCard = (Card) oppPlayAreaPanel[Int32.Parse(split[1])];
             } else {
-                targetCard = (Card) myPlayAreaPanel[Int32.Parse(split[1])];
+                //targetCard = (Card) myPlayAreaPanel[Int32.Parse(split[1])];
             }
         }
         ResolveAbilities(toPlay, false, req, targetCard);
@@ -424,9 +424,9 @@ public class DuelScript : MonoBehaviour
                     break;
                 case EffectTarget.CARD:
                     if (targetCard != null) {
-                        e.execute(targetCard);
+                        e.execute(ref targetCard);
                     } else {
-                        e.execute(played);
+                        e.execute(ref played);
                     }
                     //TODO select card and execute if
                     break;
@@ -445,6 +445,8 @@ public class DuelScript : MonoBehaviour
     public string sendNetworkRequest(string obj) {
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(obj);
         Global.stream.Write(data, 0, data.Length);
+
+        return "success";
     }
 
     #endregion
@@ -469,7 +471,7 @@ public class DuelScript : MonoBehaviour
         float defense = 0; // TODO: GET defender DEFENSE @Dhairya
 
         if (attack >= defense) {
-            DuelFunctions.destroyMinion(defender);
+            //DuelFunctions.destroyMinion(defender);
         }
     }
 

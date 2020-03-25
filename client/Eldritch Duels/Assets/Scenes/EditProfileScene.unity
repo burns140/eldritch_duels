@@ -782,7 +782,11 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1225820686}
   m_HandleRect: {fileID: 1225820685}
   m_Direction: 2
+<<<<<<< HEAD
   m_Value: 1
+=======
+  m_Value: 0
+>>>>>>> 287eeca28afcc60ce4534ddbcaa24f1eb191a808
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2883,6 +2887,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754904792}
   m_CullTransparentMesh: 0
+--- !u!1 &1807328064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1807328065}
+  - component: {fileID: 1807328066}
+  m_Layer: 5
+  m_Name: CheckMusic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1807328065
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807328064}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1874615211}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1807328066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807328064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243df16d1b7d2482782131f0462ba101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: d9381da607fd64e5da3d2a5c639e33a9, type: 3}
 --- !u!1 &1874615205
 GameObject:
   m_ObjectHideFlags: 0
@@ -3018,7 +3071,11 @@ RectTransform:
   - {fileID: 51588061}
   - {fileID: 463930224}
   - {fileID: 267307104}
+<<<<<<< HEAD
   - {fileID: 1420350645}
+=======
+  - {fileID: 1807328065}
+>>>>>>> 287eeca28afcc60ce4534ddbcaa24f1eb191a808
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
