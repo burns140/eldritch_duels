@@ -55,7 +55,7 @@ const signup = (data, sock) => {
                         "Great One's Wisdom": 1,
                         "Blood Starved Beast": 16,
                         "Moon Presence": 27,
-                        "Ludwig, Holy Blade": 15,
+                        "Ludwig Holy Blade": 15,
                         "Blood Vial": 9,
                         "Lady Maria": 10,
                         "Pungent Blood Cocktail": 5,
