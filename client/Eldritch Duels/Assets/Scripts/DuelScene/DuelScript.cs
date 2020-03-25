@@ -97,30 +97,25 @@ public class DuelScript : MonoBehaviour
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
         System.Threading.Thread T = new System.Threading.Thread((new System.Threading.ThreadStart(Listener)));
+        T.Start();
     }
 
     /* Need to spawn a separate thread to listen to the socket so that
        the client can still interact with the game while the other player is taking their turn.
        Need to kill the thread when the match dies. */
     private void Listener() {
-        while (true) {
-            Socket thisSock = Global.socket;
-            thisSock.Listen(500);
-            Socket accepted = thisSock.Accept();
-
-            Buffer buffer = new byte[accepted.SendBufferSize];
-            int bytesRead = accepted.Receive(buffer);
-
-            byte[] formatted = new byte[bytesRead];
-            for (int i = 0; i < bytesRead; i++) {
-                formatted[i] = buffer[i];
-            }
-
-            string strData = Encoding.ASCII.GetString(formatted);
-            DuelRequest move = JsonConvert.DeserializeObject(strData);
-            playOppCard(move);
-        }
+        readStreamAsync();   
         
+    }
+
+    public static async Task readStreamAsync() {
+        while (true) {
+            Byte[] data = new Byte[256];
+            int read_bytes = await Global.stream.ReadAsync(data, 0, 256);
+            string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            DuelRequest dreq = JsonConvert.DeserializeObject(trimmed);
+            playOppCard(dreq);
+        }
     }
     #endregion
 
@@ -433,7 +428,7 @@ public class DuelScript : MonoBehaviour
                     } else {
                         e.execute(played);
                     }
-                    //TODO select card and execute if we want to select more than one person
+                    //TODO select card and execute if
                     break;
                 default:
                     break;
