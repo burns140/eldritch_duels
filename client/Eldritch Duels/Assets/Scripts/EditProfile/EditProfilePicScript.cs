@@ -9,9 +9,47 @@ using System.Threading;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using SimpleFileBrowser;
 using eldritch;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+
+// Class for server request to send Profile changes
+public class EditProfileRequest
+{
+    public string cmd;
+    public string id;
+    public string token;
+    public string bio;
+    public int avatar;
+    public string username;
+
+    public EditProfileRequest(string cmd, string id, string token, string bio, int avatar, string username)
+    {
+        this.cmd = cmd;
+        this.id = id;
+        this.token = token;
+        this.bio = bio;
+        this.avatar = avatar;
+        this.username = username;
+    }
+}
+
+public class profilepicture
+{
+    public byte[] picture;
+    public string token;
+    public string id;
+    public string cmd;
+
+    public profilepicture(byte[] picture, string token, string id, string cmd)
+    {
+        this.picture = picture;
+        this.token = token;
+        this.id = id;
+        this.cmd = cmd;
+    }
+}
 
 public class EditProfilePicScript : MonoBehaviour
 {
@@ -19,6 +57,8 @@ public class EditProfilePicScript : MonoBehaviour
     public Sprite[] pictures; // List of available pictures
     public InputField screenNameInput; // Screenname field on the UI
     public InputField bioInput; // Bio field on the UI
+    public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
+    public UnityEngine.UI.Button upload;
     private string bio; // save new bio to this string
     private string screenname; // save new screenname to this string
     private int picnum=0; // default profile pic is the first option
@@ -26,6 +66,7 @@ public class EditProfilePicScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        upload.onClick.AddListener(openBrowser);
         dropdownSetup();
         displayPic();
         displayBio();
@@ -96,23 +137,57 @@ public class EditProfilePicScript : MonoBehaviour
         screennameInstance.text = originalScreenname; // Display original screenname on the UI
     }
 
-    // Class for server request to send Profile changes
-    public class EditProfileRequest {
-        public string cmd;
-        public string id;
-        public string token;
-        public string bio;
-        public int avatar;
-        public string username;
+    public void openBrowser()
+    {
+        FileBrowser.OnSuccess getpath = setpath;
+        FileBrowser.OnCancel none = cancelled;
+        Debug.Log("Opening browser");
+        FileBrowser.ShowLoadDialog(getpath, none);
 
-        public EditProfileRequest (string cmd, string id, string token, string bio, int avatar, string username) {
-            this.cmd = cmd;
-            this.id = id;
-            this.token = token;
-            this.bio = bio;
-            this.avatar = avatar;
-            this.username = username;
+    }
+
+    public void setpath(string path)
+    {
+        Debug.Log(path);
+        Debug.Log("File select success");
+        if (FileBrowser.Success)
+        {
+            if (ImageExtensions.Contains(Path.GetExtension(path).ToUpperInvariant()))
+            {
+                //SEND REQUEST WITH IMAGE
+                //UPDATE UI
+                Debug.Log("Valid image!");
+
+                byte[] imagebytes = File.ReadAllBytes(path);
+
+                profilepicture pfp = new profilepicture(imagebytes, Global.getToken(), Global.getID(), "uploadProfilePicture");
+
+                string json = JsonConvert.SerializeObject(pfp);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                NetworkStream stream = Global.client.GetStream();
+
+                stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+                string responseData = string.Empty;
+
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            else
+            {
+                //MAKE ERROR MESSAGE
+                Debug.Log("Invalid file!");
+            }
         }
+        else
+        {
+            Debug.Log("Browser error");
+        }
+    }
+
+    public void cancelled()
+    {
+        Debug.Log("File select cancelled");
     }
 
 }

@@ -42,20 +42,20 @@ const signup = (data, sock) => {
                     var startCollection = {         // The collection they start with
                         "Test 0": 30,
                         "Test 1": 30,
-                        "Mi-Go": 24,
-                        "Mi-Go Worker": 21,
-                        "Mi-Go Queen": 6,
+                        "Mi_Go": 24,
+                        "Mi_Go Worker": 21,
+                        "Mi_Go Queen": 6,
                         "Beast Patient": 12,
                         "Chime Maiden": 3,
                         "Brain of Mensis": 9,
-                        "Mi-Go Zombie": 13,
+                        "Mi_Go Zombie": 13,
                         "Snatcher": 25,
                         "Nightmare Apostle": 15,
                         "Quicksilver Bullets": 2,
                         "Great One's Wisdom": 1,
                         "Blood Starved Beast": 16,
                         "Moon Presence": 27,
-                        "Ludwig, Holy Blade": 15,
+                        "Ludwig Holy Blade": 15,
                         "Blood Vial": 9,
                         "Lady Maria": 10,
                         "Pungent Blood Cocktail": 5,
@@ -120,7 +120,7 @@ const signup = (data, sock) => {
 
                         transporter.sendMail(mailOptions, (error, info) => {    // Send verification email
                             if (error) {
-                                console.log(err);
+                                console.log(error);
                             } else {
                                 console.log('Email send: ' + info.response);
                             }
