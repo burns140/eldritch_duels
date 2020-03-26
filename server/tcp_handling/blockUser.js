@@ -143,8 +143,14 @@ const getBlockedUsers = (data, sock) => {
                     return;
                 }
 
+                console.log(result);
+
                 console.log('returning emails of blocked users');
-                sock.write(result.blocked.toString());
+                if (result.blocked.toString() == "") {
+                    sock.write("noblockedusers");
+                } else {
+                    sock.write(result.blocked.toString());
+                }
                 return;
             }).catch(err => {
                 console.log(err);
@@ -179,8 +185,14 @@ const getBlockedByUsers = (data, sock) => {
                     return;
                 }
 
-                console.log('returning emails of blocked users');
-                sock.write(result.blockedBy.toString());
+                console.log(result);
+                console.log('returning emails of blockedby users');
+
+                if (result.blockedBy.toString() == "") {
+                    sock.write("notblockedbyanyone");
+                } else {
+                    sock.write(result.blockedBy.toString());
+                }
                 return;
             }).catch(err => {
                 console.log(err);

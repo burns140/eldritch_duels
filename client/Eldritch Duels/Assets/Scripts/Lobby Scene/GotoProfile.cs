@@ -19,6 +19,6 @@ public class GotoProfile : MonoBehaviour
     public void MovetoProfile()
     {
         PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.getEmail()); // Save the my email to EMAIL PREF KEY
-        SceneManager.LoadScene("Profile Scene");
+        SceneManager.LoadScene("ProfileScene");
     }
 }

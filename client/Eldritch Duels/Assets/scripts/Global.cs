@@ -621,6 +621,7 @@ namespace eldritch {
         }
 
         public static string getEmail() {
+            Debug.Log(email);
             return email;
         }
         public static void SetUpConnection()

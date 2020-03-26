@@ -72,6 +72,7 @@ public class Login : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+        Global.email = email;
 
         if (String.Equals(responseData, "Incorrect password")) // checking for incorrect password response
         {

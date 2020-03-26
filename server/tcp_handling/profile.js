@@ -274,13 +274,13 @@ const viewProfile = (data, sock) => {
                 console.log('profile found successfully');
             }).catch(err => {
                 console.log(err);
-                sock.write(err);
+                sock.write(err.toString());
                 return;
             });
         });
     } catch (err) {
         console.log(err);
-        sock.write(err);
+        sock.write(err).toString();
     }
 }
 

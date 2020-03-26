@@ -58,9 +58,9 @@ public class ProfileScript : MonoBehaviour
     #endregion
 
     public class getBlockedRequest {
-        string id;
-        string token;
-        string cmd;
+        public string id;
+        public string token;
+        public string cmd;
 
         public getBlockedRequest(string id, string token, string cmd) {
             this.id = id;
@@ -82,22 +82,22 @@ public class ProfileScript : MonoBehaviour
     }
 
     public class getProfileRequest {
-        string email;
-        string token;
-        string cmd;
+        public string theirEmail;
+        public string token;
+        public string cmd;
 
         public getProfileRequest(string email, string token, string cmd) {
-            this.email = email;
+            this.theirEmail = email;
             this.token = token;
             this.cmd = cmd;
         }
     }
 
     public class FriendsRequest {
-        string myEmail;
-        string theirEmail;
-        string token;
-        string cmd;
+        public string myEmail;
+        public string theirEmail;
+        public string token;
+        public string cmd;
 
         public FriendsRequest(string myEmail, string theirEmail, string token, string cmd) {
             this.myEmail = myEmail;
@@ -254,8 +254,8 @@ public class ProfileScript : MonoBehaviour
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
         string[] info = responseData.Split(',');
-        returnedBio = info[1];
-        returnedUsername = info[2];
+        returnedBio = info[1].Split('-')[1];
+        returnedUsername = info[2].Split('-')[1];
     }
 
     private void displayBio(){ // get bio & display it
@@ -502,11 +502,11 @@ public class ProfileScript : MonoBehaviour
     }
 
     public class BlockRequest {
-        string id;
-        string token;
-        string cmd;
-        string myEmail;
-        string toBlockEmail;
+        public string id;
+        public string token;
+        public string cmd;
+        public string myEmail;
+        public string toBlockEmail;
 
         public BlockRequest(string id, string token, string cmd, string myEmail, string toBlockEmail) {
             this.id = id;
@@ -610,11 +610,11 @@ public class ProfileScript : MonoBehaviour
     }
 
     public class ReportRequest {
-        string id;
-        string cmd;
-        string myEmail;
-        string theirEmail;
-        string token;
+        public string id;
+        public string cmd;
+        public string myEmail;
+        public string theirEmail;
+        public string token;
 
         public ReportRequest(string id, string cmd, string myEmail, string theirEmail, string token) {
             this.id = id;
