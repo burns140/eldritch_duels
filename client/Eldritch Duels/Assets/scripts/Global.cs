@@ -97,13 +97,50 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
-#endregion
+
+    public class EditProfileRequest
+    {
+        public string cmd;
+        public string id;
+        public string token;
+        public string bio;
+        public int avatar;
+        public string username;
+
+        public EditProfileRequest(string cmd, string id, string token, string bio, int avatar, string username)
+        {
+            this.cmd = cmd;
+            this.id = id;
+            this.token = token;
+            this.bio = bio;
+            this.avatar = avatar;
+            this.username = username;
+        }
+    }
+
+    public class profilepicture
+    {
+        public byte[] picture;
+        public string token;
+        public string id;
+        public string cmd;
+
+        public profilepicture(byte[] picture, string token, string id, string cmd)
+        {
+            this.picture = picture;
+            this.token = token;
+            this.id = id;
+            this.cmd = cmd;
+        }
+    }
+    #endregion
     public static class Global
     {
         //global variables
         #region vars
         //Global variables, can be called by any class and script via Global.(variable) as long as "using eldritch" is in the imports
         public static string username = "";
+        public static string email = "";
         public static string enemyUsername = null;
         public static string matchID = null;
         public static int userID = 0;
@@ -657,6 +694,17 @@ namespace eldritch {
                     Application.Quit();
                 }
             }
+        }
+        public static String NetworkRequest(object o)
+        {
+            string json = JsonConvert.SerializeObject(o);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[256];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            return responseData;
         }
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
@@ -72,10 +73,9 @@ public class Login : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-
-        if (String.Equals(responseData, "Incorrect password")) // checking for incorrect password response
-        {
-            return String.Empty;
+        Regex check = new Regex("\\S+:\\S+");
+        if (!check.IsMatch(responseData)) { 
+            return responseData;
         }
         string tempFile = "LoginTemp";
         try //make the temp file
@@ -96,6 +96,7 @@ public class Login : MonoBehaviour
                 Global.avatar = (loginstuff[2] == null || loginstuff[2] == "")? 0 : Int32.Parse(loginstuff[2]);
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
+                Global.email = email;
                 return tempFile;
             }
             catch (Exception e)
@@ -117,7 +118,28 @@ public class Login : MonoBehaviour
     public void clicked()
     {
         string result = ServerLogin(email, pass);
-        if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
+        if (String.Equals("Not verified, can't login", result))
+        {
+            Debug.Log("Your account is not verified");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "Not verified, can't login";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else if (String.Equals("This account has been temporarily banned", result))
+        {
+            Debug.Log("Your account is tempbanned");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "This account has been temporarily banned";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else if (String.Equals("This account has been permanently banned", result))
+        {
+            Debug.Log("Your account is permabanned");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "This account has been permanently banned";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
             Debug.Log("Login successful! Temp file is: " + result);
             Global.tokenfile = result;
@@ -125,13 +147,6 @@ public class Login : MonoBehaviour
             Global.InitUserCards(tmp, 1);
             SceneManager.LoadScene("Lobby");
         }
-        /*else if (String.Equals("Not verified, can't login", result))
-        {
-            Debug.Log("Your account is not verified");
-            ErrorPanel.gameObject.SetActive(true);
-            ErrorText.text = "Invalid Email/Password";
-            ErrorText.gameObject.SetActive(true);
-        }*/
         else
         {
             Debug.Log("Login failed");
