@@ -82,8 +82,7 @@ public class SearchFriendsScript : MonoBehaviour
             StartCoroutine(showError());
         }
         else{
-            // @TODO get my username @STEPHEN/@KEVING
-            string myUsername = "me"; // store my username here
+            string myUsername = Global.username;
             if(searchPlayersList.Contains(myUsername)){ 
                 searchPlayersList.Remove(myUsername); // do not display my username in the search
             }
