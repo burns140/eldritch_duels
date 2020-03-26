@@ -8,17 +8,17 @@ public class VolumeScript : MonoBehaviour
 {
     public Slider slider; // Slider UI
     private const string MUSIC_PREF_KEY = "music"; // PLAYER PREF KEY to store music volume
-
-    int wantedVolume; //= 5; //sample value to test
-
+    public float wantedVolume;
     public void SetVolume(float Volume){
        
         AudioListener.volume = Volume; // Dynamically change volume according to slider
         Debug.Log("Selected volume is: "+Volume);
     }
 
-    void Start(){
-        wantedVolume=PlayerPrefs.GetInt(MUSIC_PREF_KEY); // Get the music volume from PLAYER PREFS
+    void Awake(){
+       
+        wantedVolume=PlayerPrefs.GetFloat(MUSIC_PREF_KEY, .5f); // Get the music volume from PLAYER PREFS    
+    
         slider.value = wantedVolume; // Move slider on UI to the saved volume
         Debug.Log("This is the saved volume: "+wantedVolume);
     }
