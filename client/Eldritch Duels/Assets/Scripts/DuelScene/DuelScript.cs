@@ -206,6 +206,7 @@ public class DuelScript : MonoBehaviour
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             deckList.Enqueue(c); // Add card to deck list
+            Destroy(c);
             deckCount++; 
         }
     }
