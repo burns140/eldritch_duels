@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
@@ -72,10 +73,9 @@ public class Login : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-
-        if (String.Equals(responseData, "Incorrect password")) // checking for incorrect password response
-        {
-            return String.Empty;
+        Regex check = new Regex("\\S+:\\S+");
+        if (!check.IsMatch(responseData)) { 
+            return responseData;
         }
         string tempFile = "LoginTemp";
         try //make the temp file
