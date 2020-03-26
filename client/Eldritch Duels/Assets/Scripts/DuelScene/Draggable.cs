@@ -16,6 +16,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 	private int childCount = 0;
 
+	void Start(){
+		duelScript = GameObject.Find("DuelScriptObject").GetComponent<DuelScript>();
+	}
+
     public void OnBeginDrag(PointerEventData eventData) {
 
         placeholder = new GameObject(); // Create a temporary placeholder
@@ -68,12 +72,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		}
         childCount++;
 		Destroy(placeholder); // Destory the temporary placeholder
-
-		if(startArea.name == "HandAreaPanel"){
+		Debug.Log("Parent: " + this.transform.parent.name);
+		if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel")){
+			
 			Debug.Log("this card:"+this.name);
 			duelScript.playMyCard(this.name);
 		}
-		else if(startArea.name == "MyPlayAreaPanel"){
+		else if(startArea.name == "MyPlayAreaPanel" && this.transform.parent.name.Equals("HandAreaPanel")){
 			Debug.Log("this card:"+this.name);
 			duelScript.recallCard(this.name);
 		}

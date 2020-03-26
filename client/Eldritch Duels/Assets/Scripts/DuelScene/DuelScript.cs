@@ -110,7 +110,7 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
-        yield return (StartCoroutine(testPlays()));
+        //yield return (StartCoroutine(testPlays()));
         //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
         //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
@@ -285,7 +285,7 @@ public class DuelScript : MonoBehaviour
                 myState.mana -= played.CardCost;
                 myState.onField.Add(played);
                 myState.inHand.RemoveAt(i);
-                
+                return true;
                 //update ui
                 GameObject c = (GameObject)Instantiate(myCard);
                 c.GetComponent<Image>().sprite = null;
@@ -331,6 +331,7 @@ public class DuelScript : MonoBehaviour
             if(recalled == null){
                 return false;
             }
+            return true;
             foreach(Transform c in myPlayAreaPanel.transform){
                 if(c.gameObject.name.Equals(cardName)){
                     Destroy(c.gameObject);
