@@ -110,6 +110,7 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
+        yield return (StartCoroutine(testPlays()));
         //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
         //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
@@ -162,6 +163,36 @@ public class DuelScript : MonoBehaviour
             oppPlayCount++; 
             yield return new WaitForSeconds(0.5f); 
         }
+    }
+    //test playing and recalling cards for user and opp
+    IEnumerator testPlays(){
+        //i play cards
+        Debug.Log("Test My Play Card");
+        int myPlayCount=1;
+        while(myPlayCount<=8){ // To add 8 cards to opp play area; 8th should be false
+            bool res = playMyCard("Test 0");
+            Debug.Log("Card played: " + myPlayCount + " result: " + res);
+            myPlayCount++;
+            //drawCard();
+            yield return new WaitForSeconds(0.5f); 
+        }
+        Debug.Log("Test Opp Play Card");
+        //opp plays cards
+        playOppCard("Test 0");
+        playOppCard("Test 0");
+        yield return new WaitForSeconds(2);
+        
+        //i recall card
+        for(int i = 0; i < DuelFunctions.MAX_FIELD/2;i++){
+            bool res2 = recallCard("Test 0");
+            Debug.Log("Card recalled result: " + res2);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        //opp recall card
+        recallOppCard("Test 0");
+        
+
     }
 
     // Called at start of game to set up card list from deck being used
@@ -230,26 +261,138 @@ public class DuelScript : MonoBehaviour
     // Called at the beginning of every turn
     private void drawCard(){
         if(deckList.Count>0){
-            myState.inHand.Add(DuelFunctions.DrawCard(ref myState));
-            handList.Add(deckList.Dequeue()); // Move 1 card from deck to hand
+            Card b = DuelFunctions.DrawCard(ref myState);
+            myState.inHand.Add(b);
+            GameObject c = (GameObject)Instantiate(myCard);
+            c.GetComponent<Image>().sprite = null;
+            c.GetComponent<Image>().material = b.CardImage;
+            c.name = b.CardName;
+            c.transform.SetParent(handAreaPanel.transform, false); // Add card to my play area
+            handList.Add(c); // Add card to my play list
         }
     }
 
     // Play card from my hand to my playing area
     public bool playMyCard(string cardName){
-        Debug.Log("Playing");
+        if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
+            return false;
+        }
+        for(int i = 0; i < myState.inHand.Count;i++){
+            if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){
+                Card played = myState.inHand[i];
+                //edit state
+                myState.mana -= played.CardCost;
+                myState.onField.Add(played);
+                myState.inHand.RemoveAt(i);
+                
+                //update ui
+                GameObject c = (GameObject)Instantiate(myCard);
+                c.GetComponent<Image>().sprite = null;
+                c.GetComponent<Image>().material = played.CardImage;
+                c.name = played.CardName;
+                c.transform.SetParent(myPlayAreaPanel.transform, false); // Add card to my play area
+                myPlayList.Add(c); // Add card to my play list
+                
+                for(int j = 0; j < handAreaPanel.transform.childCount;j++){
+                    if(handAreaPanel.transform.GetChild(j).gameObject.name.Equals(cardName)){
+                        //remove card
+                        Destroy(handAreaPanel.transform.GetChild(j).gameObject);
+                        break;
+                    }
+                }
+                for(int j = 0; j < handList.Count;j++){
+                    if(handList[j].name.Equals(cardName)){
+                        //remove card
+                        handList.RemoveAt(j);
+                        break;
+                    }
+                }
+
+                return true;
+            }
+        }
 
         return false;
     }
 
     public bool recallCard(string cardName){
-        return false;
+        if(myState.onField.Count >= DuelFunctions.MAX_FIELD || true){
+            Card recalled = null;
+            //update manager
+            for(int i = 0; i< myState.onField.Count;i++){
+                if(myState.onField[i].CardName.Equals(cardName)){
+                    recalled = myState.onField[i];
+                    myState.onField.RemoveAt(i);
+                    myState.inHand.Add(recalled);
+                    break;
+                }
+            }
+            if(recalled == null){
+                return false;
+            }
+            foreach(Transform c in myPlayAreaPanel.transform){
+                if(c.gameObject.name.Equals(cardName)){
+                    Destroy(c.gameObject);
+                    GameObject cnew = (GameObject)Instantiate(myCard);
+                    cnew.GetComponent<Image>().sprite = null;
+                    cnew.GetComponent<Image>().material = recalled.CardImage;
+                    cnew.name = recalled.CardName;
+                    cnew.transform.SetParent(handAreaPanel.transform, false); // Add card to my play area
+                    handList.Add(cnew); // Add card to my play list
+                    break;
+                }
+            }
+            for(int i = 0; i< myPlayList.Count;i++){
+                if(myPlayList[i].name.Equals(cardName)){
+                    myPlayList.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        return true;
     }
 
     // Play opponent's card
-    private void playOppCard(){
+    public void playOppCard(string cardName){
+        Card played = Library.GetCard(cardName);
+        //update manager
+        oppState.onField.Add(played);
+        oppState.mana -= played.CardCost;
+
+        //update ui
+        GameObject c = (GameObject)Instantiate(myCard);
+        c.GetComponent<Image>().sprite = null;
+        c.GetComponent<Image>().material = played.CardImage;
+        c.name = played.CardName;
+        c.transform.SetParent(oppPlayAreaPanel.transform, false); // Add card to opp play area
+        oppPlayList.Add(c); // Add card to opp play list
+
+        //resolve abilities
         
     }
+    public void recallOppCard(string cardName){
+        //update manager
+        for(int i = 0; i < oppState.onField.Count;i++){
+            if(oppState.onField[i].CardName.Equals(cardName)){
+                oppState.onField.RemoveAt(i);
+                break;
+            }
+        }
+        //update ui
+        foreach(Transform c in oppPlayAreaPanel.transform){
+            if(c.gameObject.name.Equals(cardName)){
+                Destroy(c.gameObject);
+                break;
+            }
+        }
+        for(int i = 0;i < oppPlayList.Count;i++){
+            if(oppPlayList[i].name.Equals(cardName)){
+                oppPlayList.RemoveAt(i);
+                break;
+            }
+        }
+    }
+    
     #endregion
 
     #region Attack & Update Health

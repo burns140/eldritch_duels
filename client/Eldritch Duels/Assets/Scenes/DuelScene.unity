@@ -1768,6 +1768,20 @@ MonoBehaviour:
   - {fileID: 21300000, guid: af870b3d8471f5247b3696107f051ca5, type: 3}
   - {fileID: 21300000, guid: efcb7f098b6132d4094e64f29c284ac3, type: 3}
   - {fileID: 21300000, guid: 32d2de7c4072e8f4dbc93b081c3a8b6b, type: 3}
+  myState:
+    mana: 0
+    hp: 0
+    inHand: []
+    onField: []
+    oppField: []
+    library: []
+  oppState:
+    mana: 0
+    hp: 0
+    inHand: []
+    onField: []
+    oppField: []
+    library: []
 --- !u!1 &654505639
 GameObject:
   m_ObjectHideFlags: 0
@@ -2343,6 +2357,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2396808156316464596, guid: c21cb1b18e7bd8f41ae01bd0c7c2c065,
+        type: 3}
+      propertyPath: _cards.Array.data[2].cardImage
+      value: 
+      objectReference: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
+    - target: {fileID: 2396808156316464596, guid: c21cb1b18e7bd8f41ae01bd0c7c2c065,
+        type: 3}
+      propertyPath: _cards.Array.data[3].cardImage
+      value: 
+      objectReference: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
+    - target: {fileID: 2396808156316464596, guid: c21cb1b18e7bd8f41ae01bd0c7c2c065,
+        type: 3}
+      propertyPath: _cards.Array.data[4].cardImage
+      value: 
+      objectReference: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
     - target: {fileID: 2396808156316464597, guid: c21cb1b18e7bd8f41ae01bd0c7c2c065,
         type: 3}
       propertyPath: m_Name

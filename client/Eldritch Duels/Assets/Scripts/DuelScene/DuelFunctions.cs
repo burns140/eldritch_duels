@@ -6,7 +6,7 @@ using eldritch;
 
 public static class DuelFunctions
 {
-    private const int MAX_FIELD = 7;
+    public static int MAX_FIELD = 7;
     public static bool CanCast(Card castingcard, PlayerState ps){
         if(castingcard.CardCost <= ps.mana && ps.onField.Count < MAX_FIELD){
             return true;
