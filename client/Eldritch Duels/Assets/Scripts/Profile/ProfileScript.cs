@@ -334,10 +334,8 @@ public class ProfileScript : MonoBehaviour
 
             friends = responseData.Split(',');          // Array of friend emails
             friendList = friends.ToList();
-            int pos = Array.IndexOf(friends, email);
-
-            if (pos > -1) {
-                alreadyFriend = true; // Store if the user is my friend
+            if (friendList.Contains(email)) {
+                alreadyFriend = true;
             } else {
                 alreadyFriend = false;
             }
@@ -356,15 +354,45 @@ public class ProfileScript : MonoBehaviour
                 }
                 else{
                     // @TODO Get from server if user has sent me friend request @STEPHEN
-                    alreadyReceivedRequest = true; // Store if the user has sent me friend request
-                    if(alreadyReceivedRequest){
+                    req = new genericRequest(Global.getID(), Global.getToken(), "getFriendRequests");
+                    json = JsonConvert.SerializeObject(req);
+                    data = System.Text.Encoding.ASCII.GetBytes(json);
+                    Global.stream.Write(data, 0, data.Length);
+                    data = new Byte[1024];
+                    responseData = string.Empty;
+                    bytes = Global.stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                    List<string> friendRequestList = responseData.Split(',').ToList();
+                    if (friendRequestList.Contains(email)) {
+                        alreadyReceivedRequest = true; // Store if the user has sent me friend request
+                    } else {
+                        alreadyReceivedRequest = false;
+                    }
+
+                    if (alreadyReceivedRequest){
                         AddButton.GetComponentInChildren<Text>().text = "Handle Request"; // set button text
                         AddButton.GetComponentInChildren<Button>().interactable = true;
                     }
                     else{
                         // @TODO Get from server if I have sent a friend request to the user @STEPHEN
-                        alreadySentRequest = true; // Store if I sent the user a friend request
-                        if(alreadySentRequest){
+                        req = new genericRequest(Global.getID(), Global.getToken(), "getFriendRequestsSent");
+                        json = JsonConvert.SerializeObject(req);
+                        data = System.Text.Encoding.ASCII.GetBytes(json);
+                        Global.stream.Write(data, 0, data.Length);
+                        data = new Byte[1024];
+                        responseData = string.Empty;
+                        bytes = Global.stream.Read(data, 0, data.Length);
+                        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                        List<string> friendRequestSentList = responseData.Split(',').ToList();
+
+                        if (friendRequestSentList.Contains(email)) {
+                            alreadySentRequest = true; // Store if I sent the user a friend request
+                        } else {
+                            alreadySentRequest = false;
+                        }
+                        if (alreadySentRequest){
                             AddButton.GetComponentInChildren<Text>().text = "Request Sent"; // set button text
                             AddButton.GetComponentInChildren<Button>().interactable = false;
                         }
@@ -473,13 +501,45 @@ public class ProfileScript : MonoBehaviour
         
     }
 
+    public class BlockRequest {
+        string id;
+        string token;
+        string cmd;
+        string myEmail;
+        string toBlockEmail;
+
+        public BlockRequest(string id, string token, string cmd, string myEmail, string toBlockEmail) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+            this.myEmail = myEmail;
+            this.toBlockEmail = toBlockEmail;
+        }
+    }
+
     public void handleBlock(){ // block/unblock user & handle button
         
         if(alreadyBlocked){ // unblock user
             // @TODO Unblock user through server @STEPHEN
+
+            BlockRequest req = new BlockRequest(Global.getID(), Global.getToken(), "unblockUser", Global.getEmail(), email);
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            bool unBlockFailed;
+
+            if (responseData.Equals("failed to unblock user") || responseData.Equals("failed to update blockedby")) {
+                unBlockFailed = true;
+            } else {
+                unBlockFailed = false;
+            }
             // @TODO Let me know if server didn't work as expected @STEPHEN
-            bool unBlockFailed = false;
-            if(unBlockFailed){
+            if (unBlockFailed){
                 StartCoroutine(showError("Could not unblock the user, please try again")); // set error message
             }
             else{
@@ -489,6 +549,16 @@ public class ProfileScript : MonoBehaviour
         }
         else{ // block user
             // @TODO Block user through server @STEPHEN
+
+            BlockRequest req = new BlockRequest(Global.getID(), Global.getToken(), "blockUser", Global.getEmail(), email);
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool blockFailed = false;
             if(blockFailed){
@@ -507,7 +577,23 @@ public class ProfileScript : MonoBehaviour
         }
         else{
             // @TODO Get from server if I have already reported the user @STEPHEN
-            alreadyReported = false; // Check if the user is reported by me from server
+
+            genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getMyReportedPlayers");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            List<string> reportedList = responseData.Split(',').ToList();
+            if (reportedList.Contains(email)) {
+                alreadyReported = true;
+            } else {
+                alreadyReported = false;
+            }
+
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool failed = false;
             if(failed){
@@ -523,10 +609,50 @@ public class ProfileScript : MonoBehaviour
         }
     }
 
+    public class ReportRequest {
+        string id;
+        string cmd;
+        string myEmail;
+        string theirEmail;
+        string token;
+
+        public ReportRequest(string id, string cmd, string myEmail, string theirEmail, string token) {
+            this.id = id;
+            this.cmd = cmd;
+            this.myEmail = myEmail;
+            this.theirEmail = theirEmail;
+            this.token = token;
+        }
+    }
     public void handleReport(){ // report a user & handle button
-        
-        if(!alreadyReported){  // cannot report again
-            // @TODO Report user through server @STEPHEN
+        genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getMyReportedPlayers");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        List<string> reportedList = responseData.Split(',').ToList();
+        if (reportedList.Contains(email)) {
+            alreadyReported = true;
+        } else {
+            alreadyReported = false;
+        }
+
+            if (!alreadyReported){  // cannot report again
+                // @TODO Report user through server @STEPHEN
+                ReportRequest req2 = new ReportRequest(Global.getID(), "reportPlayer", Global.getEmail(), email, Global.getToken());
+                json = JsonConvert.SerializeObject(req2);
+                data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[1024];
+                responseData = string.Empty;
+                bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool failed = false;
             if(failed){

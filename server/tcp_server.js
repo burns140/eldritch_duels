@@ -219,6 +219,15 @@ function onClientConnected(sock) {
                     case "openPack":                    // Open a pack
                         Collection.openPack(obj, sock);
                         break;
+                    case "getFriendRequests":
+                        Friends.getFriendRequests(obj, sock);
+                        break;
+                    case "getFriendRequestsSent":
+                        Friends.getFriendRequestsSent(obj, sock);
+                        break;
+                    case "getMyReportedPlayers":
+                        Profile.getMyReportedPlayers(obj, sock);
+                        break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');
                         break;

@@ -299,9 +299,66 @@ const getAllUsernames = (data, sock) => {
     }
 }
 
+const getFriendRequests = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+    
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error("user not found");
+                }
+    
+                sock.write(result.friendRequests.toString());
+                console.log('sending friend requests');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+    
+}
+
+const getFriendRequestsSent = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+    
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error("user not found");
+                }
+    
+                sock.write(result.friendRequestsSent.toString());
+                console.log('sending friend requests');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
 exports.getAllUsernames = getAllUsernames;
 exports.sendFriendRequest = sendFriendRequest;
 exports.acceptFriendRequest = acceptFriendRequest;
 exports.rejectFriendRequest = rejectFriendRequest;
 exports.removeFriend = removeFriend;
 exports.getAllFriends = getAllFriends;
+exports.getFriendRequests = getFriendRequests;
+exports.getFriendRequestsSent = getFriendRequestsSent;
