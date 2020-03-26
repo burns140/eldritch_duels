@@ -12,6 +12,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public GameObject placeholder = null; // Temporary placeholder
 
+	private int childCount = 0;
+
     public void OnBeginDrag(PointerEventData eventData) {
 
         placeholder = new GameObject(); // Create a temporary placeholder
@@ -56,12 +58,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		Debug.Log("parentToReturnTo:"+parentToReturnTo.name);
 		Debug.Log("placeholder:"+placeholder.name);
 		Debug.Log("placeholder_siblingindex:"+placeholder.transform.GetSiblingIndex());
-		//if(childCount < 7){
+		if(childCount < 7){
 			this.transform.SetParent( parentToReturnTo ); 
 			this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
 			GetComponent<CanvasGroup>().blocksRaycasts = true;
-		//}
-        
+		}
+        childCount++;
 		Destroy(placeholder); // Destory the temporary placeholder
     }
 }

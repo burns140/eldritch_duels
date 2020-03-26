@@ -90,6 +90,20 @@ namespace eldritch.cards
             set { if (value != null) { this.cardImage = value; } }
         }
 
+        [SerializeField]
+        private bool fly = false;
+        public bool HasFly{
+            get {return this.fly;}
+            set {this.fly = value;}
+        }
+
+        [SerializeField]
+        private bool stealth = false;
+        public bool HasStealth{
+            get{return this.stealth;}
+            set {this.stealth = value;}
+        }
+
 
         #endregion
 

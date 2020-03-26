@@ -188,7 +188,7 @@ namespace eldritch {
             return cards;
 
         }
-        private static List<Card> StringToCardsByName(string toParse)
+        public static List<Card> StringToCardsByName(string toParse)
         {
             List<Card> cards = new List<Card>();
             string[] pairs = toParse.Split(',');
@@ -214,7 +214,7 @@ namespace eldritch {
 
         }
 
-        private static List<CardContainer>StringToDeck(string cards)
+        public static List<CardContainer>StringToDeck(string cards)
         {
             List<CardContainer> cardsc = new List<CardContainer>();
             string[] pairs = cards.Split(',');
@@ -234,6 +234,29 @@ namespace eldritch {
                         cc.c = c;
                         cc.count = amount;
                         cardsc.Add(cc);
+                    }
+                }
+
+            }
+            return cardsc;
+        }
+
+        public static List<Card>StringToDeckByName(string cards)
+        {
+            List<Card> cardsc = new List<Card>();
+            string[] pairs = cards.Split(',');
+            foreach (string s in pairs)
+            {
+                string[] tuple = s.Split('-');
+
+                string id = tuple[0];
+                int amount = int.Parse(tuple[1]);
+                GameObject g = GameObject.Find("ContentManager");
+                if (g != null)
+                {
+                    Card c = g.GetComponent<ContentLibrary>().GetCard(id);
+                    for(int i = 0; i < amount;i++){
+                        cardsc.Add(c);
                     }
                 }
 

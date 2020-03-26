@@ -14,6 +14,16 @@ using eldritch.cards;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+[System.Serializable]
+public struct PlayerState{
+    public int mana;
+    public int hp;
+    public List<Card> inHand;
+    public List<Card> onField;
+    public List<Card> oppField;
+    public List<Card> library;
+}
+
 public class DuelScript : MonoBehaviour 
 {
     #region UI & Script Variables
@@ -53,8 +63,13 @@ public class DuelScript : MonoBehaviour
     public Sprite[] availablePictures; // Available profile pics
     private float myCurrentHP; // My Current HP
     private float oppCurrentHP; // Opp Current HP
-    private const float MAX_HEALTH = 30; // Max Health for a user
-    private const float MAX_MANA = 1; // Max Mana for a user
+    private const int MAX_HEALTH = 30; // Max Health for a user
+    private const int MAX_MANA = 1; // Max Mana for a user
+
+    [SerializeField]
+    private PlayerState myState;
+    [SerializeField]
+    private PlayerState oppState;
 
     #endregion
 
@@ -95,20 +110,23 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
-        yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
-        yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
+        //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
+        //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
 
     // Called at start of game to fill hand to 6 cards from deck
     IEnumerator initalDraw(){
         int handCount=1;
         while(handCount<=6){ // To add 6 cards to hand
-            Card b = Library.GetCard("Test 0");
+            Card b = DuelFunctions.DrawCard(ref myState);
+            if(b == null)
+                break;
             GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.name = b.CardName;
             c.transform.SetParent(handAreaPanel.transform, false); // Add card to hand
+            myState.inHand.Add(b);
             handList.Add(c); // Add card to hand list
             handCount++; 
             yield return new WaitForSeconds(0.5f); 
@@ -148,9 +166,11 @@ public class DuelScript : MonoBehaviour
 
     // Called at start of game to set up card list from deck being used
     private void setUpDeck(){
-        int deckCount=1;
-        while(deckCount<=30){ // To add 30 card from my deck to my list
-            Card b = Library.GetCard("Test 0");
+        Debug.Log("Init Deck");
+        myState.library = DuelFunctions.ShuffleLibrary(DuelFunctions.GetLibrary());
+        int deckCount=0;
+        while(deckCount<myState.library.Count){ // To add 30 card from my deck to my list
+            Card b = myState.library[deckCount];
             GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
@@ -161,6 +181,12 @@ public class DuelScript : MonoBehaviour
     
     // Set up health and mana text for both users to max values
     private void setUpHealthMana(){
+        myState.hp = MAX_HEALTH;
+        myState.mana = MAX_MANA;
+        oppState.hp = MAX_HEALTH;
+        oppState.mana = MAX_MANA;
+
+
         myHPText.text = MAX_HEALTH + " HP";
         myManaText.text = MAX_MANA + " MANA";
         oppHPText.text = MAX_HEALTH + " HP";
@@ -204,13 +230,14 @@ public class DuelScript : MonoBehaviour
     // Called at the beginning of every turn
     private void drawCard(){
         if(deckList.Count>0){
+            myState.inHand.Add(DuelFunctions.DrawCard(ref myState));
             handList.Add(deckList.Dequeue()); // Move 1 card from deck to hand
         }
     }
 
     // Play card from my hand to my playing area
     private void playMyCard(){
-        
+        Debug.Log("Playing");
     }
 
     // Play opponent's card
