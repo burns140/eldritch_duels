@@ -227,7 +227,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -4.4000244, y: -44.268005}
+  m_AnchoredPosition: {x: -4.4000244, y: -44.268066}
   m_SizeDelta: {x: -290.7, y: -74.466}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &133488761
@@ -1066,6 +1066,7 @@ GameObject:
   - component: {fileID: 694581724}
   - component: {fileID: 694581723}
   - component: {fileID: 694581722}
+  - component: {fileID: 694581725}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -1137,9 +1138,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519070975}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 694581725}
+        m_MethodName: buy
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1184,6 +1185,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694581720}
   m_CullTransparentMesh: 0
+--- !u!114 &694581725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694581720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3d83dab1eb0c249990c21afd64f721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  succeedPanel: {fileID: 147285103}
+  failedPanel: {fileID: 1318643987}
 --- !u!1 &706915557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,6 +1960,7 @@ GameObject:
   - component: {fileID: 1155821707}
   - component: {fileID: 1155821706}
   - component: {fileID: 1155821705}
+  - component: {fileID: 1155821708}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -2016,9 +2032,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519070975}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1155821708}
+        m_MethodName: buy
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2063,6 +2079,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155821703}
   m_CullTransparentMesh: 0
+--- !u!114 &1155821708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155821703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3d83dab1eb0c249990c21afd64f721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  succeedPanel: {fileID: 147285103}
+  failedPanel: {fileID: 1318643987}
 --- !u!1 &1162443851
 GameObject:
   m_ObjectHideFlags: 0
@@ -2251,7 +2281,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -49.799988, y: 52.8}
+  m_AnchoredPosition: {x: -49.799988, y: 52.80005}
   m_SizeDelta: {x: -99.7, y: -60.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1198479555
@@ -3269,6 +3299,7 @@ GameObject:
   - component: {fileID: 1587088118}
   - component: {fileID: 1587088117}
   - component: {fileID: 1587088116}
+  - component: {fileID: 1587088115}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -3297,6 +3328,20 @@ RectTransform:
   m_AnchoredPosition: {x: 423.53, y: -0.20126}
   m_SizeDelta: {x: 466.82, y: 357.57}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1587088115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587088113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3d83dab1eb0c249990c21afd64f721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  succeedPanel: {fileID: 147285103}
+  failedPanel: {fileID: 1318643987}
 --- !u!114 &1587088116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3340,9 +3385,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519070975}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1587088115}
+        m_MethodName: buy
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
