@@ -126,6 +126,7 @@
      <Compile Include="Assets\Scripts\Market Scene\BuyPack.cs" />
      <Compile Include="Assets\Scripts\Market Scene\GotoLobby.cs" />
      <Compile Include="Assets\Scripts\Market Scene\GotoOpenPack.cs" />
+     <Compile Include="Assets\Scripts\Open Pack\getNewCard.cs" />
      <Compile Include="Assets\Scripts\Profile\ProfileScript.cs" />
      <Compile Include="Assets\Scripts\Search Friends Scene\SearchFriendsScript.cs" />
      <Compile Include="Assets\Scripts\Setting Scene\ApplySettingsScript.cs" />

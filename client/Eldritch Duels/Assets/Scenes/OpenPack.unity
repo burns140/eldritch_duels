@@ -309,6 +309,7 @@ GameObject:
   - component: {fileID: 179831803}
   - component: {fileID: 179831802}
   - component: {fileID: 179831801}
+  - component: {fileID: 179831804}
   m_Layer: 5
   m_Name: Card3
   m_TagString: Untagged
@@ -378,7 +379,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 179831802}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 179831804}
+        m_MethodName: generateNewCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &179831802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,6 +427,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 179831799}
   m_CullTransparentMesh: 0
+--- !u!114 &179831804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179831799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39e09922358e94cb153a8e1844985f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontImage: {fileID: 1823965210}
 --- !u!1 &311553599
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +452,7 @@ GameObject:
   - component: {fileID: 311553603}
   - component: {fileID: 311553602}
   - component: {fileID: 311553601}
+  - component: {fileID: 311553604}
   m_Layer: 5
   m_Name: Card6
   m_TagString: Untagged
@@ -496,7 +522,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 311553602}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 311553604}
+        m_MethodName: generateNewCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &311553602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,6 +570,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 311553599}
   m_CullTransparentMesh: 0
+--- !u!114 &311553604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 311553599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39e09922358e94cb153a8e1844985f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontImage: {fileID: 1247960174}
 --- !u!1 &384656504
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,6 +595,7 @@ GameObject:
   - component: {fileID: 384656508}
   - component: {fileID: 384656507}
   - component: {fileID: 384656506}
+  - component: {fileID: 384656509}
   m_Layer: 5
   m_Name: Card5
   m_TagString: Untagged
@@ -614,7 +665,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 384656507}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 384656509}
+        m_MethodName: generateNewCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &384656507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,6 +713,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 384656504}
   m_CullTransparentMesh: 0
+--- !u!114 &384656509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 384656504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39e09922358e94cb153a8e1844985f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontImage: {fileID: 2110614356}
 --- !u!1 &526037428
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,6 +738,7 @@ GameObject:
   - component: {fileID: 526037432}
   - component: {fileID: 526037431}
   - component: {fileID: 526037430}
+  - component: {fileID: 526037433}
   m_Layer: 5
   m_Name: Card1
   m_TagString: Untagged
@@ -732,7 +808,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 526037431}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 526037433}
+        m_MethodName: generateNewCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &526037431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -769,6 +856,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526037428}
   m_CullTransparentMesh: 0
+--- !u!114 &526037433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526037428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39e09922358e94cb153a8e1844985f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontImage: {fileID: 1039137408}
 --- !u!1 &608541272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,7 +1177,7 @@ GameObject:
   - component: {fileID: 930369926}
   - component: {fileID: 930369925}
   m_Layer: 5
-  m_Name: AddButton
+  m_Name: AddPackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1646,6 +1746,7 @@ GameObject:
   - component: {fileID: 1381881205}
   - component: {fileID: 1381881204}
   - component: {fileID: 1381881203}
+  - component: {fileID: 1381881206}
   m_Layer: 5
   m_Name: Card2
   m_TagString: Untagged
@@ -1715,7 +1816,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1381881204}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1381881206}
+        m_MethodName: generateNewCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1381881204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1752,6 +1864,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381881201}
   m_CullTransparentMesh: 0
+--- !u!114 &1381881206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381881201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39e09922358e94cb153a8e1844985f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontImage: {fileID: 1344422424}
 --- !u!1 &1435517483
 GameObject:
   m_ObjectHideFlags: 0
@@ -1911,7 +2036,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1528192659
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2275,6 +2400,7 @@ GameObject:
   - component: {fileID: 1901802203}
   - component: {fileID: 1901802202}
   - component: {fileID: 1901802201}
+  - component: {fileID: 1901802204}
   m_Layer: 5
   m_Name: Card4
   m_TagString: Untagged
@@ -2344,7 +2470,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1901802202}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1901802204}
+        m_MethodName: generateNewCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1901802202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2381,6 +2518,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1901802199}
   m_CullTransparentMesh: 0
+--- !u!114 &1901802204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901802199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39e09922358e94cb153a8e1844985f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontImage: {fileID: 65981397}
 --- !u!1 &2013562551
 GameObject:
   m_ObjectHideFlags: 0
