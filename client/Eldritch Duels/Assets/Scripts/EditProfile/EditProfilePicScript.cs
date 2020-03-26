@@ -14,43 +14,6 @@ using eldritch;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-// Class for server request to send Profile changes
-public class EditProfileRequest
-{
-    public string cmd;
-    public string id;
-    public string token;
-    public string bio;
-    public int avatar;
-    public string username;
-
-    public EditProfileRequest(string cmd, string id, string token, string bio, int avatar, string username)
-    {
-        this.cmd = cmd;
-        this.id = id;
-        this.token = token;
-        this.bio = bio;
-        this.avatar = avatar;
-        this.username = username;
-    }
-}
-
-public class profilepicture
-{
-    public byte[] picture;
-    public string token;
-    public string id;
-    public string cmd;
-
-    public profilepicture(byte[] picture, string token, string id, string cmd)
-    {
-        this.picture = picture;
-        this.token = token;
-        this.id = id;
-        this.cmd = cmd;
-    }
-}
-
 public class EditProfilePicScript : MonoBehaviour
 {
     public Dropdown dropdown; // Picture Dropdown on the UI
