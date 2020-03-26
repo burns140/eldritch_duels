@@ -54,6 +54,7 @@ public class ProfileScript : MonoBehaviour
     public GameObject rejectRequestButton; // button to reject request in UI
     public GameObject cancelRequestButton; // button to hide handle request panel in UI 
     public Text ErrorText; // Display error message on UI
+    private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store user email
     #endregion
 
     public class getBlockedRequest {
@@ -116,6 +117,7 @@ public class ProfileScript : MonoBehaviour
     void Awake() // Awake is called when the script instance is being loaded
 
     {
+        email = PlayerPrefs.GetString(EMAIL_PREF_KEY); // Get the user email from PLAYER PREFS;
         isItMe();
         if(isMe){
             EditProfileButton.SetActive(true);
@@ -548,12 +550,19 @@ public class ProfileScript : MonoBehaviour
     }
 
     public void goBack(){ // Load Previous Scene
-
+        if(isMe){
+            SceneManager.LoadScene("Lobby");
+        }
+        else{
+            SceneManager.LoadScene("SearchFriendsScene");
+        }
     }
 
     public void loadEditProfile(){ // Load Edit Profile Scene
         requestsPanelHolder.SetActive(false); // hide friend requests list
         friendsPanelHolder.SetActive(false); // hide friends list
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.getEmail()); // store my email in PLAYER PREFS
+        SceneManager.LoadScene("EditProfileScene");
     }
 
     private List<string> setUpFriendsList(){ // Set up friends list
@@ -616,6 +625,7 @@ public class ProfileScript : MonoBehaviour
 
 
     public void loadUserProfile(Button btn){ // Go to the user's profile page scene
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,btn.GetComponentInChildren<Text>().text); // store user email in PLAYER PREFS
         Debug.Log(btn.GetComponentInChildren<Text>().text);
     }
 
