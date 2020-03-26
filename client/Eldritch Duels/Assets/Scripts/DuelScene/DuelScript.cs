@@ -13,25 +13,15 @@ using eldritch;
 using eldritch.cards;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using System.Linq;
 
+[System.Serializable]
 public struct PlayerState{
     public int mana;
     public int hp;
-    public List<Card> library;
     public List<Card> inHand;
     public List<Card> onField;
-    
-}
-
-public struct DuelRequest {
-    public string cardName;     // Name of the played card
-
-    public string targetName;   // Name of the target card
-
-    public int myArrPosition;   // Position in the array of my card I've played
-
-    public string targetArrPosition; // Position in the array of the target card as well as whose array it's in 
+    public List<Card> oppField;
+    public List<Card> library;
 }
 
 public class DuelScript : MonoBehaviour 
@@ -50,7 +40,8 @@ public class DuelScript : MonoBehaviour
     public GameObject myPlayAreaPanel; // My Play Area UI
     public GameObject oppPlayAreaPanel; // Opponent's Play Area UI
 
-    public GameObject card; // Card object to create instances
+    public GameObject myCard; // my Card object to create instances
+    public GameObject oppCard; // opponent Card object to create instances
 
     private Queue<GameObject> deckList = new Queue<GameObject>(); // Store cards in Deck
     private List<GameObject> handList = new List<GameObject>(); // Store cards in Hand
@@ -75,47 +66,20 @@ public class DuelScript : MonoBehaviour
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
 
-    private const string[] needTargeter = { "Destroy", "Add defender", "Add fly", "Add stealth" };
-
-    private const int MAX_HAND = 8; //max hand size
-    private const int MAX_FIELD_SIZE = 7;
-
-    public PlayerState OpponentState; //opp hp, mana
-
-    public PlayerState MyState; //my hp, mana, library
-
-    static bool done;
-    static readonly object locker = new object();
+    [SerializeField]
+    private PlayerState myState;
+    [SerializeField]
+    private PlayerState oppState;
 
     #endregion
 
     #region Awake
     // Awake is called when the script instance is being loaded.
-    void Start(){
+    void Awake(){
         setUpDeck(); // Set up card list from deck being used
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
-        System.Threading.Thread T = new System.Threading.Thread((new System.Threading.ThreadStart(Listener)));
-        T.Start();
-    }
-
-    /* Need to spawn a separate thread to listen to the socket so that
-       the client can still interact with the game while the other player is taking their turn.
-       Need to kill the thread when the match dies. */
-    private void Listener() {
-        readStreamAsync();   
-        
-    }
-
-    public static async Task readStreamAsync() {
-        while (true) {
-            Byte[] data = new Byte[256];
-            int read_bytes = await Global.stream.ReadAsync(data, 0, 256);
-            string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
-            DuelRequest dreq = JsonConvert.DeserializeObject(trimmed);
-            playOppCard(dreq);
-        }
     }
     #endregion
 
@@ -146,22 +110,25 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
-        yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
-        yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
+        yield return (StartCoroutine(testPlays()));
+        //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
+        //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
 
     // Called at start of game to fill hand to 6 cards from deck
     IEnumerator initalDraw(){
         int handCount=1;
         while(handCount<=6){ // To add 6 cards to hand
-            Card b = DuelFunctions.DrawCard(ref MyState);
-            GameObject c = (GameObject)Instantiate(card);
+            Card b = DuelFunctions.DrawCard(ref myState);
+            if(b == null)
+                break;
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.name = b.CardName;
             c.transform.SetParent(handAreaPanel.transform, false); // Add card to hand
+            myState.inHand.Add(b);
             handList.Add(c); // Add card to hand list
-            MyState.inHand.Add(b);
             handCount++; 
             yield return new WaitForSeconds(0.5f); 
         }
@@ -172,7 +139,7 @@ public class DuelScript : MonoBehaviour
         int playCount=1;
         while(playCount<=6){ // To add 6 cards to my play area
             Card b = Library.GetCard("Test 0");
-            GameObject c = (GameObject)Instantiate(card);
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.name = b.CardName;
@@ -188,7 +155,7 @@ public class DuelScript : MonoBehaviour
         int oppPlayCount=1;
         while(oppPlayCount<=6){ // To add 6 cards to opp play area
             Card b = Library.GetCard("Test 0");
-            GameObject c = (GameObject)Instantiate(card);
+            GameObject c = (GameObject)Instantiate(oppCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             c.transform.SetParent(oppPlayAreaPanel.transform, false); // Add card to opponent play area
@@ -197,14 +164,45 @@ public class DuelScript : MonoBehaviour
             yield return new WaitForSeconds(0.5f); 
         }
     }
+    //test playing and recalling cards for user and opp
+    IEnumerator testPlays(){
+        //i play cards
+        Debug.Log("Test My Play Card");
+        int myPlayCount=1;
+        while(myPlayCount<=8){ // To add 8 cards to opp play area; 8th should be false
+            bool res = playMyCard("Test 0");
+            Debug.Log("Card played: " + myPlayCount + " result: " + res);
+            myPlayCount++;
+            //drawCard();
+            yield return new WaitForSeconds(0.5f); 
+        }
+        Debug.Log("Test Opp Play Card");
+        //opp plays cards
+        playOppCard("Test 0");
+        playOppCard("Test 0");
+        yield return new WaitForSeconds(2);
+        
+        //i recall card
+        for(int i = 0; i < DuelFunctions.MAX_FIELD/2;i++){
+            bool res2 = recallCard("Test 0");
+            Debug.Log("Card recalled result: " + res2);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        //opp recall card
+        recallOppCard("Test 0");
+        
+
+    }
 
     // Called at start of game to set up card list from deck being used
     private void setUpDeck(){
-        MyState.library = DuelFunctions.ShuffleLibrary(DuelFunctions.GetLibrary());        
+        Debug.Log("Init Deck");
+        myState.library = DuelFunctions.ShuffleLibrary(DuelFunctions.GetLibrary());
         int deckCount=0;
-        while(deckCount< MyState.library.Count){ // add cards to deck
-            Card b =MyState.library[deckCount];
-            GameObject c = (GameObject)Instantiate(card);
+        while(deckCount<myState.library.Count){ // To add 30 card from my deck to my list
+            Card b = myState.library[deckCount];
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             deckList.Enqueue(c); // Add card to deck list
@@ -214,10 +212,11 @@ public class DuelScript : MonoBehaviour
     
     // Set up health and mana text for both users to max values
     private void setUpHealthMana(){
-        MyState.hp = MAX_HEALTH;
-        MyState.mana = MAX_MANA;
-        OpponentState.hp = MAX_HEALTH;
-        OpponentState.mana = MAX_MANA;
+        myState.hp = MAX_HEALTH;
+        myState.mana = MAX_MANA;
+        oppState.hp = MAX_HEALTH;
+        oppState.mana = MAX_MANA;
+
 
         myHPText.text = MAX_HEALTH + " HP";
         myManaText.text = MAX_MANA + " MANA";
@@ -262,217 +261,150 @@ public class DuelScript : MonoBehaviour
     // Called at the beginning of every turn
     private void drawCard(){
         if(deckList.Count>0){
-            Card b = DuelFunctions.DrawCard(ref MyState);
-            if(b == null)
-                return;
-            GameObject c = (GameObject)Instantiate(card);
+            Card b = DuelFunctions.DrawCard(ref myState);
+            myState.inHand.Add(b);
+            GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
-            handList.Add(c); // Move 1 card from deck to hand
-            MyState.inHand.Add(b);
+            c.name = b.CardName;
+            c.transform.SetParent(handAreaPanel.transform, false); // Add card to my play area
+            handList.Add(c); // Add card to my play list
         }
     }
 
     // Play card from my hand to my playing area
-    private void playMyCard(Card played){
-
-        /* Do I have enough mana */
-        if(!DuelFunctions.CanCast(played, MyState)){
-            return;
+    public bool playMyCard(string cardName){
+        if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
+            return false;
         }
-
-        /* Is my field full */
-        if(MyState.onField.Count >= MAX_FIELD_SIZE){
-            return;
-        }
-
-        Card targetCard = null;
-
-        /* If any of my abilities require me to target something, bring up
-           a targeter when I go to resolve that and then break. Currently,
-           this only will work if one of the abilities requires a target
-           but that can be changed once we confirm it works */
-        for (int i = 0; i < played.Abilities.Count; i++) {
-            string ability = played.Abilities[i].GetName();
-            if (needTargeter.Contains(ability)) {
-                // TODO: CREATE TARGETER @DHAIRYA
-                targetCard = null;
-            }
-        }
-
-        Card b = DuelFunctions.RemoveFromHand(played, ref MyState);     // Remove card from my hand
-        GameObject c = (GameObject)Instantiate(card);
-        DuelRequest duelRequest = new DuelRequest();        // Instantiate struct that will be sent to other player
-        duelRequest.cardName = played.CardName;
-        duelRequest.targetName = "";
-        duelRequest.targetArrPosition = "";
-        duelRequest.myArrPosition = -1;
-        if (targetCard != null) {
-            duelRequest.targetName = targetCard.CardName;
-
-            // TODO: GET THE ARRAY POSITION OF THE TARGETED CREATURE
-            // Example: "me-3"
-            // Example: "opponent-2"
-            duelRequest.targetArrPosition = "";
-        }
-
-        // TODO: GET THE ARRAY POSITION OF MY NEWLY PLACED CREATURE
-        // Example: 4
-        duelRequest.myArrPosition = -1;
-
-        c.GetComponent<Image>().sprite = null;
-        c.GetComponent<Image>().material = played.CardImage;
-        if(played.SpellType == CardType.SPELL){
-           ResolveAbilities(played, true, duelRequest, targetCard);
-        }else{
-            MyState.onField.Add(b);
-            myPlayList.Add(c);
-            ResolveAbilities(played, true, duelRequest, targetCard);
-        }
-        MyState.mana -= played.CardCost;
-
-        //TODO update ui
-
-        //TODO tell oppenent to resolve card
-    }
-
-    /* private void playMyCard(GameObject played){
-        if(!DuelFunctions.CanCast(played, MyState)){
-            return;
-        }
-        if(MyState.onField.Count >= MAX_FIELD_SIZE){
-            return;
-        }
-
-        Card b = DuelFunctions.RemoveFromHand((Card) played, ref MyState);
-        GameObject c = (GameObject)Instantiate(card);
-        c.GetComponent<Image>().sprite = null;
-        c.GetComponent<Image>().material = played.CardImage;
-        DuelRequest myMove = new DuelRequest();
-        myMove.cardName = played.CardName;
-        myMove.myArrPosition = -1; // TODO: Get the array position of my card @DHAIRYA
-        if (played.SpellType != CardType.SPELL) {
-            MyState.onField.Add(b);
-            myPlayList.Add(c);
-        }
-
-        MyState.mana -= played.CardCost;
-
-        //TODO update ui
-
-        //TODO tell oppenent to resolve card
-    } */
-
-    //server sends request that opp played a card
-    //this method ties the server request with the
-    //client side
-/*    public void ServerPlayOppCard(DuelRequest req){
-        Card toPlay = Library.GetCard(cardName);
-        playOppCard(toPlay);
-    }
-
-*/
-    // Play opponent's card
-    /*private void playOppCard(Card played){
-        OpponentState.onField.Add(played);
-        GameObject c = (GameObject)Instantiate(card);
-        c.GetComponent<Image>().sprite = null;
-        c.GetComponent<Image>().material = played.CardImage;
-        if(played.SpellType == CardType.SPELL){
-            ResolveAbilities(played, false);
-        }else{
-            oppPlayList.Add(c);
-            OpponentState.onField.Add(played);
-            ResolveAbilities(played, false);
-
-        }
-
-        OpponentState.mana -= played.CardCost;
-
-        //TODO update ui
-    }*/
-
-    private void playOppCard(DuelRequest req) {
-        Card toPlay = Library.GetCard(cardName);
-        if (toPlay.SpellType != CardType.SPELL) {
-            OpponentState.onField.Add(toPlay);
-        }
-        GameObject c = (GameObject)Instantiate(card);
-        c.GetComponent<Image>().sprite = null;
-        c.GetComponent<Image>().material = toPlay.CardImage;
-        Card targetCard = null;
-        if (req.targetName != null) {
-            string[] split = req.targetName.Split('-');
-            if (String.Equals(split[0], "mine")) {
-                targetCard = (Card) oppPlayAreaPanel[Int32.Parse(split[1])];
-            } else {
-                targetCard = (Card) myPlayAreaPanel[Int32.Parse(split[1])];
-            }
-        }
-        ResolveAbilities(toPlay, false, req, targetCard);
-    }
-
-
-    private void ResolveAbilities(Card played, bool iPlayed, DuelRequest selected, Card targetCard){
-        foreach(Effect e in played.Abilities){
-            switch(e.GetTargetType()){
-                case EffectTarget.OPPONENT:
-                    e.execute(ref OpponentState);
-                    break;
-                case EffectTarget.SELF:
-                    e.execute(ref MyState);
-                    break;
-                case EffectTarget.CARD:
-                    if (targetCard != null) {
-                        e.execute(targetCard);
-                    } else {
-                        e.execute(played);
+        for(int i = 0; i < myState.inHand.Count;i++){
+            if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){
+                Card played = myState.inHand[i];
+                //edit state
+                myState.mana -= played.CardCost;
+                myState.onField.Add(played);
+                myState.inHand.RemoveAt(i);
+                
+                //update ui
+                GameObject c = (GameObject)Instantiate(myCard);
+                c.GetComponent<Image>().sprite = null;
+                c.GetComponent<Image>().material = played.CardImage;
+                c.name = played.CardName;
+                c.transform.SetParent(myPlayAreaPanel.transform, false); // Add card to my play area
+                myPlayList.Add(c); // Add card to my play list
+                
+                for(int j = 0; j < handAreaPanel.transform.childCount;j++){
+                    if(handAreaPanel.transform.GetChild(j).gameObject.name.Equals(cardName)){
+                        //remove card
+                        Destroy(handAreaPanel.transform.GetChild(j).gameObject);
+                        break;
                     }
-                    //TODO select card and execute if
-                    break;
-                default:
-                    break;
+                }
+                for(int j = 0; j < handList.Count;j++){
+                    if(handList[j].name.Equals(cardName)){
+                        //remove card
+                        handList.RemoveAt(j);
+                        break;
+                    }
+                }
 
+                return true;
             }
-            if (iPlayed) {
-                string json = JsonConvert.SerializeObject(selected);
-                sendNetworkRequest(json);
+        }
+
+        return false;
+    }
+
+    public bool recallCard(string cardName){
+        if(myState.onField.Count >= DuelFunctions.MAX_FIELD || true){
+            Card recalled = null;
+            //update manager
+            for(int i = 0; i< myState.onField.Count;i++){
+                if(myState.onField[i].CardName.Equals(cardName)){
+                    recalled = myState.onField[i];
+                    myState.onField.RemoveAt(i);
+                    myState.inHand.Add(recalled);
+                    break;
+                }
             }
-            
+            if(recalled == null){
+                return false;
+            }
+            foreach(Transform c in myPlayAreaPanel.transform){
+                if(c.gameObject.name.Equals(cardName)){
+                    Destroy(c.gameObject);
+                    GameObject cnew = (GameObject)Instantiate(myCard);
+                    cnew.GetComponent<Image>().sprite = null;
+                    cnew.GetComponent<Image>().material = recalled.CardImage;
+                    cnew.name = recalled.CardName;
+                    cnew.transform.SetParent(handAreaPanel.transform, false); // Add card to my play area
+                    handList.Add(cnew); // Add card to my play list
+                    break;
+                }
+            }
+            for(int i = 0; i< myPlayList.Count;i++){
+                if(myPlayList[i].name.Equals(cardName)){
+                    myPlayList.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Play opponent's card
+    public void playOppCard(string cardName){
+        Card played = Library.GetCard(cardName);
+        //update manager
+        oppState.onField.Add(played);
+        oppState.mana -= played.CardCost;
+
+        //update ui
+        GameObject c = (GameObject)Instantiate(myCard);
+        c.GetComponent<Image>().sprite = null;
+        c.GetComponent<Image>().material = played.CardImage;
+        c.name = played.CardName;
+        c.transform.SetParent(oppPlayAreaPanel.transform, false); // Add card to opp play area
+        oppPlayList.Add(c); // Add card to opp play list
+
+        //resolve abilities
+        
+    }
+    public void recallOppCard(string cardName){
+        //update manager
+        for(int i = 0; i < oppState.onField.Count;i++){
+            if(oppState.onField[i].CardName.Equals(cardName)){
+                oppState.onField.RemoveAt(i);
+                break;
+            }
+        }
+        //update ui
+        foreach(Transform c in oppPlayAreaPanel.transform){
+            if(c.gameObject.name.Equals(cardName)){
+                Destroy(c.gameObject);
+                break;
+            }
+        }
+        for(int i = 0;i < oppPlayList.Count;i++){
+            if(oppPlayList[i].name.Equals(cardName)){
+                oppPlayList.RemoveAt(i);
+                break;
+            }
         }
     }
-
-    public string sendNetworkRequest(string obj) {
-        Byte[] data = System.Text.Encoding.ASCII.GetBytes(obj);
-        Global.stream.Write(data, 0, data.Length);
-    }
-
+    
     #endregion
 
     #region Attack & Update Health
     // Play card animations when I attack 
-    /* private void myAttack(){
+    private void myAttack(){
         foreach(GameObject value in myPlayList){
             // @TODO some attack animations (@BRANDON)
             float hit=0; // @TODO get attack value of the card (@DHAIRYA)
-            float defense = 0; // @TODO get defense value of targeted card (@DHAIRYA)
-            if (hit >= defense) {
-                destroyMinion(value);
-            }
             // @TODO send attack value to server (@KEVIN M)
             updateOppHealth(hit); // After each card's attack, update opponent's health
         }
-    } */
-
-    private void myAttack(GameObject attacker, GameObject defender) {
-        float attack = 0; // TODO: GET attacker ATTACK @Dhairya
-        float defense = 0; // TODO: GET defender DEFENSE @Dhairya
-
-        if (attack >= defense) {
-            DuelFunctions.destroyMinion(defender);
-        }
     }
-
 
     // After my card attacks opponent
     private void updateOppHealth(float hit){

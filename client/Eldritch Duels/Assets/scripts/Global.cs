@@ -176,6 +176,29 @@ namespace eldritch {
             return cards;
 
         }
+
+        public static List<Card>StringToDeckByName(string cards)
+        {
+            List<Card> cardsc = new List<Card>();
+            string[] pairs = cards.Split(',');
+            foreach (string s in pairs)
+            {
+                string[] tuple = s.Split('-');
+
+                string id = tuple[0];
+                int amount = int.Parse(tuple[1]);
+                GameObject g = GameObject.Find("ContentManager");
+                if (g != null)
+                {
+                    Card c = g.GetComponent<ContentLibrary>().GetCard(id);
+                    for(int i = 0; i < amount;i++){
+                        cardsc.Add(c);
+                    }
+                }
+
+            }
+            return cardsc;
+        }
         //format of user card string: "id-#,id2-#..."
         public static void InitUserCards(string userCards, int mode)
         {
