@@ -117,7 +117,28 @@ public class Login : MonoBehaviour
     public void clicked()
     {
         string result = ServerLogin(email, pass);
-        if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
+        if (String.Equals("Not verified, can't login", result))
+        {
+            Debug.Log("Your account is not verified");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "Not verified, can't login";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else if (String.Equals("This account has been temporarily banned", result))
+        {
+            Debug.Log("Your account is tempbanned");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "This account has been temporarily banned";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else if (String.Equals("This account has been permanently banned", result))
+        {
+            Debug.Log("Your account is permabanned");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "This account has been permanently banned";
+            ErrorText.gameObject.SetActive(true);
+        }
+        else if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
             Debug.Log("Login successful! Temp file is: " + result);
             Global.tokenfile = result;
@@ -125,13 +146,6 @@ public class Login : MonoBehaviour
             Global.InitUserCards(tmp, 1);
             SceneManager.LoadScene("Lobby");
         }
-        /*else if (String.Equals("Not verified, can't login", result))
-        {
-            Debug.Log("Your account is not verified");
-            ErrorPanel.gameObject.SetActive(true);
-            ErrorText.text = "Invalid Email/Password";
-            ErrorText.gameObject.SetActive(true);
-        }*/
         else
         {
             Debug.Log("Login failed");
