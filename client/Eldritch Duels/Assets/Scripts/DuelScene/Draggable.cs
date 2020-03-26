@@ -6,17 +6,20 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-
+	public DuelScript duelScript; // to access duelscript functions
     public Transform parentToReturnTo = null; // Parent placeholder to return to
 	public Transform placeholderParent = null; // Parent placeholder
 
     public GameObject placeholder = null; // Temporary placeholder
+
+	public Transform startArea = null; // where the card came from
 
 	private int childCount = 0;
 
     public void OnBeginDrag(PointerEventData eventData) {
 
         placeholder = new GameObject(); // Create a temporary placeholder
+		startArea = this.transform.parent; // the panel the card starts at
 		placeholder.transform.SetParent( this.transform.parent ); // Set parent of temp placeholder to current card's parent
         // Since we set the placeholder's parents equal, we set the hierarchy level to the children's too
 		placeholder.transform.SetSiblingIndex( this.transform.GetSiblingIndex() ); 
@@ -65,5 +68,15 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		}
         childCount++;
 		Destroy(placeholder); // Destory the temporary placeholder
+
+		if(startArea.name == "HandAreaPanel"){
+			Debug.Log("this card:"+this.name);
+			duelScript.playMyCard(this.name);
+		}
+		else if(startArea.name == "MyPlayAreaPanel"){
+			Debug.Log("this card:"+this.name);
+			duelScript.recallCard(this.name);
+		}
+
     }
 }

@@ -400,7 +400,7 @@ public class DuelScript : MonoBehaviour
     private void myAttack(){
         foreach(GameObject value in myPlayList){
             // @TODO some attack animations (@BRANDON)
-            float hit=0; // @TODO get attack value of the card (@DHAIRYA)
+            float hit=0; // @TODO get attack value of the card
             // @TODO send attack value to server (@KEVIN M)
             updateOppHealth(hit); // After each card's attack, update opponent's health
         }
