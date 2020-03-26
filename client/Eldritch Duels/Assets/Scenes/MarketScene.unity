@@ -1199,6 +1199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   succeedPanel: {fileID: 147285103}
   failedPanel: {fileID: 1318643987}
+  moneyText: {fileID: 828126589}
 --- !u!1 &706915557
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,6 +2094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   succeedPanel: {fileID: 147285103}
   failedPanel: {fileID: 1318643987}
+  moneyText: {fileID: 828126589}
 --- !u!1 &1162443851
 GameObject:
   m_ObjectHideFlags: 0
@@ -3342,6 +3344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   succeedPanel: {fileID: 147285103}
   failedPanel: {fileID: 1318643987}
+  moneyText: {fileID: 828126589}
 --- !u!114 &1587088116
 MonoBehaviour:
   m_ObjectHideFlags: 0
