@@ -236,7 +236,7 @@ public class DuelScript : MonoBehaviour
     }
 
     // Play card from my hand to my playing area
-    private bool playMyCard(string cardName){
+    public bool playMyCard(string cardName){
         Debug.Log("Playing");
 
         return false;
