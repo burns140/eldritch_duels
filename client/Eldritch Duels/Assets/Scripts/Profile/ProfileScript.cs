@@ -153,7 +153,8 @@ public class ProfileScript : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-        string[] blockedByUsersEmails = responseData.Split(',');            // array of emails of users who've blocked me
+        List<string> blockedByUsersEmails = new List<string>();
+        blockedByUsersEmails = responseData.Split(',').ToList();           // array of emails of users who've blocked me
 
         // @TODO Let me know if server didn't work as expected @STEPHEN
         bool failed = false;
@@ -162,9 +163,7 @@ public class ProfileScript : MonoBehaviour
             return true; // just so that nothing loads
         }
         else{
-
-            int pos = Array.IndexOf(blockedByUsersEmails, email);
-            if (pos > -1) {             // I'm blocked by them
+            if (blockedByUsersEmails.Contains(email)) {             // I'm blocked by them
                 // TODO
                 Button[] gameObjects = buttonPanel.GetComponentsInChildren<Button>(); // Get buttons from panel
                 foreach(Button o in gameObjects){ 
@@ -267,7 +266,7 @@ public class ProfileScript : MonoBehaviour
                 StartCoroutine(showError("Could not retreive my bio")); // set error message
             }
             else{
-                bioText =  "bio"; // Get my bio from server @STEPHEN/@KEVING
+                bioText =  returnedBio; // Get my bio from server @STEPHEN/@KEVING
             }
         }
         else{
@@ -278,7 +277,7 @@ public class ProfileScript : MonoBehaviour
                 StartCoroutine(showError("Could not retreive user's bio")); // set error message
             }
             else{
-                bioText =  "bio"; // Get user's bio from server @STEPHEN
+                bioText =  returnedBio; // Get user's bio from server @STEPHEN
             }
         }
 
@@ -296,7 +295,7 @@ public class ProfileScript : MonoBehaviour
                 StartCoroutine(showError("Could not retreive my username")); // set error message
             }
             else{
-                usernameText = "username"; 
+                usernameText = returnedUsername; 
             }
         }
         else{
@@ -307,7 +306,7 @@ public class ProfileScript : MonoBehaviour
                 StartCoroutine(showError("Could not retreive user's username")); // set error message
             }
             else{
-                usernameText = "username";
+                usernameText = returnedUsername;
             }
         }
 
