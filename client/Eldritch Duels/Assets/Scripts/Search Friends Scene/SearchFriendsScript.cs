@@ -26,6 +26,9 @@ public class SearchFriendsScript : MonoBehaviour
 
     private List<string> searchPlayersList = new List<string>(); // To store all searched users
     private List<string> lastPlayedList = new List<string>(); // To store last 3 opponents played
+    
+    private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store email of user
+    
     #endregion
 
     List<string> usernames;
@@ -75,7 +78,7 @@ public class SearchFriendsScript : MonoBehaviour
         lastPlayedList.Add(user3); 
 
         // Add temporary users to search results list
-        searchPlayersList.Add("Hola");
+        /*searchPlayersList.Add("Hola");
         searchPlayersList.Add("Amigo");
         searchPlayersList.Add("Que Paso");
         searchPlayersList.Add("HolaAmigo");
@@ -88,7 +91,7 @@ public class SearchFriendsScript : MonoBehaviour
         searchPlayersList.Add("HolaAmigo");
         searchPlayersList.Add("HolaAmigo");
         searchPlayersList.Add("HolaAmigo");
-        searchPlayersList.Add("HolaAmigo");
+        searchPlayersList.Add("HolaAmigo");*/
 
         // Set buttons to show those players on frontend
         GameObject userButton1 = (GameObject)Instantiate(buttonPrefab);
@@ -118,10 +121,21 @@ public class SearchFriendsScript : MonoBehaviour
         else{
             // @TODO get my username @STEPHEN/@KEVING
             string myUsername = "me"; // store my username here
-            if(searchPlayersList.Contains(myUsername)){ 
+            /*if(searchPlayersList.Contains(myUsername)){ 
                 searchPlayersList.Remove(myUsername); // do not display my username in the search
+            }*/
+            if(usernames.Contains(myUsername)){
+                usernames.Remove(myUsername); // do not display my username in the search
             }
-            foreach(string value in searchPlayersList){
+            /*foreach(string value in searchPlayersList){
+                if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
+                    GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
+                    searched.GetComponentInChildren<Text>().text = value; // Set text to the searched username 
+                    searched.SetActive(true);
+                    searched.transform.SetParent(searchPanel.transform, false); // Add username buttons to search panel
+                }
+            }*/
+            foreach(string value in usernames){
                 if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
                     GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
                     searched.GetComponentInChildren<Text>().text = value; // Set text to the searched username 
@@ -152,11 +166,13 @@ public class SearchFriendsScript : MonoBehaviour
                 break;
             }
         }
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,email); // Save the clicked email to EMAIL PREF KEY
         loadUserProfile(); // Go to the user's profile page scene
     }
 
     private void loadUserProfile(){ // load the clicked user's profile
-        
+        // this will just change scene to profile scene
+        SceneManager.LoadScene("ProfileScene");
     }
 
     // Start is called before the first frame update

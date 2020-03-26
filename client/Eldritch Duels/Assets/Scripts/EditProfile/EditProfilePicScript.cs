@@ -63,6 +63,8 @@ public class EditProfilePicScript : MonoBehaviour
     private string screenname; // save new screenname to this string
     private int picnum=0; // default profile pic is the first option
 
+    private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store user email
+
     // Start is called before the first frame update
     void Start()
     {
@@ -92,6 +94,8 @@ public class EditProfilePicScript : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.getEmail()); // Get the user email from PLAYER PREFS;
+        SceneManager.LoadScene("ProfileScene"); // Don't save profile changes and go back to Lobby
     }
 
     private void dropdownSetup(){
