@@ -6,15 +6,24 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-
+	public DuelScript duelScript; // to access duelscript functions
     public Transform parentToReturnTo = null; // Parent placeholder to return to
 	public Transform placeholderParent = null; // Parent placeholder
 
     public GameObject placeholder = null; // Temporary placeholder
 
+	public Transform startArea = null; // where the card came from
+
+	private int childCount = 0;
+
+	void Start(){
+		duelScript = GameObject.Find("DuelScriptObject").GetComponent<DuelScript>();
+	}
+
     public void OnBeginDrag(PointerEventData eventData) {
 
         placeholder = new GameObject(); // Create a temporary placeholder
+		startArea = this.transform.parent; // the panel the card starts at
 		placeholder.transform.SetParent( this.transform.parent ); // Set parent of temp placeholder to current card's parent
         // Since we set the placeholder's parents equal, we set the hierarchy level to the children's too
 		placeholder.transform.SetSiblingIndex( this.transform.GetSiblingIndex() ); 
@@ -51,11 +60,37 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     }
 
     public void OnEndDrag(PointerEventData eventData) {
-
-        this.transform.SetParent( parentToReturnTo ); 
-		this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
-		GetComponent<CanvasGroup>().blocksRaycasts = true;
-
+		//int childCount = this.GetComponent<GridLayoutGroup>().transform.childCount;
+		Debug.Log("this:"+this.name);
+		Debug.Log("parentToReturnTo:"+parentToReturnTo.name);
+		Debug.Log("placeholder:"+placeholder.name);
+		Debug.Log("placeholder_siblingindex:"+placeholder.transform.GetSiblingIndex());
+		if(childCount < 7 && !startArea.name.Equals("OppPlayAreaPanel")){
+			this.transform.SetParent( parentToReturnTo ); 
+			this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
+			GetComponent<CanvasGroup>().blocksRaycasts = true;
+		}
+        childCount++;
 		Destroy(placeholder); // Destory the temporary placeholder
+		Debug.Log("Parent: " + startArea.transform.name);
+		if(startArea.name.Equals("OppPlayAreaPanel")){
+			this.transform.SetParent(startArea.transform);
+			parentToReturnTo = null;
+			placeholderParent = null;
+			startArea = null;
+			placeholder = null;
+			GetComponent<CanvasGroup>().blocksRaycasts = true;
+			return;
+		}
+		if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel")){
+			
+			Debug.Log("this card:"+this.name);
+			duelScript.playMyCard(this.name);
+		}
+		else if(startArea.name == "MyPlayAreaPanel" && this.transform.parent.name.Equals("HandAreaPanel")){
+			Debug.Log("this card:"+this.name);
+			duelScript.recallCard(this.name);
+		}
+
     }
 }

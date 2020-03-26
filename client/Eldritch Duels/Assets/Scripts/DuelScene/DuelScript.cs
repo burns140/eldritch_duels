@@ -110,7 +110,7 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
-        yield return (StartCoroutine(testPlays()));
+        //yield return (StartCoroutine(testPlays()));
         //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
         //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
@@ -206,6 +206,7 @@ public class DuelScript : MonoBehaviour
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
             deckList.Enqueue(c); // Add card to deck list
+            Destroy(c);
             deckCount++; 
         }
     }
@@ -284,7 +285,7 @@ public class DuelScript : MonoBehaviour
                 myState.mana -= played.CardCost;
                 myState.onField.Add(played);
                 myState.inHand.RemoveAt(i);
-                
+                return true;
                 //update ui
                 GameObject c = (GameObject)Instantiate(myCard);
                 c.GetComponent<Image>().sprite = null;
@@ -330,6 +331,7 @@ public class DuelScript : MonoBehaviour
             if(recalled == null){
                 return false;
             }
+            return true;
             foreach(Transform c in myPlayAreaPanel.transform){
                 if(c.gameObject.name.Equals(cardName)){
                     Destroy(c.gameObject);
@@ -400,7 +402,7 @@ public class DuelScript : MonoBehaviour
     private void myAttack(){
         foreach(GameObject value in myPlayList){
             // @TODO some attack animations (@BRANDON)
-            float hit=0; // @TODO get attack value of the card (@DHAIRYA)
+            float hit=0; // @TODO get attack value of the card
             // @TODO send attack value to server (@KEVIN M)
             updateOppHealth(hit); // After each card's attack, update opponent's health
         }

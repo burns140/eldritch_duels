@@ -151,7 +151,7 @@ namespace eldritch {
             return cards;
 
         }
-        private static List<Card> StringToCardsByName(string toParse)
+        public static List<Card> StringToCardsByName(string toParse)
         {
             List<Card> cards = new List<Card>();
             string[] pairs = toParse.Split(',');
