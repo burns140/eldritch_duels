@@ -140,6 +140,7 @@ namespace eldritch {
         #region vars
         //Global variables, can be called by any class and script via Global.(variable) as long as "using eldritch" is in the imports
         public static string username = "";
+        public static string email = "";
         public static string enemyUsername = null;
         public static string matchID = null;
         public static int userID = 0;
