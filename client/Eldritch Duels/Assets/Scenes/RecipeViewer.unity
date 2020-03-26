@@ -3221,8 +3221,8 @@ MonoBehaviour:
   ResultCard: {fileID: 485511464}
   CraftCost: {fileID: 1779276779}
   Indicator: {fileID: 471905847}
-  Green: {fileID: 2100000, guid: 8d93b8c00d6dfe842a8df7eb4a2514bd, type: 2}
-  Gray: {fileID: 2100000, guid: 626f00c94cead454ea7cac7ce31db80a, type: 2}
+  Green: {fileID: 2100000, guid: e6d07b3e9acddb64eb7af4035d07203a, type: 2}
+  Gray: {fileID: 2100000, guid: 4e67420350e168e4f9166a60757e296f, type: 2}
 --- !u!114 &1783906409
 MonoBehaviour:
   m_ObjectHideFlags: 0
