@@ -56,7 +56,65 @@ public class ProfileScript : MonoBehaviour
     public Text ErrorText; // Display error message on UI
     #endregion
 
+    public class getBlockedRequest {
+        string id;
+        string token;
+        string cmd;
+
+        public getBlockedRequest(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class genericRequest {
+        string id;
+        string token;
+        string cmd;
+
+        public genericRequest(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class getProfileRequest {
+        string email;
+        string token;
+        string cmd;
+
+        public getProfileRequest(string email, string token, string cmd) {
+            this.email = email;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class FriendsRequest {
+        string myEmail;
+        string theirEmail;
+        string token;
+        string cmd;
+
+        public FriendsRequest(string myEmail, string theirEmail, string token, string cmd) {
+            this.myEmail = myEmail;
+            this.theirEmail = theirEmail;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    string email;
+    string returnedUsername;
+    string returnedBio;
+    string[] friends;
+    List<string> friendList;
+    List<string> myBlockedUsers;
+
     void Awake() // Awake is called when the script instance is being loaded
+
     {
         isItMe();
         if(isMe){
@@ -76,12 +134,27 @@ public class ProfileScript : MonoBehaviour
 
     private void isItMe(){ // check if it's my profile
         // @TODO Check if it's me (@STEPHEN/@KEVING)
-        isMe = true; // If it's my account 
+        if (email.Equals(Global.getEmail())) {
+            isMe = true; // If it's my account 
+        } else {
+            isMe = false;
+        }
         // isMe = false; // If it's not my account
     }
 
     private bool getBlockedMe(){ // check if I the user has blocked me
         // @TODO Check if I am blocked by this user
+        getBlockedRequest req = new getBlockedRequest(Global.getID(), Global.getToken(), "getBlockedByUsers");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        string[] blockedByUsersEmails = responseData.Split(',');            // array of emails of users who've blocked me
+
         // @TODO Let me know if server didn't work as expected @STEPHEN
         bool failed = false;
         if(failed){
@@ -89,18 +162,21 @@ public class ProfileScript : MonoBehaviour
             return true; // just so that nothing loads
         }
         else{
-            // If I'm blocked then hide buttons & return true;
-            // Button[] gameObjects = buttonPanel.GetComponentsInChildren<Button>(); // Get buttons from panel
-            // foreach(Button o in gameObjects){ 
-            //     Destroy(o.gameObject); // Destroy buttons on UI
-            // }
-            // ErrorText.text = "You have been blocked by this user")); // set error message
-            // ErrorText.GetComponent<Text>().enabled = true; 
-            //return true;
-            // If I'm not blocked then
-            // return false;
-        }
-        return false; 
+
+            int pos = Array.IndexOf(blockedByUsersEmails, email);
+            if (pos > -1) {             // I'm blocked by them
+                // TODO
+                Button[] gameObjects = buttonPanel.GetComponentsInChildren<Button>(); // Get buttons from panel
+                foreach(Button o in gameObjects){ 
+                    Destroy(o.gameObject); // Destroy buttons on UI
+                }
+                ErrorText.text = "You have been blocked by this user"; // set error message
+                ErrorText.GetComponent<Text>().enabled = true; 
+                return true;
+            }
+            
+            return false;
+        } 
     }
 
     private void displayPic(){ // get profile pic & display it
@@ -166,8 +242,23 @@ public class ProfileScript : MonoBehaviour
         }
     }
 
+    private void getInfo() {
+        getProfileRequest req = new getProfileRequest(email, Global.getToken(), "viewProfile");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        string[] info = responseData.Split(',');
+        returnedBio = info[1];
+        returnedUsername = info[2];
+    }
+
     private void displayBio(){ // get bio & display it
-        
+        getInfo();
         if(isMe){
             // @TODO Get my bio from server @STEPHEN/@KEVING
             // @TODO Let me know if server didn't work as expected @STEPHEN
@@ -195,6 +286,7 @@ public class ProfileScript : MonoBehaviour
     }
 
     private void displayScreenName(){ // get username & display it
+        getInfo();
 
         if(isMe){
             // @TODO Get my username from server @STEPHEN/@KEVING
@@ -229,7 +321,27 @@ public class ProfileScript : MonoBehaviour
         }
         else{
             // @TODO Get from server if user is already my friend @STEPHEN
-            alreadyFriend = true; // Store if the user is my friend
+
+            genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getAllFriends");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            friends = responseData.Split(',');          // Array of friend emails
+            friendList = friends.ToList();
+            int pos = Array.IndexOf(friends, email);
+
+            if (pos > -1) {
+                alreadyFriend = true; // Store if the user is my friend
+            } else {
+                alreadyFriend = false;
+            }
+
+
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool failed = false;
             if(failed){
@@ -264,6 +376,17 @@ public class ProfileScript : MonoBehaviour
     public void handleAddFriend(){ // friend/unfriend/handleRequest button
         if(alreadyFriend){ // unfriend user
             // @TODO Unfriend user through server @STEPHEN
+
+            FriendsRequest req = new FriendsRequest(Global.getEmail(), email, Global.getToken(), "removeFriend");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            friendList.Remove(email);
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool unFriendFailed = false;
             if(unFriendFailed){
@@ -284,12 +407,22 @@ public class ProfileScript : MonoBehaviour
             }
             else{ // sent a friend reqiest to the user
                 // @TODO Add user as friend through server @STEPHEN
+
+                FriendsRequest req = new FriendsRequest(Global.getEmail(), email, Global.getToken(), "sendFriendRequest");
+                string json = JsonConvert.SerializeObject(req);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[1024];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
                 // @TODO Let me know if server didn't work as expected @STEPHEN
                 bool friendFailed = false;
                 if(friendFailed){
                     StartCoroutine(showError("Could not add user as friend, please try again")); // set error message
                 }
-                else{
+                else {
                     AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
                     AddButton.GetComponentInChildren<Button>().interactable = true;
                     alreadyFriend = true; // since we added user as friend, set alreadyFriend to true
@@ -307,7 +440,23 @@ public class ProfileScript : MonoBehaviour
         }
         else{
             // @TODO Get from server if I have already blocked the user
-            alreadyBlocked = false; // Check if the user is blocked by me from server
+
+            genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getBlockedUsers");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            myBlockedUsers = responseData.Split(',').ToList();
+
+            if (myBlockedUsers.Contains(email)) {
+                alreadyBlocked = true;
+            } else {
+                alreadyBlocked = false; // Check if the user is blocked by me from server
+            }
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool failed = false;
             if(failed){

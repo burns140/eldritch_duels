@@ -28,8 +28,42 @@ public class SearchFriendsScript : MonoBehaviour
     private List<string> lastPlayedList = new List<string>(); // To store last 3 opponents played
     #endregion
 
+    List<string> usernames;
+    List<string> emails;
+
+    public class getAllFriendsRequest {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public getAllFriendsRequest(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
     void Awake() // Awake is called when the script instance is being loaded
     {
+        getAllFriendsRequest req = new getAllFriendsRequest(Global.getID(), Global.getToken(), "getAllUsernames");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        string[] pairs = responseData.Split(',');
+        usernames = new List<string>();            // List with all usernames
+        emails = new List<string>();
+
+        foreach (string str in pairs) {
+            string[] user_email = str.Split('-');
+            usernames.Add(user_email[0]);
+            emails.Add(user_email[1]);
+        }
+
         // @TODO Get the 3 last played users from server
         string user1 = "user1"; // temp users
         string user2 = "user2";
@@ -107,6 +141,17 @@ public class SearchFriendsScript : MonoBehaviour
 
     public void buttonClicked(Button btn){ // clicked on a user
         Debug.Log(btn.GetComponentInChildren<Text>().text);
+        string username = btn.GetComponentInChildren<Text>().text;
+        string email = "";
+
+        int i = 0;
+
+        for (; i < usernames.Count; i++) {
+            if (usernames[i].Equals(username)) {
+                email = usernames[i];
+                break;
+            }
+        }
         loadUserProfile(); // Go to the user's profile page scene
     }
 

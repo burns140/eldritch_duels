@@ -120,6 +120,7 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
+        public static string email = "";
         #endregion
 
 
@@ -617,6 +618,10 @@ namespace eldritch {
                 Console.WriteLine("Error reading token file: " + ex.Message);
                 return String.Empty;
             }
+        }
+
+        public static string getEmail() {
+            return email;
         }
         public static void SetUpConnection()
         {
