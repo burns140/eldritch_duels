@@ -220,7 +220,7 @@ const getCredits = (data, sock) => {
                     throw new Error("no user found");
                 }
 
-                sock.write(result.credits);
+                sock.write(result.credits.toString());
                 console.log("credits returned");
             }).catch(err => {
                 sock.write(err.toString());
@@ -266,4 +266,5 @@ exports.removeCard = removeCard;
 exports.getCollection = getCollection;
 exports.addCard = addCard;
 exports.openPack = openPack;
+exports.getCredits = getCredits;
 exports.updateCredits = updateCredits;
