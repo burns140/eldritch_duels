@@ -97,6 +97,7 @@ public class Login : MonoBehaviour
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
                 Global.email = email;
+                //TODO: QUERY IF CUSTOM IMAGE IS UPLOADED, IF SO, ACQUIRE IMAGE AND STORE IN GLOBAL
                 return tempFile;
             }
             catch (Exception e)

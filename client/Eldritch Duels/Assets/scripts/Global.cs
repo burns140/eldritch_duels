@@ -156,6 +156,8 @@ namespace eldritch {
         public static int avatar = 0;
         public static string bio = "";
         public static bool inQueue = false;
+        public static bool hasCustomPFP = false;
+        public static Sprite CustomPFP;
         private static string hostIP = "66.253.158.241";
         #endregion
 

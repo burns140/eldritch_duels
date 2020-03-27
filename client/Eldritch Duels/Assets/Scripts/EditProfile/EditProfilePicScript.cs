@@ -21,6 +21,7 @@ public class EditProfilePicScript : MonoBehaviour
     public InputField screenNameInput; // Screenname field on the UI
     public InputField bioInput; // Bio field on the UI
     public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" }; // for checking picture files
+    //TODO: ADD IMAGE FOR ERROR MESSAGES
     public UnityEngine.UI.Button upload; // upload button
     private string bio; // save new bio to this string
     private string screenname; // save new screenname to this string
@@ -66,9 +67,15 @@ public class EditProfilePicScript : MonoBehaviour
             picItems.Add(picOption); 
         }
 
-        dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
+        
 
-        //TODO: ADD USER UPLOADED PROFILE PICTURE
+        if (Global.hasCustomPFP)
+        {
+            var temp = new Dropdown.OptionData("Custom", Global.CustomPFP);
+            picItems.Add(temp);
+        }
+
+        dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
     }
 
     public void handlePicName(int val){
@@ -135,6 +142,10 @@ public class EditProfilePicScript : MonoBehaviour
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                Global.hasCustomPFP = true;
+
+                //TODO: PUT IMAGE IN GLOBAL SPRITE
 
                 dropdownSetup();
             }
