@@ -96,6 +96,9 @@ function dataHandler(data) {
                 case "getBlockedByUsers":            //Get array of the users who have blocked me
                     Block.getBlockedByUsers(obj, sock);
                     break;
+                case "getCredits":
+                    Collection.getCredits(obj, sock);
+                    break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
                     break;
@@ -218,6 +221,12 @@ function onClientConnected(sock) {
                         break;
                     case "openPack":                    // Open a pack
                         Collection.openPack(obj, sock);
+                        break;
+                    case "getCredits":
+                    	Collection.getCredits(obj, sock);
+                    	break;
+                    case "updateCredits":
+                        Collection.updateCredits(obj, sock);
                         break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');

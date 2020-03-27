@@ -2,37 +2,31 @@ const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
 var commonCardNames = [
     "Test 1",
-    "Test 2", 
-    "Test 3", 
-    "Test 4", 
-    "Test 5", 
-    "Test 6", 
-    "Test 7", 
-    "Test 8", 
-    "Test 9", 
-    "Test 10", 
-    "Test 11", 
-    "Test 12",
-    "Test 13",
-    "Test 14", 
-    "Test 15", 
-    "Test 16", 
-    "Test 17", 
-    "Test 18", 
-    "Test 19", 
-    "Test 20" 
+    "Mi_Go",
+    "Beast Patient",
+    "Mi-Go Zombie",
+    "Nightmare Apostle",
+    "Blood Vial"
 ]
 
 var rareCardNames =  [
-    "Rare 1",
-    "Rare 2",
-    "Rare 3",
-    "Rare 4",
-    "Rare 5"
+    "Mi_Go Worker",
+    "Chime Maiden",
+    "Brain of Mensis",
+    "Snatcher",
+    "Quicksilver Bullets",
+    "Pungent Blood Cocktail",
+    "Madman's Knowledge"
 ]
 
 var legendaryCardNames = [
-    "Legend 1"
+    "Test 0",
+    "Mi_Go Queen",
+    "Great One's Wisdom",
+    "Blood Starved Beast",
+    "Moon Presence",
+    "Ludwig, Holy Blade",
+    "Lady Maria"
 ]
 
 /**
@@ -210,12 +204,67 @@ const openPack = (data, sock) => {
         sock.write(err.toString());
         console.log(err);
     }
-    
-
-    
 }
+
+const getCredits = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+            
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error("no user found");
+                }
+
+                sock.write(result.credits.toString());
+                console.log("credits returned");
+            }).catch(err => {
+                sock.write(err.toString());
+                console.log(err);
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
+const updateCredits = (data, sock) => {
+    const id = data.id;
+    const value = data.value;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').updateOne(
+                { _id: ObjectID(id) },
+                { $inc: { credits: value } }
+            ).then(result => {
+                if (result.modifiedCount != 1) {
+                    throw new Error("no modifications");
+                }
+                sock.write("credits updated");
+                console.log('credits updated');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
 
 exports.removeCard = removeCard;
 exports.getCollection = getCollection;
 exports.addCard = addCard;
 exports.openPack = openPack;
+exports.getCredits = getCredits;
+exports.updateCredits = updateCredits;

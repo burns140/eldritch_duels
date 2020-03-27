@@ -116,7 +116,7 @@ public class Login : MonoBehaviour
                 StreamWriter streamWriter = File.AppendText(tempFile);
                 streamWriter.WriteLine(loginstuff[0]); // token
                 streamWriter.WriteLine(loginstuff[1]); // ID
-                streamWriter.Flush();
+                //streamWriter.Flush();
                 streamWriter.Close();
                 Global.avatar = (loginstuff[2] == null || loginstuff[2] == "")? 0 : Int32.Parse(loginstuff[2]);
                 Global.username = loginstuff[3];

@@ -88,13 +88,16 @@ const login = (data, sock) => {
                         if (playList.isLoggedIn(idString)) {
                             var prevSocket = playList.getSocketByKey(idString);
                             if (prevSocket != sock) {
+                                    sock.write("a user is already logged into this account");
+                                    console.log("user already logged in with this account");
+                                    return;
                                 try {
-                                    prevSocket.end('Another device has logged in with this account');
-                                    console.log('forcing socket to close');
+                                    //prevSocket.end('Another device has logged in with this account');
+                                    //console.log('forcing socket to close');
                                 } catch (err) {
-                                    console.log(err);
+                                    //console.log(err);
                                 }
-                                playList.removePlayer(idString);
+                                //playList.removePlayer(idString);
                             }
                         }
 

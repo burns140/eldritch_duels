@@ -18,6 +18,7 @@ public class EditProfilePicScript : MonoBehaviour
 {
     public Dropdown dropdown; // Picture Dropdown on the UI
     public Sprite[] pictures; // List of available pictures
+    public Image errorimage; // Image for error message
     public InputField screenNameInput; // Screenname field on the UI
     public InputField bioInput; // Bio field on the UI
     public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
@@ -65,6 +66,8 @@ public class EditProfilePicScript : MonoBehaviour
             var picOption = new Dropdown.OptionData(pic.name, pic);
             picItems.Add(picOption); 
         }
+
+        //TODO: QUERY SERVER IF THERE IS UPLOADED IMAGE, IF SO, RETRIEVE IMAGE AND ADD TO PICTURE LIST
 
         dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
     }
@@ -139,6 +142,7 @@ public class EditProfilePicScript : MonoBehaviour
             else
             {
                 //MAKE ERROR MESSAGE
+                errorimage.gameObject.SetActive(true);
                 Debug.Log("Invalid file!");
             }
         }
