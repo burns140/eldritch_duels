@@ -24,6 +24,13 @@ public struct PlayerState{
     public List<Card> library;
 }
 
+public enum Phase{
+    MAIN,
+    ATTACK,
+    BLOCK,
+    WAITING,
+    END
+}
 public class DuelScript : MonoBehaviour 
 {
     #region UI & Script Variables
@@ -34,7 +41,8 @@ public class DuelScript : MonoBehaviour
     public GameObject cardBack4;
 
     public Text gameText; // Display game instructions and hints
-    private bool isMyTurn; // Check if it is my turn
+    
+    public bool isMyTurn = false; // Check if it is my turn
 
     public GameObject handAreaPanel; // Hand Area UI
     public GameObject myPlayAreaPanel; // My Play Area UI
@@ -65,6 +73,10 @@ public class DuelScript : MonoBehaviour
     private float oppCurrentHP; // Opp Current HP
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
+    public Phase currentPhase = Phase.MAIN;
+
+    public Text phaseText = null;
+    
 
     [SerializeField]
     private PlayerState myState;
@@ -88,6 +100,35 @@ public class DuelScript : MonoBehaviour
     void Update()
     {
         checkDeckCount(); // Check & update card back quantity on deck UI
+    }
+
+    public void NextPhase(){
+        if(phaseText == null){
+            return;
+        }if(!isMyTurn && currentPhase != Phase.BLOCK){
+            currentPhase = Phase.WAITING;
+            phaseText.text = "WAITING";
+        }
+        if(currentPhase == Phase.MAIN){
+            currentPhase = Phase.ATTACK;
+            phaseText.text = "CONFIRM";
+        }else if(currentPhase == Phase.ATTACK && isMyTurn){
+            currentPhase = Phase.WAITING;
+            phaseText.text = "WAITING";
+            //TODO send attackers and tell opp to block
+        }else if(!isMyTurn && currentPhase == Phase.BLOCK){
+            phaseText.text = "CONFIRM";
+
+        }else if(currentPhase == Phase.BLOCK && !isMyTurn){
+            currentPhase = Phase.END;
+            //TODO send blockers and resolve 
+        }
+    }
+
+    public void EndTurnNow(){
+        if(isMyTurn && currentPhase != Phase.WAITING){
+            endMyTurn();
+        }
     }
 
     // Check current number of cards in deck
@@ -432,19 +473,21 @@ public class DuelScript : MonoBehaviour
     private void endMyTurn(){
         isMyTurn = false; // No longer my turn
         string endString = "YOUR TURN"; // Send this to server
+        currentPhase = Phase.WAITING;
     }
 
 
     // End opponent's play
     private void endOppTurn(){
         isMyTurn = true; // Now it's my turn
+        currentPhase = Phase.MAIN;
     }
     #endregion
 
     #region End Game
     // End game
     private void endGame(){
-
+        
     }
     #endregion
 }
