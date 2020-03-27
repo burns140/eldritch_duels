@@ -89,7 +89,7 @@ const signup = (data, sock) => {
                         wins: 0,                            // int
                         losses: 0,                          // int
                         recent_games: [],                   // bool[]
-                        currency: 500,                       // int
+                        credits: 100000,                       // int
                         bio: "enter_bio",                   // string
                         verified: false,                     // boolean of whether they verified their account
                         verifyStr: str,                      // string
