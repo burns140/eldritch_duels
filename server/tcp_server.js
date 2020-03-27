@@ -219,6 +219,9 @@ function onClientConnected(sock) {
                     case "openPack":                    // Open a pack
                         Collection.openPack(obj, sock);
                         break;
+                    case "updateCredits":
+                        Collection.updateCredits(obj, sock);
+                        break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');
                         break;

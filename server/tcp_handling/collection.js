@@ -233,7 +233,37 @@ const getCredits = (data, sock) => {
     }
 }
 
+const updateCredits = (data, sock) => {
+    const id = data.id;
+    const value = data.value;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').updateOne(
+                { _id: ObjectID(id) },
+                { $inc: { credits: value } }
+            ).then(result => {
+                if (result.modifiedCount != 1) {
+                    throw new Error("no modifications");
+                }
+                sock.write("credits updated");
+                console.log('credits updated');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
+
 exports.removeCard = removeCard;
 exports.getCollection = getCollection;
 exports.addCard = addCard;
 exports.openPack = openPack;
+exports.updateCredits = updateCredits;
