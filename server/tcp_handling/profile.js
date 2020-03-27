@@ -397,7 +397,11 @@ const getMyReportedPlayers = (data, sock) => {
                 }
 
                 console.log('getting my reported users');
-                sock.write(result.reported.toString());
+                if (result.reported.toString() == "") {
+                    sock.write("noreportedusers");
+                } else {
+                    sock.write(result.reported.toString()); 
+                }
                 return;
             }).catch(err => {
                 console.log(err);

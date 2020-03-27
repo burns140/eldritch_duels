@@ -70,9 +70,9 @@ public class ProfileScript : MonoBehaviour
     }
 
     public class genericRequest {
-        string id;
-        string token;
-        string cmd;
+        public string id;
+        public string token;
+        public string cmd;
 
         public genericRequest(string id, string token, string cmd) {
             this.id = id;
@@ -110,9 +110,7 @@ public class ProfileScript : MonoBehaviour
     string email;
     string returnedUsername;
     string returnedBio;
-    string[] friends;
-    List<string> friendList;
-    List<string> myBlockedUsers;
+    
 
     void Awake() // Awake is called when the script instance is being loaded
 
@@ -280,8 +278,6 @@ public class ProfileScript : MonoBehaviour
     }
 
     private void displayScreenName(){ // get username & display it
-        getInfo();
-
         if(isMe){
             // @TODO Get my username from server @STEPHEN/@KEVING
             // @TODO Let me know if server didn't work as expected @STEPHEN
@@ -325,8 +321,9 @@ public class ProfileScript : MonoBehaviour
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-            friends = responseData.Split(',');          // Array of friend emails
-            friendList = friends.ToList();
+            List<string> friendList;
+
+            friendList = responseData.Split(',').ToList();
             if (friendList.Contains(email)) {
                 alreadyFriend = true;
             } else {
@@ -408,7 +405,6 @@ public class ProfileScript : MonoBehaviour
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-            friendList.Remove(email);
             // @TODO Let me know if server didn't work as expected @STEPHEN
             bool unFriendFailed = false;
             if(unFriendFailed){
@@ -472,6 +468,7 @@ public class ProfileScript : MonoBehaviour
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+            List<string> myBlockedUsers;
             myBlockedUsers = responseData.Split(',').ToList();
 
             if (myBlockedUsers.Contains(email)) {
