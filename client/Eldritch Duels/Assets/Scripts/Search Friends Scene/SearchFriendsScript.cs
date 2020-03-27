@@ -183,6 +183,10 @@ public class SearchFriendsScript : MonoBehaviour
         SceneManager.LoadScene("ProfileScene");
     }
 
+    public void goBack(){ // Load Lobby Scene
+        SceneManager.LoadScene("Lobby");    
+    }
+
     // Start is called before the first frame update
     //void Start() {}
 
