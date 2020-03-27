@@ -15,8 +15,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 	public Transform startArea = null; // where the card came from
 
 	private int childCount = 0;
-	[SerializeField]
-	private bool isAttacking = false;
+	public bool isAttacking = false;
+
+	public bool isBlocking = false;
+	public bool battleResolved = false;
 
 	void Start(){
 		duelScript = GameObject.Find("DuelScriptObject").GetComponent<DuelScript>();
@@ -32,15 +34,35 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 	
 	public void toggleAttack(){
-		if(this.transform.parent.name.Equals("MyPlayAreaPanel")){
+		if(this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.ATTACK){
 			if(isAttacking){
 				isAttacking = false;
 				this.GetComponent<Image>().color = Color.white;
-				//TODO remove attacker
+				duelScript.RemoveAttacker(this.gameObject);
 			}else{
 				isAttacking = true;
 				this.GetComponent<Image>().color = Color.gray;
-				//TODO add attacker
+				duelScript.AddAttacker(this.gameObject);
+			}
+		}else if(this.transform.parent.name.Equals("OppPlayAreaPanel") && duelScript.currentPhase == Phase.BLOCK){
+			if(!isBlocking && isAttacking){
+				duelScript.SetToBlock(this.gameObject);
+				this.GetComponent<Image>().color = Color.gray;
+				this.isBlocking = true;
+			}else if(isAttacking){
+				this.GetComponent<Image>().color = Color.white;
+				duelScript.RemoveToBlock(this.gameObject);
+				this.isBlocking = false;
+			}
+		}else if(this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.BLOCK){
+			if(!isBlocking){
+				duelScript.SetBlocker(this.gameObject);
+				this.GetComponent<Image>().color = Color.gray;
+				this.isBlocking = true;
+			}else{
+				duelScript.RemoveBlocker(this.gameObject);
+				this.GetComponent<Image>().color = Color.white;
+				this.isBlocking = false;
 			}
 		}
 	}

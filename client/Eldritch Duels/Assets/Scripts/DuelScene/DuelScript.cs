@@ -24,6 +24,13 @@ public struct PlayerState{
     public List<Card> library;
 }
 
+[System.Serializable]
+public struct AttackBlock{
+    public GameObject attacker;
+    public GameObject blocker;
+    public Card attackCard;
+}
+
 public enum Phase{
     MAIN,
     ATTACK,
@@ -74,6 +81,7 @@ public class DuelScript : MonoBehaviour
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
     public Phase currentPhase = Phase.MAIN;
+    public int currentTurn = 1;
 
     public Text phaseText = null;
     
@@ -151,7 +159,7 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
-        //yield return (StartCoroutine(testPlays()));
+        yield return (StartCoroutine(testPlays()));
         //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
         //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
@@ -207,31 +215,15 @@ public class DuelScript : MonoBehaviour
     }
     //test playing and recalling cards for user and opp
     IEnumerator testPlays(){
-        //i play cards
-        Debug.Log("Test My Play Card");
-        int myPlayCount=1;
-        while(myPlayCount<=8){ // To add 8 cards to opp play area; 8th should be false
-            bool res = playMyCard("Test 0");
-            Debug.Log("Card played: " + myPlayCount + " result: " + res);
-            myPlayCount++;
-            //drawCard();
-            yield return new WaitForSeconds(0.5f); 
-        }
+        
         Debug.Log("Test Opp Play Card");
         //opp plays cards
         playOppCard("Test 0");
         playOppCard("Test 0");
         yield return new WaitForSeconds(2);
-        
-        //i recall card
-        for(int i = 0; i < DuelFunctions.MAX_FIELD/2;i++){
-            bool res2 = recallCard("Test 0");
-            Debug.Log("Card recalled result: " + res2);
-            yield return new WaitForSeconds(0.5f);
+        foreach(Transform t in oppPlayAreaPanel.transform){
+            addOppAttacker(t.gameObject.name);
         }
-
-        //opp recall card
-        recallOppCard("Test 0");
         
 
     }
@@ -326,29 +318,11 @@ public class DuelScript : MonoBehaviour
                 myState.mana -= played.CardCost;
                 myState.onField.Add(played);
                 myState.inHand.RemoveAt(i);
+
+                //TODO resolve abilities
+
                 return true;
-                //update ui
-                GameObject c = (GameObject)Instantiate(myCard);
-                c.GetComponent<Image>().sprite = null;
-                c.GetComponent<Image>().material = played.CardImage;
-                c.name = played.CardName;
-                c.transform.SetParent(myPlayAreaPanel.transform, false); // Add card to my play area
-                myPlayList.Add(c); // Add card to my play list
                 
-                for(int j = 0; j < handAreaPanel.transform.childCount;j++){
-                    if(handAreaPanel.transform.GetChild(j).gameObject.name.Equals(cardName)){
-                        //remove card
-                        Destroy(handAreaPanel.transform.GetChild(j).gameObject);
-                        break;
-                    }
-                }
-                for(int j = 0; j < handList.Count;j++){
-                    if(handList[j].name.Equals(cardName)){
-                        //remove card
-                        handList.RemoveAt(j);
-                        break;
-                    }
-                }
 
                 return true;
             }
@@ -438,15 +412,208 @@ public class DuelScript : MonoBehaviour
     
     #endregion
 
+    #region battle management
+
+    
+
+    public List<AttackBlock> attackers = new List<AttackBlock>();
+    //add attacker to attack with
+    public void AddAttacker(GameObject attacker){
+        if(attacker.GetComponent<Draggable>() == null){
+            return;
+        }
+        //check if already in attack list
+        foreach(AttackBlock g in attackers){
+            if(g.attacker.GetHashCode().Equals(attacker.GetHashCode())){
+                return;
+            }
+        }
+        AttackBlock at;
+        at.attacker = attacker;
+        at.attackCard = null;
+        foreach(Card c in myState.onField){
+            if(c.CardName.Equals(attacker.name)){
+                at.attackCard = c;
+                break;
+            }
+        }
+        at.blocker = null;
+        attackers.Add(at);
+        Debug.Log("# attacking: " + attackers.Count);
+    }
+    //remove creature to attack with
+    public void RemoveAttacker(GameObject attacker){
+        if(attacker.GetComponent<Draggable>() == null){
+            return;
+        }
+        for(int i = 0; i < attackers.Count;i++){
+            if(attackers[i].attacker.GetHashCode().Equals(attacker.GetHashCode())){
+                attackers.RemoveAt(i);
+                return;
+            }
+        }
+    }
+    
+    private GameObject atb; //placehoder for attacker
+    private GameObject blockwith; //placeholder for blocker
+    //set placeholder for attacker
+    public void SetToBlock(GameObject attacker){
+        if(atb != null){
+            atb.GetComponent<Draggable>().isBlocking = false;
+            atb.GetComponent<Image>().color = Color.white;
+        }
+        this.atb = attacker;
+        if(atb != null && blockwith != null){
+            makeAttackBlockLink();
+        }
+    }
+    //set placeholder for blocker
+    public void SetBlocker(GameObject blocker){
+        if(blockwith != null){
+            blockwith.GetComponent<Draggable>().isBlocking = false;
+            blockwith.GetComponent<Image>().color = Color.white;
+        }
+        this.blockwith = blocker;
+        if(atb != null && blockwith != null){
+            makeAttackBlockLink();
+        }
+    }
+    //remove place holder for blocker
+    public void RemoveBlocker(GameObject blocker){
+        for(int i = 0; i < attackers.Count;i++){
+            if(attackers[i].blocker != null && attackers[i].blocker.GetHashCode().Equals(blocker.GetHashCode())){
+                AttackBlock ab = attackers[i];
+                attackers[i].blocker.GetComponent<Draggable>().isBlocking = false;
+                attackers[i].blocker.GetComponent<Image>().color = Color.white;
+                ab.blocker = null;
+                attackers[i] = ab;
+                attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
+                attackers[i].attacker.GetComponent<Image>().color = Color.white;
+                break;
+            }
+        }
+    }
+    //remove placeholder for attacker
+    public void RemoveToBlock(GameObject attacker){
+        for(int i = 0; i < attackers.Count;i++){
+            if(attackers[i].attacker.GetHashCode().Equals(attacker.GetHashCode())){
+                AttackBlock ab = attackers[i];
+                attackers[i].blocker.GetComponent<Draggable>().isBlocking = false;
+                attackers[i].blocker.GetComponent<Image>().color = Color.white;
+                ab.blocker = null;
+                attackers[i] = ab;
+                attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
+                attackers[i].attacker.GetComponent<Image>().color = Color.white;
+                break;
+            }
+        }
+    }
+
+    //sets up link between attacker and blocker
+    private void makeAttackBlockLink(){
+        for(int i = 0; i < attackers.Count;i++){
+            if(attackers[i].attacker.GetHashCode().Equals(atb.GetHashCode())){
+                AttackBlock ab = attackers[i];
+                ab.blocker = blockwith;
+                attackers[i] = ab;
+                Debug.Log("Link made");
+                break;
+            }
+        }
+        atb = null;
+        blockwith = null;
+        Debug.Log("links: " + attackers.Count);
+    }
+
+    //format and send blocker string to opponent
+    private void confirmBlockers(){
+
+    }
+
+    //format and sent attacker to opponent
+    private void confirmAttackers(){
+
+    }
+
+
+
+    private void sendDataToOpp(string formatted){
+        //TODO
+
+    }
+
+    private void recievedDataFromOpp(string formatted){
+        
+    }
+    #endregion
+
+
+
     #region Attack & Update Health
+
+    
+
+
+
+
     // Play card animations when I attack 
     private void myAttack(){
-        foreach(GameObject value in myPlayList){
-            // @TODO some attack animations (@BRANDON)
-            float hit=0; // @TODO get attack value of the card
-            // @TODO send attack value to server (@KEVIN M)
-            updateOppHealth(hit); // After each card's attack, update opponent's health
+        
+        foreach(AttackBlock ab in attackers){
+            if(ab.blocker == null && ab.attackCard != null){
+                updateOppHealth(ab.attackCard.AttackPower);
+            }else if(ab.attackCard != null){
+                Card blocker = Library.GetCard(ab.blocker.name);
+                if(blocker.DefencePower > ab.attackCard.AttackPower){
+                    //DESTROY myCard
+                }else if(blocker.DefencePower < ab.attackCard.AttackPower){
+                    //DESTORY OPP CARD
+                }else{
+                    //DESTROY BOTH CARDS
+                }
+            }
         }
+
+        attackers.Clear();
+    }
+    //string format "attacker 1,attacker 2,..."
+    public void AddOppAttackers(string attackCards){
+        string[] attackers = attackCards.Split(',');
+        foreach(string s in attackers){
+            addOppAttacker(s); //add opp attacker
+        }
+    }
+    private void addOppAttacker(string attacker){
+        for(int i = 0; i < oppPlayAreaPanel.transform.childCount;i++){
+            if(oppPlayAreaPanel.transform.GetChild(i).gameObject.GetComponent<Draggable>() != null && //check child is a card placeholder
+            !oppPlayAreaPanel.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking){ //check card is not already set to attacker
+                AttackBlock attackBlock; //create blank attacker blocker struct
+                attackBlock.attacker = oppPlayAreaPanel.transform.GetChild(i).gameObject; //add teh attacker ui object
+                attackBlock.attackCard = Library.GetCard(attacker); //get the attacker card
+                attackBlock.blocker = null;
+                oppPlayAreaPanel.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking = true; //set card to is attacking
+                attackers.Add(attackBlock); //add attacker to list
+                break;
+            }
+        }
+    }
+    private void oppAttack(){
+        foreach(AttackBlock ab in attackers){
+            if(ab.blocker == null){
+                updateMyHealth(ab.attackCard.AttackPower);
+            }else{
+                Card blocker = Library.GetCard(ab.blocker.name);
+                if(blocker.DefencePower < ab.attackCard.AttackPower){
+                    //DESTROY BLOCKER
+                }else if (blocker.DefencePower > ab.attackCard.AttackPower){
+                    //DESTROY ATTACKER
+                }else{
+                    //DESTROY BOTH
+                }
+            }
+        }
+
+        attackers.Clear();
     }
 
     // After my card attacks opponent
@@ -456,8 +623,8 @@ public class DuelScript : MonoBehaviour
     }
 
     // After opponent's card attacks me
-    private void updateMyHealth(){
-        float hit=0; // @TODO get attack value from server (@KEVIN M)
+    private void updateMyHealth(float hit=0){
+         // @TODO get attack value from server (@KEVIN M)
         myCurrentHP -= hit; // Decrease attack from HP
         myHPImage.fillAmount = myCurrentHP/MAX_HEALTH; // Update my HP on UI
     }
@@ -473,14 +640,17 @@ public class DuelScript : MonoBehaviour
     private void endMyTurn(){
         isMyTurn = false; // No longer my turn
         string endString = "YOUR TURN"; // Send this to server
-        currentPhase = Phase.WAITING;
+        currentPhase = Phase.WAITING; //wait for opp move
+        currentTurn++;
     }
 
 
     // End opponent's play
     private void endOppTurn(){
         isMyTurn = true; // Now it's my turn
-        currentPhase = Phase.MAIN;
+        currentPhase = Phase.MAIN; //start my turn
+        myState.mana = myState.mana + currentTurn /8 + 1; //increase mana
+        currentTurn++;
     }
     #endregion
 
