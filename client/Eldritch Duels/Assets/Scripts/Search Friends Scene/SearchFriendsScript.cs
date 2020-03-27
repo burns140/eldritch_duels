@@ -123,9 +123,6 @@ public class SearchFriendsScript : MonoBehaviour
             /*if(searchPlayersList.Contains(myUsername)){ 
                 searchPlayersList.Remove(myUsername); // do not display my username in the search
             }*/
-            if(usernames.Contains(myUsername)){
-                usernames.Remove(myUsername); // do not display my username in the search
-            }
             /*foreach(string value in searchPlayersList){
                 if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
                     GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
@@ -136,6 +133,9 @@ public class SearchFriendsScript : MonoBehaviour
             }*/
             foreach(string value in usernames){
                 if(value.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0){
+                    if(value == myUsername){
+                        continue;// do not display my username in the search
+                    }
                     GameObject searched = (GameObject)Instantiate(buttonPrefab); // Create search result button
                     searched.GetComponentInChildren<Text>().text = value; // Set text to the searched username 
                     searched.SetActive(true);
@@ -156,15 +156,24 @@ public class SearchFriendsScript : MonoBehaviour
         Debug.Log(btn.GetComponentInChildren<Text>().text);
         string username = btn.GetComponentInChildren<Text>().text;
         string email = "";
+        Debug.Log("Search clicked on: "+username);
 
         int i = 0;
 
         for (; i < usernames.Count; i++) {
             if (usernames[i].Equals(username)) {
-                email = usernames[i];
+                email = emails[i];
+                Debug.Log("Sending email: "+email);
                 break;
             }
         }
+        // for(int j=0; j<usernames.Count; j++){
+        //     Debug.Log("username "+j+":"+usernames[j]);
+        // }
+        // for(int k=0; k<emails.Count; k++){
+        //     Debug.Log("email "+k+":"+emails[k]);
+        // }
+
         PlayerPrefs.SetString(EMAIL_PREF_KEY,email); // Save the clicked email to EMAIL PREF KEY
         loadUserProfile(); // Go to the user's profile page scene
     }

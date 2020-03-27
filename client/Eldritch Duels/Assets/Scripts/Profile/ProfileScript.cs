@@ -124,7 +124,7 @@ public class ProfileScript : MonoBehaviour
             FriendsButton.SetActive(true);
             FriendRequestsButton.SetActive(true);
         }
-        if(!getBlockedMe()){ // Hide profile if I am blocked by user
+        else if(!getBlockedMe()){ // Hide profile if I am blocked by user
             displayPic();
             displayBio();
             displayScreenName(); 
@@ -744,7 +744,7 @@ public class ProfileScript : MonoBehaviour
 
     public void loadUserProfile(Button btn){ // Go to the user's profile page scene
         PlayerPrefs.SetString(EMAIL_PREF_KEY,btn.GetComponentInChildren<Text>().text); // store user email in PLAYER PREFS
-        Debug.Log(btn.GetComponentInChildren<Text>().text);
+        Debug.Log("Opening profile of: "+btn.GetComponentInChildren<Text>().text);
     }
 
     private List<string> setUpFriendRequestsList(){ // Set up friend requests list
@@ -809,7 +809,7 @@ public class ProfileScript : MonoBehaviour
     }
 
     public void requestButtonClicked(Button btn){ // click on a friend request
-        Debug.Log(btn.GetComponentInChildren<Text>().text); 
+        Debug.Log("request of user clicked: "+btn.GetComponentInChildren<Text>().text); 
         requestsPanelHolder.SetActive(false); // hide friend requests list
         handleRequestPanel.SetActive(true);
         ErrorText.text = "Click on username to go to their profile";
