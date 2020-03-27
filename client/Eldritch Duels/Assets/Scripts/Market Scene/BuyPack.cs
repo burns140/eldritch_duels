@@ -73,6 +73,8 @@ public class BuyPack : MonoBehaviour
             string[] cards = res.Split(',');
             amountnum -= 100;
             moneyAmount.text = amountnum.ToString();
+            CreditRequest decrease = new CreditRequest("addCredits", Global.getID(), Global.getToken(), -100);
+            Global.NetworkRequest(decrease);
             foreach (string c in cards)
             {
                 AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), "addCard", c);
