@@ -191,15 +191,8 @@ public class ProfileScript : MonoBehaviour
             if(hasPicIndex){
                 int picIndex; // Store pic index
                 if(isMe){ 
-                    picIndex = 0; // get my pic index @STEPHEN/@KEVING
-                    // @TODO Let me know if server didn't work as expected @STEPHEN
-                    bool myIndexFailed = false;
-                    if(myIndexFailed){
-                        StartCoroutine(showError("Could not retreive my profile pic")); // set error message
-                    }
-                    else{
-                        profilePic.GetComponent<Image>().sprite = pictures[picIndex]; // Set profile pic on UI
-                    }
+                    picIndex = Global.avatar; // get my pic index 
+                    profilePic.GetComponent<Image>().sprite = pictures[picIndex]; // Set profile pic on UI
                 }
                 else{
                     picIndex = 0; // get user's pic index @STEPHEN

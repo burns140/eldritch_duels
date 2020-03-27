@@ -297,8 +297,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: af870b3d8471f5247b3696107f051ca5, type: 3}
   - {fileID: 21300000, guid: efcb7f098b6132d4094e64f29c284ac3, type: 3}
   - {fileID: 21300000, guid: 32d2de7c4072e8f4dbc93b081c3a8b6b, type: 3}
-  screenNameInput: {fileID: 704537422}
-  bioInput: {fileID: 676138866}
+  screenNameInput: {fileID: 704537420}
+  bioInput: {fileID: 676138864}
   upload: {fileID: 7744967}
 --- !u!1 &63123166
 GameObject:
@@ -3257,7 +3257,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 2
+  m_ScrollSensitivity: 3
   m_Viewport: {fileID: 1265581651}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 380259661}
