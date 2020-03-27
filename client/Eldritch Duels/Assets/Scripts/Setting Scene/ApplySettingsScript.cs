@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ApplySettingsScript : MonoBehaviour
 {
@@ -81,6 +82,7 @@ public class ApplySettingsScript : MonoBehaviour
         PlayerPrefs.SetString(WINDOW_PREF_KEY,windowkey); // Save the new windowed mode to PLAYER PREF KEY
         Debug.Log(Screen.fullScreen);
         Debug.Log(Screen.currentResolution);
+        SceneManager.LoadScene("Lobby");
     }
 
     
