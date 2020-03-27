@@ -133,6 +133,22 @@ namespace eldritch {
             this.username = username;
         }
     }
+
+    public class CreditRequest
+    {
+        public string cmd;
+        public string id;
+        public string token;
+        public int credit;
+
+        public CreditRequest(string cmd, string id, string token, int credit)
+        {
+            this.cmd = cmd;
+            this.id = id;
+            this.token = token;
+            this.credit = credit;
+        }
+    }
     #endregion
     public static class Global
     {
