@@ -20,7 +20,7 @@ public class EditProfileCancelButton : MonoBehaviour
     // Handle Cancel button click
     public void onSubmit()
     {
-        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.getEmail()); // Get the user email from PLAYER PREFS;
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.email); // Get the user email from PLAYER PREFS;
         SceneManager.LoadScene("ProfileScene"); // Don't save profile changes and go back to Lobby
     }
 }
