@@ -129,6 +129,20 @@ public class DuelScript : MonoBehaviour
     void Update()
     {
         checkDeckCount(); // Check & update card back quantity on deck UI
+        //update hp and mana
+        setMyHealth(myState.hp);
+        setOppHealth(oppState.hp);
+        myHPText.text = myState.hp + " HP";
+        myManaText.text = myState.mana + " MANA";
+        oppHPText.text = oppState.hp + " HP";
+        oppManaText.text = oppState.mana + " MANA";
+
+        if(oppState.hp <= 0){
+            endGame(true);
+        }else if(myState.hp <= 0){
+            endGame(false);
+        }
+
     }
 
     public void NextPhase(){
@@ -242,9 +256,7 @@ public class DuelScript : MonoBehaviour
         playOppCard("Mi_Go");
         playOppCard("Mi_Go");
         yield return new WaitForSeconds(2);
-        foreach(Transform t in oppPlayAreaPanel.transform){
-            addOppAttacker(t.gameObject.name);
-        }
+        
         
 
     }
@@ -327,6 +339,12 @@ public class DuelScript : MonoBehaviour
         }
     }
 
+    public bool CanCast(GameObject c){
+        if(DuelFunctions.CanCast(Library.GetCard(c.name), myState)){
+            return true;
+        }
+        return false;
+    }
     // Play card from my hand to my playing area
     public bool playMyCard(string cardName, GameObject c){
         if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
@@ -339,7 +357,7 @@ public class DuelScript : MonoBehaviour
                 myState.mana -= played.CardCost;
                 myState.onField.Add(played);
                 myState.inHand.RemoveAt(i);
-
+                Debug.Log("Resolving abilities");
                 StartCoroutine(resolveAbilities(played, c));
 
                 //sync with opp
@@ -791,6 +809,16 @@ public class DuelScript : MonoBehaviour
          // @TODO get attack value from server (@KEVIN M)
         myCurrentHP -= hit; // Decrease attack from HP
         myHPImage.fillAmount = myCurrentHP/MAX_HEALTH; // Update my HP on UI
+    }
+
+    private void setOppHealth(int health){
+        oppCurrentHP = health;
+        oppHPImage.fillAmount = oppCurrentHP/MAX_HEALTH;
+    }
+
+    private void setMyHealth(int health){
+        myCurrentHP = health;
+        myHPImage.fillAmount = myCurrentHP/MAX_HEALTH;
     }
     #endregion
 

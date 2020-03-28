@@ -125,6 +125,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			}
 			childCount++;
 			Destroy(placeholder); // Destory the temporary placeholder
+			
 			Debug.Log("Parent: " + startArea.transform.name);
 			if(startArea.name.Equals("OppPlayAreaPanel")){
 				this.transform.SetParent(startArea.transform);
@@ -135,7 +136,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 				GetComponent<CanvasGroup>().blocksRaycasts = true;
 				return;
 			}
-			if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel")){
+			if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.CanCast(this.gameObject)){
 				
 				Debug.Log("this card:"+this.name);
 				duelScript.playMyCard(this.name, this.gameObject);
@@ -143,6 +144,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			else if(startArea.name == "MyPlayAreaPanel" && this.transform.parent.name.Equals("HandAreaPanel")){
 				Debug.Log("this card:"+this.name);
 				duelScript.recallCard(this.name);
+			}else if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel") && !duelScript.CanCast(this.gameObject)){
+				Debug.Log("Not enough mana");
+				this.gameObject.transform.SetParent(startArea.transform);
 			}
 		}
 

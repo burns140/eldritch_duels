@@ -13,6 +13,7 @@ public class DealDamage : Effect
 
     public override void execute(ref PlayerState ps)
     {
+        Debug.Log("Dealing damage");
         ps.hp--;
     }
 
