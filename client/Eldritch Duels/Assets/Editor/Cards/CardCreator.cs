@@ -21,6 +21,8 @@ namespace eldritch.editor
         private CardType cardType = CardType.NULL;
         private int mode = 0;
         private int backMode = 0;
+        private bool hasFly = false;
+        private bool hasStealth;
         private Vector2 scrollPos;
         
 
@@ -85,6 +87,8 @@ namespace eldritch.editor
                 this.rarity = CardRarity.NULL;
                 this.cardMat = null;
                 this.cardType = CardType.NULL;
+                this.hasFly = false;
+                this.hasStealth = false;
                 mode = 1;
             }
             if (GUI.Button(new Rect(70, 5, 50, 15), "Load"))
@@ -115,6 +119,8 @@ namespace eldritch.editor
                             c.SpellRarity = this.rarity;
                             c.CardImage = this.cardMat;
                             c.SpellType = this.cardType;
+                            c.HasFly = this.hasFly;
+                            c.HasStealth = this.hasStealth;
                             foreach(Effect e in effects){
                                 c.AddAbility(e);
                             }
@@ -153,6 +159,8 @@ namespace eldritch.editor
                     this.rarity = CardRarity.NULL;
                     this.cardMat = null;
                     this.cardType = CardType.NULL;
+                    this.hasFly = false;
+                    this.hasStealth = false;
                     mode = 1;
                     
                 }
@@ -208,7 +216,7 @@ namespace eldritch.editor
                 }
 
                 //Gain health
-                GUI.Label(new Rect(10,80,100,20), ("Gain Health: " + countEfect(new DealDamage())));
+                GUI.Label(new Rect(10,80,100,20), ("Gain Health: " + countEfect(new GainHealth())));
                 if(GUI.Button(new Rect(120,80,20,20), "+")){
                     addEffect(new GainHealth());
                 }
@@ -217,12 +225,28 @@ namespace eldritch.editor
                 }
 
                 //draw card
-                GUI.Label(new Rect(10,110,100,20), ("Draw Card: " + countEfect(new DealDamage())));
+                GUI.Label(new Rect(10,110,100,20), ("Draw Card: " + countEfect(new DrawCard())));
                 if(GUI.Button(new Rect(120,110,20,20), "+")){
                     addEffect(new DrawCard());
                 }
                 if(GUI.Button(new Rect(150,110,20,20), "-")){
                     removeEffect(new DrawCard());
+                }
+                GUI.Label(new Rect(10,140,100,20), ("Gain Mana: " + countEfect(new AddMana())));
+                if(GUI.Button(new Rect(120,140,20,20), "+")){
+                    addEffect(new AddMana());
+                }
+                if(GUI.Button(new Rect(150,140,20,20), "-")){
+                    removeEffect(new AddMana());
+                }
+
+                //fly
+                if(GUI.Button(new Rect(10,170,100,20), "Fly: " + hasFly)){
+                    hasFly = !hasFly;
+                }
+                //stealth
+                if(GUI.Button(new Rect(10,200,100,20), "Stealth: " + hasStealth)){
+                    hasStealth = !hasStealth;
                 }
                 
                     
@@ -252,6 +276,8 @@ namespace eldritch.editor
                                 this.rarity = cards[pos].SpellRarity;
                                 this.cardMat = cards[pos].CardImage;
                                 this.cardType = cards[pos].SpellType;
+                                this.hasFly = cards[pos].HasFly;
+                                this.hasStealth = cards[pos].HasStealth;
                                 mode = 2;
 
                             }

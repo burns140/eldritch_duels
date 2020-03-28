@@ -44,58 +44,220 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cards:
-  - cardName: Test 0
-    id: 0
-    owned: 0
-    cost: 0
-    power: 10
-    defence: 100
-    type: 0
-    rartiy: 2
-    cardImage: {fileID: 2100000, guid: 133104de352359e46a810bdc61a8b63c, type: 2}
-    fly: 0
-    stealth: 0
-  - cardName: Test 1
-    id: 1
-    owned: 0
-    cost: 5
-    power: 0
-    defence: 0
-    type: 1
-    rartiy: 0
-    cardImage: {fileID: 2100000, guid: f20086bfd2f31ca439c04c0de7fa079b, type: 2}
-    fly: 0
-    stealth: 0
   - cardName: Mi_Go
     id: 2
     owned: 0
     cost: 1
-    power: 100
-    defence: 200
+    power: 1
+    defence: 1
     type: 0
     rartiy: 0
-    cardImage: {fileID: 0}
-    fly: 0
-    stealth: 0
+    cardImage: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
   - cardName: Mi_Go Worker
     id: 3
     owned: 0
-    cost: 2
-    power: 200
-    defence: 200
+    cost: 3
+    power: 2
+    defence: 2
     type: 0
     rartiy: 1
-    cardImage: {fileID: 0}
-    fly: 0
-    stealth: 0
+    cardImage: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
   - cardName: Mi_Go Queen
     id: 4
     owned: 0
     cost: 5
-    power: 500
-    defence: 500
+    power: 5
+    defence: 5
     type: 0
     rartiy: 2
+    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
+  - cardName: Beast Patient
+    id: 5
+    owned: 0
+    cost: 3
+    power: 5
+    defence: 3
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: 2a1a4e245c0ef1a40a68e65549068961, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Blood Starved Beast
+    id: 6
+    owned: 0
+    cost: 8
+    power: 13
+    defence: 6
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: f6ef397774c8b6843ac1d7345ef17970, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Blood Vial
+    id: 7
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: a5e0d54e4b03fff41a2191d927917cf0, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Brain of Mensis
+    id: 8
+    owned: 0
+    cost: 6
+    power: 7
+    defence: 2
+    type: 0
+    rartiy: 1
     cardImage: {fileID: 0}
-    fly: 0
-    stealth: 0
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
+  - cardName: Chime Maiden
+    id: 9
+    owned: 0
+    cost: 2
+    power: 1
+    defence: 1
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: a62b5b2a94e62ef459234a80883d812f, type: 2}
+    canFly: 0
+    isStealth: 1
+    isDefender: 0
+  - cardName: Great Ones Wisdom
+    id: 10
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 11ee1fa28edb73147b15eea57320a9ce, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Lady Maria
+    id: 11
+    owned: 0
+    cost: 8
+    power: 5
+    defence: 5
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: ec410aa89a045724dbb1327609d949bd, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Ludwig Holy Blade
+    id: 12
+    owned: 0
+    cost: 9
+    power: 5
+    defence: 5
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 9f2f89249f7d11a40bbcb28154a12dce, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Madmans Knowledge
+    id: 13
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: 408aa7da2c773cc4f96955d2d652f2c8, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Migo Zombie
+    id: 14
+    owned: 0
+    cost: 1
+    power: 1
+    defence: 2
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: ef351172578be484d9be29833b167a16, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Moon Presence
+    id: 15
+    owned: 0
+    cost: 7
+    power: 5
+    defence: 5
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 1478ac8bfeb637f4eb769be1681313eb, type: 2}
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
+  - cardName: Nightmare Apostle
+    id: 16
+    owned: 0
+    cost: 2
+    power: 2
+    defence: 2
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: dc8fb1252c939c44fa3e53a88c2398e4, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Pungent Blood Cocktail
+    id: 17
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: 54cca2d5a4d3e5f4988139a3b4fdffc6, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Quicksilver Bullet
+    id: 18
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: ccfd0152b1ded42419bda1f75416a506, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  - cardName: Snatcher
+    id: 19
+    owned: 0
+    cost: 3
+    power: 1
+    defence: 2
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: ae58ebea047f2424c8bd9a3bceb33cf4, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+  recipes: []
