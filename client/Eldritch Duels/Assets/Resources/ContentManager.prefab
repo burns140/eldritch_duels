@@ -260,4 +260,60 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
-  recipes: []
+  recipes:
+  - BaseCard: Mi_Go
+    FodderCard: Beast Patient
+    CraftCost: 0
+    ResultCard: Blood Vial
+  - BaseCard: Migo Zombie
+    FodderCard: Migo Zombie
+    CraftCost: 0
+    ResultCard: Brain of Mensis
+  - BaseCard: Nightmare Apostle
+    FodderCard: Beast Patient
+    CraftCost: 0
+    ResultCard: Chime Maiden
+  - BaseCard: Nightmare Apostle
+    FodderCard: Blood Vial
+    CraftCost: 0
+    ResultCard: Madmans Knowledge
+  - BaseCard: Mi_Go
+    FodderCard: Migo Zombie
+    CraftCost: 0
+    ResultCard: Mi_Go Worker
+  - BaseCard: Nightmare Apostle
+    FodderCard: Nightmare Apostle
+    CraftCost: 0
+    ResultCard: Pungent Blood Cocktail
+  - BaseCard: Mi_Go
+    FodderCard: Quicksilver Bullet
+    CraftCost: 0
+    ResultCard: Snatcher
+  - BaseCard: Brain of Mensis
+    FodderCard: Blood Vial
+    CraftCost: 0
+    ResultCard: Blood Starved Beast
+  - BaseCard: Madmans Knowledge
+    FodderCard: Madmans Knowledge
+    CraftCost: 0
+    ResultCard: Great Ones Wisdom
+  - BaseCard: Chime Maiden
+    FodderCard: Madmans Knowledge
+    CraftCost: 0
+    ResultCard: Lady Maria
+  - BaseCard: Brain of Mensis
+    FodderCard: Quicksilver Bullet
+    CraftCost: 0
+    ResultCard: Ludwig Holy Blade
+  - BaseCard: Mig_Go Worker
+    FodderCard: Mig_Go Worker
+    CraftCost: 0
+    ResultCard: Mi_Go Queen
+  - BaseCard: Mi_Go Queen
+    FodderCard: Madmans Knowledge
+    CraftCost: 0
+    ResultCard: Moon Presence
+  - BaseCard: Pungent Blood Cocktail
+    FodderCard: Pungent Blood Cocktail
+    CraftCost: 0
+    ResultCard: Quicksilver Bullet
