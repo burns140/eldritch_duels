@@ -503,7 +503,7 @@ public class DuelScript : MonoBehaviour
     public void SetToBlock(GameObject attacker){
         if(atb != null){
             atb.GetComponent<Draggable>().isBlocking = false;
-            atb.GetComponent<Image>().color = Color.white;
+            atb.GetComponent<Image>().color = Color.red;
         }
         this.atb = attacker;
         if(atb != null && blockwith != null){
@@ -531,7 +531,7 @@ public class DuelScript : MonoBehaviour
                 ab.blocker = null;
                 attackers[i] = ab;
                 attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
-                attackers[i].attacker.GetComponent<Image>().color = Color.white;
+                attackers[i].attacker.GetComponent<Image>().color = Color.red;
                 break;
             }
         }
@@ -546,7 +546,7 @@ public class DuelScript : MonoBehaviour
                 ab.blocker = null;
                 attackers[i] = ab;
                 attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
-                attackers[i].attacker.GetComponent<Image>().color = Color.white;
+                attackers[i].attacker.GetComponent<Image>().color = Color.red;
                 break;
             }
         }
@@ -717,6 +717,8 @@ public class DuelScript : MonoBehaviour
     private void myAttack(){
         
         foreach(AttackBlock ab in attackers){
+            ab.blocker.GetComponent<Image>().color = Color.white;
+            ab.attacker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null && ab.attackCard != null){
                 updateOppHealth(ab.attackCard.AttackPower);
             }else if(ab.attackCard != null){
@@ -805,6 +807,8 @@ public class DuelScript : MonoBehaviour
     }
     private void oppAttack(){
         foreach(AttackBlock ab in attackers){
+            ab.attacker.GetComponent<Image>().color = Color.white;
+            ab.blocker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null){
                 updateMyHealth(ab.attackCard.AttackPower);
             }else{
@@ -825,17 +829,17 @@ public class DuelScript : MonoBehaviour
     }
 
     // After my card attacks opponent
-    private void updateOppHealth(float hit){
-        oppCurrentHP -= hit; // Decrease attack from HP
-        oppHPImage.fillAmount = oppCurrentHP/MAX_HEALTH; // Update opponent's HP on UI
+    private void updateOppHealth(int hit){
+        oppState.hp -= hit; // Decrease attack from HP
+        oppHPImage.fillAmount = oppState.hp/MAX_HEALTH; // Update opponent's HP on UI
 
     }
 
     // After opponent's card attacks me
-    private void updateMyHealth(float hit=0){
+    private void updateMyHealth(int hit){
          // @TODO get attack value from server (@KEVIN M)
-        myCurrentHP -= hit; // Decrease attack from HP
-        myHPImage.fillAmount = myCurrentHP/MAX_HEALTH; // Update my HP on UI
+        myState.hp -= hit; // Decrease attack from HP
+        myHPImage.fillAmount = myState.hp/MAX_HEALTH; // Update my HP on UI
     }
 
     private void setOppHealth(int health){

@@ -53,7 +53,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 				this.GetComponent<Image>().color = Color.gray;
 				this.isBlocking = true;
 			}else if(isAttacking){
-				this.GetComponent<Image>().color = Color.white;
+				this.GetComponent<Image>().color = Color.red;
 				duelScript.RemoveToBlock(this.gameObject);
 				this.isBlocking = false;
 			}
