@@ -764,6 +764,11 @@ public class DuelScript : MonoBehaviour
 
     public void AddOppBlockers(string blockers){
         if(blockers.Equals("")){
+            Debug.Log("Entering end turn");
+            string data = "end";
+            sendDataToOpp(data);
+            currentPhase = Phase.END;
+            myAttack();
             return;
         }
         string[] blocker = blockers.Split(',');
@@ -773,8 +778,8 @@ public class DuelScript : MonoBehaviour
 
         //StartCoroutine(checker());
         Debug.Log("Entering end turn");
-        string data = "end";
-        sendDataToOpp(data);
+        string data2 = "end";
+        sendDataToOpp(data2);
         currentPhase = Phase.END;
         myAttack();
     }
