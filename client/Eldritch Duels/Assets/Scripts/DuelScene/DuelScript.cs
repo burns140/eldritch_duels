@@ -663,6 +663,7 @@ public class DuelScript : MonoBehaviour
                 phaseText.text = "BLOCK";
                 break;
             case "block":
+                Debug.Log("Entering block info");
                 if(firstPass.Length > 1)
                     AddOppBlockers(firstPass[1]);
                 else
