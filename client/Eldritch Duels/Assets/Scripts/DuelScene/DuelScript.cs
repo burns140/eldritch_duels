@@ -101,6 +101,29 @@ public class DuelScript : MonoBehaviour
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
+
+        System.Threading.Thread T = new System.Threading.Thread((new System.Threading.ThreadStart(Listener)));
+        T.Start();
+    }
+
+    private void Listener() {
+        readStreamAsync();
+    }
+
+    public async void readStreamAsync() {
+        while (true) {
+            Byte[] data = new byte[1024];
+            int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
+            string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            string[] temp = trimmed.Split(':');
+            
+            switch (temp[0]) {
+                case "play":
+                    playOppCard(temp[1]);
+                    break;
+            }
+        }
+
     }
     #endregion
 
