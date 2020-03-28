@@ -1737,7 +1737,7 @@ PrefabInstance:
     - target: {fileID: 2954993857884082950, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_Text
-      value: ATTACK
+      value: WAITING
       objectReference: {fileID: 0}
     - target: {fileID: 2954993857884082950, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
@@ -1866,6 +1866,7 @@ MonoBehaviour:
   myState:
     mana: 0
     hp: 0
+    corruption: 0
     inHand: []
     onField: []
     oppField: []
@@ -1873,6 +1874,7 @@ MonoBehaviour:
   oppState:
     mana: 0
     hp: 0
+    corruption: 0
     inHand: []
     onField: []
     oppField: []

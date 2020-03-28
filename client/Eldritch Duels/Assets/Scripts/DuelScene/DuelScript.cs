@@ -109,6 +109,9 @@ public class DuelScript : MonoBehaviour
 
         readStreamAsync();
         this.isMyTurn = Global.DuelMyTurn;
+        if(isMyTurn){
+            phaseText.text = "ATTACK";
+        }
 
         /* Thread T = new Thread((new ThreadStart(Listener)));
         T.Start(); */
@@ -720,7 +723,8 @@ public class DuelScript : MonoBehaviour
     private void myAttack(){
         
         foreach(AttackBlock ab in attackers){
-            ab.blocker.GetComponent<Image>().color = Color.white;
+            if(ab.blocker != null)
+                ab.blocker.GetComponent<Image>().color = Color.white;
             ab.attacker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null && ab.attackCard != null){
                 updateOppHealth(ab.attackCard.AttackPower);
@@ -810,7 +814,8 @@ public class DuelScript : MonoBehaviour
     }
     private void oppAttack(){
         foreach(AttackBlock ab in attackers){
-            ab.attacker.GetComponent<Image>().color = Color.white;
+            if(ab.blocker != null)
+                ab.attacker.GetComponent<Image>().color = Color.white;
             ab.blocker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null){
                 updateMyHealth(ab.attackCard.AttackPower);
