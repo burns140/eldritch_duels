@@ -768,6 +768,8 @@ public class ProfileScript : MonoBehaviour
     public void loadUserProfile(Button btn){ // Go to the user's profile page scene
         PlayerPrefs.SetString(EMAIL_PREF_KEY,btn.GetComponentInChildren<Text>().text); // store user email in PLAYER PREFS
         Debug.Log("Opening profile of: "+btn.GetComponentInChildren<Text>().text);
+
+        SceneManager.LoadScene("ProfileScene");
     }
 
     private List<string> setUpFriendRequestsList(){ // Set up friend requests list
