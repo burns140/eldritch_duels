@@ -121,6 +121,12 @@ public class ProfileScript : MonoBehaviour
             EditProfileButton.SetActive(true);
             FriendsButton.SetActive(true);
             FriendRequestsButton.SetActive(true);
+            AddButton.SetActive(false);
+            BlockButton.SetActive(false);
+            ReportButton.SetActive(false);
+            displayPic();
+            displayBio();
+            displayScreenName(); 
         }
         else if(!getBlockedMe()){ // Hide profile if I am blocked by user
             displayPic();
@@ -681,7 +687,7 @@ public class ProfileScript : MonoBehaviour
     }
 
     private List<string> setUpFriendsList(){ // Set up friends list
-        List<string> friendsList = new List<string>(); // To store all my friends
+        //List<string> friendsList = new List<string>(); // To store all my friends
         
         Button[] gameObjects = friendsPanel.GetComponentsInChildren<Button>(); // Get previous friend buttons
         foreach(Button o in gameObjects){
@@ -689,15 +695,15 @@ public class ProfileScript : MonoBehaviour
         }
         
         // Add temporary users to friends list
-        friendsList.Add("Hola");
-        friendsList.Add("Amigo");
-        friendsList.Add("Que Paso");
-        friendsList.Add("HolaAmigo");
-        friendsList.Add("HolaAmigo");
-        friendsList.Add("HolaAmigo");
-        friendsList.Add("HolaAmigo");
-        friendsList.Add("HolaAmigo");
-        friendsList.Add("HolaAmigo");
+        // friendsList.Add("Hola");
+        // friendsList.Add("Amigo");
+        // friendsList.Add("Que Paso");
+        // friendsList.Add("HolaAmigo");
+        // friendsList.Add("HolaAmigo");
+        // friendsList.Add("HolaAmigo");
+        // friendsList.Add("HolaAmigo");
+        // friendsList.Add("HolaAmigo");
+        // friendsList.Add("HolaAmigo");
 
         // @TODO Get from server if I have friends @STEPHEN
         // List<string> getFriends = new List<string>;
@@ -713,7 +719,23 @@ public class ProfileScript : MonoBehaviour
         //     //     friendsList.Add(value); // add friends to friends list
         //     // }
         // } 
+        genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getAllFriends");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        List<string> friendsList;
+
+        friendsList = responseData.Split(',').ToList();
+        
         foreach(string value in friendsList){
+            if(value=="nofriends"){
+                continue;
+            }
             GameObject friendObject = (GameObject)Instantiate(friendButtonPrefab); // Create friend user button
             friendObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
             friendObject.SetActive(true);
@@ -731,10 +753,14 @@ public class ProfileScript : MonoBehaviour
             friendsPanelHolder.SetActive(false); // hide friends list
         }
         else if(friendsPanelHolder.activeSelf){
+            ErrorText.GetComponent<Text>().enabled = false;
             friendsPanelHolder.SetActive(false); // hide friends list
         }
         else{
+            ErrorText.GetComponent<Text>().enabled = false;
             friendsPanelHolder.SetActive(true); // unhide friends list
+            ErrorText.text = "Click on username to go to user's profile";
+            ErrorText.GetComponent<Text>().enabled = true;
         }
     }
 
@@ -745,7 +771,7 @@ public class ProfileScript : MonoBehaviour
     }
 
     private List<string> setUpFriendRequestsList(){ // Set up friend requests list
-        List<string> friendRequestsList = new List<string>(); // To store all my friend requests
+        // List<string> friendRequestsList = new List<string>(); // To store all my friend requests
         
         Button[] gameObjects = requestsPanel.GetComponentsInChildren<Button>(); // Get previous request buttons
         foreach(Button o in gameObjects){ 
@@ -753,15 +779,15 @@ public class ProfileScript : MonoBehaviour
         }
 
         // Add temporary users to friend requests list
-        friendRequestsList.Add("Hola");
-        friendRequestsList.Add("Amigo");
-        friendRequestsList.Add("Que Paso");
-        friendRequestsList.Add("HolaAmigo");
-        friendRequestsList.Add("HolaAmigo");
-        friendRequestsList.Add("HolaAmigo");
-        friendRequestsList.Add("HolaAmigo");
-        friendRequestsList.Add("HolaAmigo");
-        friendRequestsList.Add("HolaAmigo");
+        // friendRequestsList.Add("Hola");
+        // friendRequestsList.Add("Amigo");
+        // friendRequestsList.Add("Que Paso");
+        // friendRequestsList.Add("HolaAmigo");
+        // friendRequestsList.Add("HolaAmigo");
+        // friendRequestsList.Add("HolaAmigo");
+        // friendRequestsList.Add("HolaAmigo");
+        // friendRequestsList.Add("HolaAmigo");
+        // friendRequestsList.Add("HolaAmigo");
 
         // @TODO Get from server if I have friend requests @STEPHEN
         // List<string> getRequests = new List<string>;
@@ -777,7 +803,21 @@ public class ProfileScript : MonoBehaviour
         //     //     friendRequestsList.Add(value); // add users to friend requests list
         //     // }
         // }
+        genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getFriendRequests");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        List<string> friendRequestsList = responseData.Split(',').ToList();
+
         foreach(string value in friendRequestsList){
+            if(value=="norequests"){
+                continue;
+            }
             GameObject requestObject = (GameObject)Instantiate(requestButtonPrefab); // Create friend user button
             requestObject.GetComponentInChildren<Text>().text = value; // Set text to the friend username 
             requestObject.SetActive(true);
@@ -823,6 +863,15 @@ public class ProfileScript : MonoBehaviour
             //     StartCoroutine(showError("Could not accept friend request, please try again")); // set error message
             // }
             // else{
+            FriendsRequest req = new FriendsRequest(Global.getEmail(), userRequestButton.GetComponentInChildren<Text>().text, Global.getToken(), "acceptFriendRequest");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            
             handleRequestPanel.SetActive(false); // hide handle request panel UI
             StartCoroutine(showError("Friend Request Accepted")); // set message
             loadRequestsList(); // to update the requests list
@@ -836,6 +885,15 @@ public class ProfileScript : MonoBehaviour
             //     StartCoroutine(showError("Could not accept friend request, please try again")); // set error message
             // }
             // else{
+            FriendsRequest req = new FriendsRequest(Global.getEmail(), email, Global.getToken(), "acceptFriendRequest");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
             handleRequestPanel.SetActive(false); // hide handle request panel UI
             StartCoroutine(showError("Friend Request Accepted")); // set message
             AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
@@ -857,6 +915,15 @@ public class ProfileScript : MonoBehaviour
             //     StartCoroutine(showError("Could not reject request, please try again")); // set error message
             // }
             // else{
+            FriendsRequest req = new FriendsRequest(Global.getEmail(), userRequestButton.GetComponentInChildren<Text>().text, Global.getToken(), "rejectFriendRequest");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
             handleRequestPanel.SetActive(false); // hide handle request panel UI
             StartCoroutine(showError("Friend Request Rejected")); // set message
             loadRequestsList(); // to update the requests list
@@ -870,6 +937,15 @@ public class ProfileScript : MonoBehaviour
             //     StartCoroutine(showError("Could not reject request, please try again")); // set error message
             // }
             // else{
+            FriendsRequest req = new FriendsRequest(Global.getEmail(), email, Global.getToken(), "rejectFriendRequest");
+            string json = JsonConvert.SerializeObject(req);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1024];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
             handleRequestPanel.SetActive(false); // hide handle request panel UI
             StartCoroutine(showError("Friend Request Rejected")); // set message
             AddButton.GetComponentInChildren<Text>().text = "Add Friend"; // set button text

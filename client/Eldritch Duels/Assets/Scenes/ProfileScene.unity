@@ -2265,6 +2265,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendsButtonPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8981475693088031506, guid: 2c59d9f5390f9426ca606d39881d0088,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c59d9f5390f9426ca606d39881d0088, type: 3}
 --- !u!1 &1384508597 stripped
@@ -4070,6 +4075,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RequetsButtonPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981475693088031506, guid: 2c59d9f5390f9426ca606d39881d0088,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c59d9f5390f9426ca606d39881d0088, type: 3}
