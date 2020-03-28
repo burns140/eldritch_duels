@@ -190,8 +190,11 @@ public class ProfileScript : MonoBehaviour
     }
 
     private void displayPic(){ // get profile pic & display it
-        hasPicIndex = true; // Check if my pic is uploaded or has index (@KEVING)
-        // @TODO Let me know if server didn't work as expected @KEVING
+        hasPicIndex = true;
+        if (Global.hasCustom)
+        {
+            hasPicIndex = false;
+        }
         bool failed = false;
         if(failed){
             StartCoroutine(showError("Could not retreive all info")); // set error message
@@ -218,27 +221,25 @@ public class ProfileScript : MonoBehaviour
             else{ // The picture was uploaded
                 Sprite newImage;
                 if(isMe){
-                    // @TODO GET UPLOADED PICTURE FROM SERVER (@KEVING)
-                    // newImage = ;
-                    // @TODO Let me know if server didn't work as expected @KEVIN
+                    newImage = Global.CustomAvatar;
                     bool newImgFailed = false;
                     if(newImgFailed){
                         StartCoroutine(showError("Could not retreive my profile pic")); // set error message
                     }
                     else{
-                        //profilePic.GetComponent<Image>().sprite = newImage;
+                        profilePic.GetComponent<Image>().sprite = newImage;
                     }
                 }
                 else{
                     // @TODO GET UPLOADED PICTURE FROM SERVER (@KEVING)
-                    // newImage = ;
+                    newImage = Global.getOtherCustomAvatar(email);
                     // @TODO Let me know if server didn't work as expected @KEVIN
                     bool userImgFailed = false;
                     if(userImgFailed){
                         StartCoroutine(showError("Could not retreive my profile pic")); // set error message
                     }
                     else{
-                        //profilePic.GetComponent<Image>().sprite = newImage;
+                        profilePic.GetComponent<Image>().sprite = newImage;
                     }
                 }
             }
