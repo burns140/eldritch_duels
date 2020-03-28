@@ -814,9 +814,10 @@ public class DuelScript : MonoBehaviour
     }
     private void oppAttack(){
         foreach(AttackBlock ab in attackers){
+            
+            ab.attacker.GetComponent<Image>().color = Color.white;
             if(ab.blocker != null)
-                ab.attacker.GetComponent<Image>().color = Color.white;
-            ab.blocker.GetComponent<Image>().color = Color.white;
+                ab.blocker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null){
                 updateMyHealth(ab.attackCard.AttackPower);
             }else{
@@ -893,6 +894,7 @@ public class DuelScript : MonoBehaviour
         isMyTurn = false; // No longer my turn
         string endString = "YOUR TURN"; // Send this to server
         currentPhase = Phase.WAITING; //wait for opp move
+        oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
         currentTurn++;
     }
 
