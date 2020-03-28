@@ -108,6 +108,10 @@ function matchPlayers() {
                 /** @type {import("net").Socket[]}  */
                 let connections = matches.map(id => clientConnections[id]);
 
+                console.log('connections\n-----------------');
+
+                console.log(connections);
+
                 for (let i = 0; i < matches.length; i++) {
                     // add player to match
                     match.addPlayer(match[i], connections[i]);
