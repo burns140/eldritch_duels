@@ -52,8 +52,10 @@ namespace eldritch.cards
         {
             foreach (Card c in _cards)
             {
-                if (c.CardName.Equals(cardName))
+                
+                if (c.CardName.Trim().Equals(cardName.Trim()))
                 {
+                    Debug.Log("Return card");
                     return c;
                 }
             }
