@@ -29,6 +29,9 @@ module.exports = class Match {
     addPlayer(id, socket) {
         console.log('adding player to match');
         console.log(this.ids);
+        if (this.ids.length == 0) {
+            socket.write("my turn");
+        }
         this.ids.push(id);
         this.sockets.push(socket);
         this.closeFuncs[id] = () => {
