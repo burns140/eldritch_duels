@@ -583,8 +583,8 @@ public class DuelScript : MonoBehaviour
 
     //send string to opponent
     private void sendDataToOpp(string formatted){
-        //TODO
-
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(formatted);
+        Global.stream.Write(data, 0, data.Length);
     }
 
     //parce data received from opp
