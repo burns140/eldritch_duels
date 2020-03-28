@@ -115,13 +115,7 @@ public class DuelScript : MonoBehaviour
             Byte[] data = new byte[1024];
             int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
-            string[] temp = trimmed.Split(':');
-            
-            switch (temp[0]) {
-                case "play":
-                    playOppCard(temp[1]);
-                    break;
-            }
+            receivedDataFromOpp(trimmed);
         }
 
     }
