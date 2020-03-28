@@ -44,6 +44,7 @@ module.exports = class Match {
             }
             
             this.forEachPlayer((cid, sock) => {
+                console.log('for each player');
                 if (cid == id)
                     return;
                 
