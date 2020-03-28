@@ -30,10 +30,10 @@ module.exports = class Match {
         this.ids.push(id);
         this.sockets.push(socket);
 
-        /* THIS WORKS DO NOT FUCKING REMOVE THIS */
-        if (this.sockets.length == 1) {
+        /* THIS DOES NOT WORK DO FUCKING REMOVE THIS */
+        /*if (this.sockets.length == 1) {
             this.sockets[0].write("my turn");
-        }
+        }*/
 
         this.closeFuncs[id] = () => {
             this.endMatch(id);

@@ -125,8 +125,8 @@ function matchPlayers() {
                 connections[0].write(`match found: ${users[1]}\n${matchID}\n`);
                 connections[1].write(`match found: ${users[0]}\n${matchID}\n`);
 
-                //let firstIndex = Math.floor(Math.random() * 2);
-                //connections[firstIndex].write("you are first\n");
+                let firstIndex = Math.floor(Math.random() * 2);
+                connections[firstIndex].write("my turn\n");
 
                 return true;
             });
