@@ -28,7 +28,7 @@ public static class DuelFunctions
     public static List<Card> GetLibrary(){
         Deck d = Global.selectedDeck;
         if(d == null || d.DeckName.Equals("")){
-            List<Card> clist = Global.StringToDeckByName("Test 0-32");
+            List<Card> clist = Global.StringToDeckByName("Mi_Go-16,Blood Vial-16");
             Debug.Log(clist.Count);
             return clist;
         }

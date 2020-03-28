@@ -188,7 +188,7 @@ public class DuelScript : MonoBehaviour
     IEnumerator testPlayArea(){
         int playCount=1;
         while(playCount<=6){ // To add 6 cards to my play area
-            Card b = Library.GetCard("Test 0");
+            Card b = Library.GetCard("Mi_Go");
             GameObject c = (GameObject)Instantiate(myCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
@@ -204,7 +204,7 @@ public class DuelScript : MonoBehaviour
     IEnumerator testOppArea(){
         int oppPlayCount=1;
         while(oppPlayCount<=6){ // To add 6 cards to opp play area
-            Card b = Library.GetCard("Test 0");
+            Card b = Library.GetCard("Mi_Go");
             GameObject c = (GameObject)Instantiate(oppCard);
             c.GetComponent<Image>().sprite = null;
             c.GetComponent<Image>().material = b.CardImage;
@@ -219,8 +219,8 @@ public class DuelScript : MonoBehaviour
         
         Debug.Log("Test Opp Play Card");
         //opp plays cards
-        playOppCard("Test 0");
-        playOppCard("Test 0");
+        playOppCard("Mi_Go");
+        playOppCard("Mi_Go");
         yield return new WaitForSeconds(2);
         foreach(Transform t in oppPlayAreaPanel.transform){
             addOppAttacker(t.gameObject.name);
@@ -548,22 +548,24 @@ public class DuelScript : MonoBehaviour
     }
 
     private IEnumerator resolveAbilities(Card card, GameObject c){
-        if(isMyTurn){ //resolve for me
-            foreach(Effect e in card.Abilities){
-                if(e.GetTargetType() == EffectTarget.SELF){
-                    e.execute(ref myState);
-                }else if(e.GetTargetType() == EffectTarget.OPPONENT){
-                    e.execute(ref oppState);
-                }else if(e.GetTargetType() == EffectTarget.DRAW){
-                    drawCard();
+        if(card.Abilities != null){
+            if(isMyTurn){ //resolve for me
+                foreach(Effect e in card.Abilities){
+                    if(e.GetTargetType() == EffectTarget.SELF){
+                        e.execute(ref myState);
+                    }else if(e.GetTargetType() == EffectTarget.OPPONENT){
+                        e.execute(ref oppState);
+                    }else if(e.GetTargetType() == EffectTarget.DRAW){
+                        drawCard();
+                    }
                 }
-            }
-        }else{ //resolve for opponent
-            foreach(Effect e in card.Abilities){
-                if(e.GetTargetType() == EffectTarget.OPPONENT){
-                    e.execute(ref myState);
-                }else if(e.GetTargetType() == EffectTarget.SELF){
-                    e.execute(ref oppState);
+            }else{ //resolve for opponent
+                foreach(Effect e in card.Abilities){
+                    if(e.GetTargetType() == EffectTarget.OPPONENT){
+                        e.execute(ref myState);
+                    }else if(e.GetTargetType() == EffectTarget.SELF){
+                        e.execute(ref oppState);
+                    }
                 }
             }
         }
