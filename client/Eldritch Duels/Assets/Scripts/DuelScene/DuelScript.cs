@@ -165,9 +165,6 @@ public class DuelScript : MonoBehaviour
     public void NextPhase(){
         if(phaseText == null){
             return;
-        }if(!isMyTurn && currentPhase != Phase.BLOCK){
-            currentPhase = Phase.WAITING;
-            phaseText.text = "WAITING";
         }
         if(currentPhase == Phase.MAIN){
             currentPhase = Phase.ATTACK;
