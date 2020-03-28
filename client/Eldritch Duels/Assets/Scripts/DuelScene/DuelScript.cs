@@ -413,7 +413,7 @@ public class DuelScript : MonoBehaviour
 
     // Play opponent's card
     public void playOppCard(string cardName){
-        Debug.Log("Name length: " + cardName.Length);
+        Debug.Log(cardName.Length);
         Card played = Library.GetCard(cardName);
         Debug.Log(played);
         //update manager
