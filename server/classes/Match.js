@@ -29,11 +29,11 @@ module.exports = class Match {
     addPlayer(id, socket) {
         console.log('adding player to match');
         console.log(this.ids);
-        if (this.ids.length == 0) {
-            socket.write("my turn");
-        }
         this.ids.push(id);
         this.sockets.push(socket);
+        if (this.sockets.length == 1) {
+            this.sockets[0].write("my turn");
+        }
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
@@ -41,19 +41,16 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
-            console.log('received data during a match');
             if (data == "YOU LOSE") {
                 this.endMatch(data, id);
                 return;
             }
             
             this.forEachPlayer((cid, sock) => {
-                console.log(`id: ${id} -- cid: ${cid}`);
                 if (cid == id) {
                     return;
                 }
                 
-                console.log(`writing data to socket`);
                 sock.write(data);
             });
         }
