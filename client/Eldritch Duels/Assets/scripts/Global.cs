@@ -133,14 +133,14 @@ namespace eldritch {
     }
     public class profilepicture
     {
-        public byte[] picture;
+        public byte[] pic;
         public string token;
         public string id;
         public string cmd;
 
         public profilepicture(byte[] picture, string token, string id, string cmd)
         {
-            this.picture = picture;
+            this.pic = picture;
             this.token = token;
             this.id = id;
             this.cmd = cmd;
