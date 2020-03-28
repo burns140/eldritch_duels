@@ -18,6 +18,7 @@ using System.Collections.Generic;
 public struct PlayerState{
     public int mana;
     public int hp;
+    public int corruption;
     public List<Card> inHand;
     public List<Card> onField;
     public List<Card> oppField;
@@ -39,6 +40,7 @@ public enum Phase{
     DISCARD,
     END
 }
+
 public class DuelScript : MonoBehaviour 
 {
     #region UI & Script Variables
