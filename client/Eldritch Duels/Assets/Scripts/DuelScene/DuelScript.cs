@@ -194,7 +194,7 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
-        yield return (StartCoroutine(testPlays()));
+        //yield return (StartCoroutine(testPlays()));
         //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
         //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
     }
