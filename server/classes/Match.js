@@ -28,6 +28,7 @@ module.exports = class Match {
      */
     addPlayer(id, socket) {
         console.log('adding player to match');
+        console.log(this.ids);
         this.ids.push(id);
         this.sockets.push(socket);
         this.closeFuncs[id] = () => {
@@ -45,6 +46,7 @@ module.exports = class Match {
             
             this.forEachPlayer((cid, sock) => {
                 console.log(`id: ${id} -- cid: ${cid}`);
+                console.log(`${sock}`);
                 if (cid == id) {
                     return;
                 }
@@ -63,6 +65,7 @@ module.exports = class Match {
     forEachPlayer(handler) {
         for (let i = 0; i < this.ids.length; i++) {
             let id = this.ids[i];
+            console.log(`for id: ${id}`);
             let socket = this.sockets[i];
             handler(id, socket);
         }
