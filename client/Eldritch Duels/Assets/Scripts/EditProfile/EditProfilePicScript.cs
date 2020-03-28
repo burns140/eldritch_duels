@@ -82,11 +82,14 @@ public class EditProfilePicScript : MonoBehaviour
             picItems.Add(picOption); 
         }
 
+        Sprite uploaded = Global.getCustomAvatar();
+
+        var customavatar = new Dropdown.OptionData("Uploaded", uploaded);
+        picItems.Add(customavatar);
+
         //TODO: QUERY SERVER IF THERE IS UPLOADED IMAGE, IF SO, RETRIEVE IMAGE AND ADD TO PICTURE LIST
 
         dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
-
-        //TODO: ADD USER UPLOADED PROFILE PICTURE
     }
 
     public void handlePicName(int val){
@@ -153,6 +156,8 @@ public class EditProfilePicScript : MonoBehaviour
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Global.hasCustom = true;
+                Global.CustomAvatar = Global.getCustomAvatar();
                 dropdownSetup();
             }
             else

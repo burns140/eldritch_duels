@@ -110,7 +110,7 @@ function matchPlayers() {
 
                 for (let i = 0; i < matches.length; i++) {
                     // add player to match
-                    match.addPlayer(match[i], connections[i]);
+                    match.addPlayer(matches[i], connections[i]);
 
                     // player cannot be removed after they are matched
                     connections[i].removeListener('close', connections[i]._temp_remove);

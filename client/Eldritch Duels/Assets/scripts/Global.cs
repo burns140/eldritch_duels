@@ -146,6 +146,21 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+    public class getprofilepicture
+    {
+        public string email;
+        public string token;
+        public string id;
+        public string cmd;
+
+        public getprofilepicture(string email, string token, string id, string cmd)
+        {
+            this.email = email;
+            this.token = token;
+            this.id = id;
+            this.cmd = cmd;
+        }
+    }
     #endregion
     public static class Global
     {
@@ -170,6 +185,8 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
+        public static bool hasCustom;
+        public static Sprite CustomAvatar;
         #endregion
 
 
@@ -751,6 +768,51 @@ namespace eldritch {
         public static void addCredits()
         {
             CreditRequest asdf = new CreditRequest("updateCredits", getID(), getToken(), 100);
+        }
+
+        public static Sprite getCustomAvatar()
+        {
+            getprofilepicture cust = new getprofilepicture(Global.getEmail(), Global.getToken(), Global.getID(), "getCustomAvatar");
+            string json = JsonConvert.SerializeObject(cust);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[100000];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Texture2D imagetexture = new Texture2D(100, 100);
+
+            imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            imagetexture.Apply();
+
+            Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
+            return imagesprite;
+        }
+
+        public static Sprite getOtherCustomAvatar(string email)
+        {
+            getprofilepicture cust = new getprofilepicture(email, Global.getToken(), Global.getID(), "getCustomAvatar");
+            string json = JsonConvert.SerializeObject(cust);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[100000];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Texture2D imagetexture = new Texture2D(100, 100);
+
+            imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            imagetexture.Apply();
+
+            Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
+            return imagesprite;
+        }
+
+        public static bool hasCustomAvatar()
+        {
+            return avatar < 0;
         }
         #endregion
 

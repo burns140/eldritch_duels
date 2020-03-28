@@ -36,6 +36,7 @@ public enum Phase{
     MAIN,
     ATTACK,
     BLOCK,
+    PRE_BLOCK,
     WAITING,
     DISCARD,
     END
@@ -100,14 +101,16 @@ public class DuelScript : MonoBehaviour
 
     #region Awake
     // Awake is called when the script instance is being loaded.
-    void Awake(){
+    void Start(){
         setUpDeck(); // Set up card list from deck being used
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
 
-        Thread T = new Thread((new ThreadStart(Listener)));
-        T.Start();
+        readStreamAsync();
+
+        /* Thread T = new Thread((new ThreadStart(Listener)));
+        T.Start(); */
     }
 
     private void Listener() {
@@ -116,11 +119,25 @@ public class DuelScript : MonoBehaviour
 
     public async void readStreamAsync() {
         while (true) {
-            Byte[] data = new byte[1024];
-            int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
-            Debug.Log("Received data");
+            Debug.Log("ready to receive");
+            Byte[] data = new byte[128];
+            int read_bytes = await Global.stream.ReadAsync(data, 0, 128);
+
+            int len = 128;
+            while (len > 0 && data[len - 1] == 0) {
+                len--;
+            }
+            
+            byte[] cropped = new byte[len];
+            if (len > 0) {
+                Array.Copy(data, 0, cropped, 0, len);
+            }
+            data = cropped;
+
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            Debug.Log($"Trimmed: {trimmed}");
             receivedDataFromOpp(trimmed);
+            
         }
 
     }
@@ -150,9 +167,6 @@ public class DuelScript : MonoBehaviour
     public void NextPhase(){
         if(phaseText == null){
             return;
-        }if(!isMyTurn && currentPhase != Phase.BLOCK){
-            currentPhase = Phase.WAITING;
-            phaseText.text = "WAITING";
         }
         if(currentPhase == Phase.MAIN){
             currentPhase = Phase.ATTACK;
@@ -160,13 +174,13 @@ public class DuelScript : MonoBehaviour
         }else if(currentPhase == Phase.ATTACK && isMyTurn){
             currentPhase = Phase.WAITING;
             phaseText.text = "WAITING";
-            //TODO send attackers and tell opp to block
-        }else if(!isMyTurn && currentPhase == Phase.BLOCK){
+            confirmAttackers();
+        }else if(!isMyTurn && currentPhase == Phase.PRE_BLOCK){
             phaseText.text = "CONFIRM";
-
+            currentPhase = Phase.BLOCK;
         }else if(currentPhase == Phase.BLOCK && !isMyTurn){
             currentPhase = Phase.END;
-            //TODO send blockers and resolve 
+            confirmBlockers();
         }
     }
 
@@ -400,7 +414,9 @@ public class DuelScript : MonoBehaviour
 
     // Play opponent's card
     public void playOppCard(string cardName){
+        Debug.Log(cardName.Length);
         Card played = Library.GetCard(cardName);
+        Debug.Log(played);
         //update manager
         oppState.onField.Add(played);
         oppState.mana -= played.CardCost;
@@ -623,12 +639,14 @@ public class DuelScript : MonoBehaviour
 
     //send string to opponent
     private void sendDataToOpp(string formatted){
+        Debug.Log("In OP : " + formatted);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(formatted);
         Global.stream.Write(data, 0, data.Length);
     }
 
     //parce data received from opp
     private void receivedDataFromOpp(string formatted){
+        Debug.Log("Received: " + formatted);
         string[] firstPass = formatted.Split(':');
         switch (firstPass[0]){
             case "play":
@@ -642,8 +660,12 @@ public class DuelScript : MonoBehaviour
                     AddOppAttackers(firstPass[1]);
                 else
                     AddOppAttackers("");
+                
+                currentPhase = Phase.PRE_BLOCK;
+                phaseText.text = "BLOCK";
                 break;
             case "block":
+                Debug.Log("Entering block info");
                 if(firstPass.Length > 1)
                     AddOppBlockers(firstPass[1]);
                 else
@@ -744,6 +766,11 @@ public class DuelScript : MonoBehaviour
 
     public void AddOppBlockers(string blockers){
         if(blockers.Equals("")){
+            Debug.Log("Entering end turn");
+            string data = "end";
+            sendDataToOpp(data);
+            currentPhase = Phase.END;
+            myAttack();
             return;
         }
         string[] blocker = blockers.Split(',');
@@ -751,10 +778,10 @@ public class DuelScript : MonoBehaviour
             addOppBlocker(b);
         }
 
-        StartCoroutine(checker());
-
-        string data = "end";
-        sendDataToOpp(data);
+        //StartCoroutine(checker());
+        Debug.Log("Entering end turn");
+        string data2 = "end";
+        sendDataToOpp(data2);
         currentPhase = Phase.END;
         myAttack();
     }
