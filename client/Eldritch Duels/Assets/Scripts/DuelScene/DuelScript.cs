@@ -174,8 +174,8 @@ public class DuelScript : MonoBehaviour
             phaseText.text = "WAITING";
             confirmAttackers();
         }else if(!isMyTurn && currentPhase == Phase.PRE_BLOCK){
-            phaseText.text = "BLOCK";
-            
+            phaseText.text = "CONFIRM";
+            currentPhase = Phase.BLOCK;
         }else if(currentPhase == Phase.BLOCK && !isMyTurn){
             currentPhase = Phase.END;
             confirmBlockers();
