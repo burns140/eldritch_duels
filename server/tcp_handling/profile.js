@@ -5,6 +5,9 @@ const generator = require('generate-password');
 const myEmail = 'eldritch.duels@gmail.com';
 const dbconfig = require('../dbconfig.json');
 const nodemailer = require('nodemailer');
+const Binary = require('mongodb').Binary;
+
+
 const TEMP_BAN_MARKS = [1, 3, 5, 10, 12] 
 const TEMP_BAN_LENGTHS_MINS = [1, 10, 300, 1440, -1];
 
@@ -419,13 +422,15 @@ const setCustomAvatar = (data, sock) => {
     const id = data.id;
     const pic = data.pic;
 
+    const insertdata = Binary(pic);
+
     try {
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             db.collection('users').updateOne(
                 { _id: ObjectID(id) },
-                { $set: { customArt: pic, avatar: -1 } }
+                { $set: { customArt: insertdata, avatar: -1 } }
             ).then(result => {
                 if (result.matchedCount != 1) {
                     throw new Error('no user modified');
@@ -444,14 +449,14 @@ const setCustomAvatar = (data, sock) => {
 }
 
 const getCustomAvatar = (data, sock) => {
-    const id = data.id;
+    const email = data.email;
 
     try {
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
             db.collection('users').findOne(
-                { _id: ObjectID(id) },
+                { email: ObjectID(email) },
             ).then(result => {
                 if (result == null) {
                     throw new Error('no user found');

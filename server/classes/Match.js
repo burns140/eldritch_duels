@@ -44,9 +44,10 @@ module.exports = class Match {
             }
             
             this.forEachPlayer((cid, sock) => {
-                console.log('for each player');
-                if (cid == id)
+                console.log(`id: ${id} -- cid: ${cid}`);
+                if (cid == id) {
                     return;
+                }
                 
                 console.log(`writing data to socket`);
                 sock.write(data);
