@@ -639,6 +639,7 @@ public class DuelScript : MonoBehaviour
 
     //send string to opponent
     private void sendDataToOpp(string formatted){
+        Debug.Log("In OP : " + formatted);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(formatted);
         Global.stream.Write(data, 0, data.Length);
     }
