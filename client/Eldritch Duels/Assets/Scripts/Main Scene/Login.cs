@@ -131,7 +131,7 @@ public class Login : MonoBehaviour
             ErrorText.gameObject.SetActive(true);
             return;
         }
-        else if (String.Equals("This account has been temporarily banned", result))
+        else if (result.Contains("This account is temporarily banned"))
         {
             Debug.Log("Your account is tempbanned");
             ErrorPanel.gameObject.SetActive(true);
