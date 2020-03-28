@@ -752,6 +752,27 @@ namespace eldritch {
         {
             CreditRequest asdf = new CreditRequest("updateCredits", getID(), getToken(), 100);
         }
+
+        public static Sprite getCustomAvatar()
+        {
+            getCollection cust = new getCollection("getCustomAvatar", Global.getID(), Global.getToken());
+            string json = JsonConvert.SerializeObject(cust);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[100000];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            Debug.Log(responseData);
+
+            Texture2D imagetexture = new Texture2D(100, 100);
+
+            imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            imagetexture.Apply();
+
+            Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
+            return imagesprite;
+        }
         #endregion
 
 
