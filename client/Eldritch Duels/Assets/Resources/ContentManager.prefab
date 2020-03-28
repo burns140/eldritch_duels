@@ -56,6 +56,7 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Mi_Go Worker
     id: 3
     owned: 0
@@ -68,6 +69,7 @@ MonoBehaviour:
     canFly: 1
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Mi_Go Queen
     id: 4
     owned: 0
@@ -76,10 +78,11 @@ MonoBehaviour:
     defence: 5
     type: 0
     rartiy: 2
-    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
+    cardImage: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
     canFly: 1
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Beast Patient
     id: 5
     owned: 0
@@ -88,10 +91,11 @@ MonoBehaviour:
     defence: 3
     type: 0
     rartiy: 0
-    cardImage: {fileID: 2100000, guid: 2a1a4e245c0ef1a40a68e65549068961, type: 2}
+    cardImage: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Blood Starved Beast
     id: 6
     owned: 0
@@ -100,14 +104,15 @@ MonoBehaviour:
     defence: 6
     type: 0
     rartiy: 2
-    cardImage: {fileID: 2100000, guid: f6ef397774c8b6843ac1d7345ef17970, type: 2}
+    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Blood Vial
     id: 7
     owned: 0
-    cost: 0
+    cost: 4
     power: 0
     defence: 0
     type: 1
@@ -116,6 +121,11 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Damage Opp
+    - Damage Opp
+    - Damage Opp
+    - Damage Opp
   - cardName: Brain of Mensis
     id: 8
     owned: 0
@@ -128,6 +138,7 @@ MonoBehaviour:
     canFly: 1
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Chime Maiden
     id: 9
     owned: 0
@@ -140,6 +151,7 @@ MonoBehaviour:
     canFly: 0
     isStealth: 1
     isDefender: 0
+    effectnames: []
   - cardName: Great Ones Wisdom
     id: 10
     owned: 0
@@ -152,6 +164,10 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Add mana
+    - Add mana
+    - Draw card
   - cardName: Lady Maria
     id: 11
     owned: 0
@@ -164,6 +180,9 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Draw card
+    - Add mana
   - cardName: Ludwig Holy Blade
     id: 12
     owned: 0
@@ -176,6 +195,9 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Damage Opp
+    - Add mana
   - cardName: Madmans Knowledge
     id: 13
     owned: 0
@@ -188,6 +210,8 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Add mana
   - cardName: Migo Zombie
     id: 14
     owned: 0
@@ -200,6 +224,7 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Moon Presence
     id: 15
     owned: 0
@@ -212,6 +237,8 @@ MonoBehaviour:
     canFly: 1
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Add mana
   - cardName: Nightmare Apostle
     id: 16
     owned: 0
@@ -224,6 +251,7 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames: []
   - cardName: Pungent Blood Cocktail
     id: 17
     owned: 0
@@ -236,6 +264,8 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Gain health
   - cardName: Quicksilver Bullet
     id: 18
     owned: 0
@@ -248,6 +278,9 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Damage Opp
+    - Damage Opp
   - cardName: Snatcher
     id: 19
     owned: 0
@@ -260,6 +293,8 @@ MonoBehaviour:
     canFly: 0
     isStealth: 0
     isDefender: 0
+    effectnames:
+    - Damage Opp
   recipes:
   - BaseCard: Mi_Go
     FodderCard: Beast Patient

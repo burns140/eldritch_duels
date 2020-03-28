@@ -64,6 +64,9 @@ namespace eldritch.editor
             }
         }
         private int countEfect(Effect e){
+            if(effects == null){
+                return 0;
+            }
             int c = 0;
             foreach(Effect ei in effects){
                 if(ei.GetName().Equals(e.GetName())){
@@ -122,6 +125,7 @@ namespace eldritch.editor
                             c.HasFly = this.hasFly;
                             c.HasStealth = this.hasStealth;
                             foreach(Effect e in effects){
+                                Debug.Log("Adding Ability: " + e.GetName());
                                 c.AddAbility(e);
                             }
                             Library.AddCard(c);
@@ -132,6 +136,7 @@ namespace eldritch.editor
                         }
                         else
                         {
+                            Debug.Log("Card name is: " + cardName);
                             throw new Exception();
                         }
 
@@ -271,7 +276,7 @@ namespace eldritch.editor
                                 this.cardName = cards[pos].CardName;
                                 this.attack = cards[pos].AttackPower + "";
                                 this.defence = cards[pos].DefencePower + "";
-                                //this.effects = cards[pos].Effects + "";
+                                this.effects = cards[pos].Abilities;
                                 this.cost = cards[pos].CardCost + "";
                                 this.rarity = cards[pos].SpellRarity;
                                 this.cardMat = cards[pos].CardImage;
