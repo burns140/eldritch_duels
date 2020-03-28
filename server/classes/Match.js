@@ -72,19 +72,26 @@ module.exports = class Match {
     
     endMatch(data, skipID) {
         this.forEachPlayer((id, sock) => {
-            if (skipID == id)
-                return;
 
-            let fn;
-            if (fn = this.closeFuncs[id])
-                sock.off('close', fn);
+            try {
+                if (skipID == id)
+                    return;
 
-            if (fn = this.dataFuncs[id])
-                sock.off('data', fn);
+                let fn;
+                if (fn = this.closeFuncs[id])
+                    sock.off('close', fn);
 
-            sock.write(data);
+                if (fn = this.dataFuncs[id])
+                    sock.off('data', fn);
 
-            sock.on("data", this.dataHandler);
+                sock.write(data);
+
+                sock.on("data", this.dataHandler);
+            } catch (err) {
+                console.log(err);
+                sock.write(err.toString());
+            }
+            
         });
 
         this.init();
