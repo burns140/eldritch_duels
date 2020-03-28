@@ -29,6 +29,12 @@ module.exports = class Match {
         console.log(this.ids);
         this.ids.push(id);
         this.sockets.push(socket);
+
+        /* THIS WORKS DO NOT FUCKING REMOVE THIS */
+        if (this.sockets.length == 1) {
+            this.sockets[0].write("my turn");
+        }
+
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
@@ -59,7 +65,6 @@ module.exports = class Match {
     forEachPlayer(handler) {
         for (let i = 0; i < this.ids.length; i++) {
             let id = this.ids[i];
-            console.log(`for id: ${id}`);
             let socket = this.sockets[i];
             handler(id, socket);
         }
