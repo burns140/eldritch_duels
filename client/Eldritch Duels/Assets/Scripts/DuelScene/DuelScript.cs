@@ -98,14 +98,16 @@ public class DuelScript : MonoBehaviour
 
     #region Awake
     // Awake is called when the script instance is being loaded.
-    void Awake(){
+    void Start(){
         setUpDeck(); // Set up card list from deck being used
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
 
-        Thread T = new Thread((new ThreadStart(Listener)));
-        T.Start();
+        readStreamAsync();
+
+        /* Thread T = new Thread((new ThreadStart(Listener)));
+        T.Start(); */
     }
 
     private void Listener() {
