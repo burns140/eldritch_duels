@@ -146,6 +146,21 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+    public class getprofilepicture
+    {
+        public string email;
+        public string token;
+        public string id;
+        public string cmd;
+
+        public getprofilepicture(string email, string token, string id, string cmd)
+        {
+            this.email = email;
+            this.token = token;
+            this.id = id;
+            this.cmd = cmd;
+        }
+    }
     #endregion
     public static class Global
     {
@@ -170,6 +185,8 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
+        public static bool hasCustom;
+        public static Sprite CustomAvatar;
         #endregion
 
 
@@ -755,7 +772,7 @@ namespace eldritch {
 
         public static Sprite getCustomAvatar()
         {
-            getCollection cust = new getCollection("getCustomAvatar", Global.getID(), Global.getToken());
+            getprofilepicture cust = new getprofilepicture(Global.getEmail(), Global.getToken(), Global.getID(), "getCustomAvatar");
             string json = JsonConvert.SerializeObject(cust);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
@@ -763,7 +780,6 @@ namespace eldritch {
             string responseData = string.Empty;
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Debug.Log(responseData);
 
             Texture2D imagetexture = new Texture2D(100, 100);
 
@@ -772,6 +788,11 @@ namespace eldritch {
 
             Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
             return imagesprite;
+        }
+
+        public static bool hasCustomAvatar()
+        {
+            return avatar < 0;
         }
         #endregion
 
