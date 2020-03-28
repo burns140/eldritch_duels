@@ -48,6 +48,28 @@ namespace eldritch.editor
         {
 
         }
+
+        private void addEffect(Effect e){
+            this.effects.Add(e);
+        }
+
+        private void removeEffect(Effect e){
+            for(int i = 0; i<effects.Count;i++){
+                if(effects[i].GetName().Equals(e.GetName())){
+                    effects.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+        private int countEfect(Effect e){
+            int c = 0;
+            foreach(Effect ei in effects){
+                if(ei.GetName().Equals(e.GetName())){
+                    c++;
+                }
+            }
+            return c;
+        }
         Editor matEdit;
         private void OnGUI()
         {
@@ -58,7 +80,7 @@ namespace eldritch.editor
                 this.cardName = "";
                 this.attack = 0 + "";
                 this.defence = 0 + "";
-                //this.effects = cards[pos].Effects + "";
+                this.effects = new List<Effect>();
                 this.cost = 0 + "";
                 this.rarity = CardRarity.NULL;
                 this.cardMat = null;
@@ -126,7 +148,7 @@ namespace eldritch.editor
                     this.cardName = "";
                     this.attack = 0 + "";
                     this.defence = 0 + "";
-                    //this.effects = cards[pos].Effects + "";
+                    this.effects = new List<Effect>();
                     this.cost = 0 + "";
                     this.rarity = CardRarity.NULL;
                     this.cardMat = null;
@@ -134,6 +156,7 @@ namespace eldritch.editor
                     mode = 1;
                     
                 }
+
             }
             GUILayout.EndArea();
             if (mode == 1 || mode == 2)
@@ -172,7 +195,35 @@ namespace eldritch.editor
 
                 GUILayout.EndArea();
 
-                //preview
+                //card effects
+                GUILayout.BeginArea(new Rect(this.position.width/2,10,this.position.width/2-50,this.position.height-100));
+                GUI.Label(new Rect(10,20,100,20), "EFFECTS:");
+                //Deal damage
+                GUI.Label(new Rect(10,50,100,20), ("Deal Damage: " + countEfect(new DealDamage())));
+                if(GUI.Button(new Rect(120,50,20,20), "+")){
+                    addEffect(new DealDamage());
+                }
+                if(GUI.Button(new Rect(150,50,20,20), "-")){
+                    removeEffect(new DealDamage());
+                }
+
+                //Gain health
+                GUI.Label(new Rect(10,80,100,20), ("Gain Health: " + countEfect(new DealDamage())));
+                if(GUI.Button(new Rect(120,80,20,20), "+")){
+                    addEffect(new GainHealth());
+                }
+                if(GUI.Button(new Rect(150,80,20,20), "-")){
+                    removeEffect(new GainHealth());
+                }
+
+                //draw card
+                GUI.Label(new Rect(10,110,100,20), ("Draw Card: " + countEfect(new DealDamage())));
+                if(GUI.Button(new Rect(120,110,20,20), "+")){
+                    addEffect(new DrawCard());
+                }
+                if(GUI.Button(new Rect(150,110,20,20), "-")){
+                    removeEffect(new DrawCard());
+                }
                 
                     
                 GUILayout.EndArea();

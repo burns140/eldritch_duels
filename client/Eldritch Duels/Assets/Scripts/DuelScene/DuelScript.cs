@@ -554,6 +554,8 @@ public class DuelScript : MonoBehaviour
                     e.execute(ref myState);
                 }else if(e.GetTargetType() == EffectTarget.OPPONENT){
                     e.execute(ref oppState);
+                }else if(e.GetTargetType() == EffectTarget.DRAW){
+                    drawCard();
                 }
             }
         }else{ //resolve for opponent
