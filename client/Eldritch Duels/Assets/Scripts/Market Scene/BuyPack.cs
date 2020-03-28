@@ -79,9 +79,13 @@ public class BuyPack : MonoBehaviour
             Global.NetworkRequest(decrease);
             foreach (string c in cards)
             {
-                Debug.Log(c);
                 AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), "addCard", c);
                 string added = Global.NetworkRequest(newcard);
+            }
+            for (int a = 0; a < cards.Length; a++)
+            {
+                cards[a] = cards[a].Replace(" ", String.Empty);
+                Debug.Log(cards[a]);
             }
             //sets up card screen
             lobbybutton.interactable = false;
@@ -91,22 +95,20 @@ public class BuyPack : MonoBehaviour
             card4.interactable = true;
             card5.interactable = true;
             card1image.gameObject.SetActive(false);
-            Debug.Log(cards[0] + ".png");
-            cards[0] = cards[0].Replace(" ", String.Empty);
-            cards[1] = cards[1].Replace(" ", String.Empty);
-            card1image.sprite = Resources.Load<Sprite>(cards[0] + ".png");
+            
+            card1image.sprite = Resources.Load<Sprite>("images/" + cards[0]);
             card1imageback.gameObject.SetActive(true);
             card2image.gameObject.SetActive(false);
-            card2image.sprite = Resources.Load<Sprite>(cards[1]);
+            card2image.sprite = Resources.Load<Sprite>("images/" + cards[1]);
             card2imageback.gameObject.SetActive(true);
             card3image.gameObject.SetActive(false);
-            card3image.sprite = Resources.Load<Sprite>(cards[2]);
+            card3image.sprite = Resources.Load<Sprite>("images/" + cards[2]);
             card3imageback.gameObject.SetActive(true);
             card4image.gameObject.SetActive(false);
-            card4image.sprite = Resources.Load<Sprite>(cards[3]);
+            card4image.sprite = Resources.Load<Sprite>("images/" + cards[3]);
             card4imageback.gameObject.SetActive(true);
             card5image.gameObject.SetActive(false);
-            card5image.sprite = Resources.Load<Sprite>(cards[4]);
+            card5image.sprite = Resources.Load<Sprite>("images/" + cards[4]);
             card5imageback.gameObject.SetActive(true);
             confirm.gameObject.SetActive(false);
 
