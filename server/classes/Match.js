@@ -27,6 +27,7 @@ module.exports = class Match {
      * @param {Socket} socket
      */
     addPlayer(id, socket) {
+        console.log('adding player to match');
         this.ids.push(id);
         this.sockets.push(socket);
         this.closeFuncs[id] = () => {
@@ -36,6 +37,7 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
+            console.log('received data during a match');
             if (data == "YOU LOSE") {
                 this.endMatch(data, id);
                 return;
@@ -44,7 +46,8 @@ module.exports = class Match {
             this.forEachPlayer((cid, sock) => {
                 if (cid == id)
                     return;
-
+                
+                console.log(`writing data to socket`);
                 sock.write(data);
             });
         }
