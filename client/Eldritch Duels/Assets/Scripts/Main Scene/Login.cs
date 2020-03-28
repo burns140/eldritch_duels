@@ -129,6 +129,7 @@ public class Login : MonoBehaviour
             ErrorPanel.gameObject.SetActive(true);
             ErrorText.text = "Not verified, can't login";
             ErrorText.gameObject.SetActive(true);
+            return;
         }
         else if (String.Equals("This account has been temporarily banned", result))
         {
@@ -136,6 +137,7 @@ public class Login : MonoBehaviour
             ErrorPanel.gameObject.SetActive(true);
             ErrorText.text = "This account has been temporarily banned";
             ErrorText.gameObject.SetActive(true);
+            return;
         }
         else if (String.Equals("This account has been permanently banned", result))
         {
@@ -143,6 +145,7 @@ public class Login : MonoBehaviour
             ErrorPanel.gameObject.SetActive(true);
             ErrorText.text = "This account has been permanently banned";
             ErrorText.gameObject.SetActive(true);
+            return;
         }
         else if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
