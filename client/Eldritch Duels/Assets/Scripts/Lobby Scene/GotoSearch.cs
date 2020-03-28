@@ -13,12 +13,10 @@ using eldritch;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public class GotoProfile : MonoBehaviour
+public class GotoSearch : MonoBehaviour
 {
-    private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store user email
-    public void MovetoProfile()
+    public void MovetoSearch()
     {
-        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.getEmail()); // Save the my email to EMAIL PREF KEY
-        SceneManager.LoadScene("ProfileScene");
+        SceneManager.LoadScene("SearchFriendsScene");
     }
 }

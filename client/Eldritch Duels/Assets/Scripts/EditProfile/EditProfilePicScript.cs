@@ -27,6 +27,9 @@ public class EditProfilePicScript : MonoBehaviour
     private string bio; // save new bio to this string
     private string screenname; // save new screenname to this string
     private int picnum=0; // default profile pic is the first option
+    private int temppicnum=0; // to change value on ui
+
+    private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store user email
 
     // Start is called before the first frame update
     void Start()
@@ -40,11 +43,21 @@ public class EditProfilePicScript : MonoBehaviour
 
     public void onSave(){
         Debug.Log("Clicked on Save Profile");
-        bio = bioInput.text; // save new bio
+        string testbio = bioInput.GetComponent<InputField>().text; // Get user input text
+        string testusername = screenNameInput.GetComponent<InputField>().text; // Get user input text
+        if(!String.IsNullOrWhiteSpace(testbio)){
+            bio = testbio;
+            Global.bio = bio; // update on global
+        }
+        if(!String.IsNullOrWhiteSpace(testusername)){
+            screenname = testusername;
+            Global.username = screenname; // update on global
+        }
         Debug.Log("This is the new bio: "+bio);
-        screenname = screenNameInput.text; // save new screenname
-        Debug.Log("This is the new screenname: "+screenname);
-
+        Debug.Log("This is the new screenname: "+screenname);  
+        picnum = temppicnum;
+        Global.avatar = picnum;
+        Debug.Log("This is the new profilepicnum: "+picnum);  
         // Sending request to server to update bio, screen name, & profile pic
         EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, picnum, screenname);
         string json = JsonConvert.SerializeObject(req);
@@ -57,6 +70,8 @@ public class EditProfilePicScript : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.email); // Get the user email from PLAYER PREFS;
+        SceneManager.LoadScene("ProfileScene"); // Don't save profile changes and go back to Lobby
     }
 
     private void dropdownSetup(){
@@ -76,34 +91,34 @@ public class EditProfilePicScript : MonoBehaviour
     }
 
     public void handlePicName(int val){
-        picnum = val; // Get selected picture index from the dropdown
-        Debug.Log("Selected Profile Pic option: "+picnum.ToString());
+        temppicnum = val; // Get selected picture index from the dropdown
+        Debug.Log("Selected Profile Pic option: "+temppicnum.ToString());
     }
 
     private void displayPic(){
 
         int originalPic = Global.avatar; // Get original picnum from global variable
-
+        picnum = Global.avatar; // in case it's cancelled
+        Debug.Log("displayPic: Global.avatar value is "+Global.avatar);
         var dropdownInstance = dropdown.GetComponent<Dropdown>();
         dropdownInstance.value = originalPic; // Select original picture option on the UI
-
 
     }
 
     private void displayBio(){
 
         string originalBio = Global.bio; // Get original bio from global variable
-
-        var bioInstance = bioInput.GetComponent<InputField>();
-        bioInstance.text = originalBio; // Display original bio on the UI
+        bio = Global.bio; // in case it's cancelled
+        Debug.Log("displayBio: Global.bio value is "+Global.bio);
+        bioInput.GetComponent<InputField>().placeholder.GetComponent<Text>().text = originalBio; // Display original bio on the UI
     }
 
     private void displayScreenName(){
 
         string originalScreenname = Global.username; // Get original screenname from global variable
-
-        var screennameInstance = screenNameInput.GetComponent<InputField>();
-        screennameInstance.text = originalScreenname; // Display original screenname on the UI
+        screenname = Global.username; // in case it's cancelled
+        Debug.Log("displaScreenName: Global.username value is "+Global.username);
+        screenNameInput.GetComponent<InputField>().placeholder.GetComponent<Text>().text = originalScreenname; // Display original screenname on the UI
     }
 
     public void openBrowser()

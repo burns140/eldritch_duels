@@ -77,6 +77,11 @@ public class Login : MonoBehaviour
         if (!check.IsMatch(responseData)) { 
             return responseData;
         }
+        Global.email = email;
+        if (String.Equals(responseData, "Incorrect password")) // checking for incorrect password response
+        {
+            return String.Empty;
+        }
         string tempFile = "LoginTemp";
         try //make the temp file
         {

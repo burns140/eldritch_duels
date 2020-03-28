@@ -53,4 +53,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SharedDecks.unity
     guid: 3172404964463194ab030f018bceda2a
+  - enabled: 1
+    path: Assets/Scenes/SearchFriendsScene.unity
+    guid: 38db68ab8f6ab489b8345f05fdb56388
   m_configObjects: {}

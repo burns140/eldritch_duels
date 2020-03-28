@@ -253,7 +253,12 @@ const getAllFriends = (data, sock) => {
                 if (result == null) {
                     throw new Error(errString);
                 }
-                sock.write(result.friends.toString());
+
+                if (result.friends.toString() == "") {
+                    sock.write("nofriends");
+                } else {
+                    sock.write(result.friends.toString());
+                }
                 console.log('friends list returned');
             }).catch(err => {
                 console.log(err);
@@ -286,6 +291,7 @@ const getAllUsernames = (data, sock) => {
                     usernames.push(`${user.username}-${user.email}`);
                 }
 
+                
                 sock.write(usernames.toString());
                 console.log('list of users returned');
             }).catch(err => {
@@ -299,9 +305,74 @@ const getAllUsernames = (data, sock) => {
     }
 }
 
+const getFriendRequests = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+    
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error("user not found");
+                }
+    
+                if (result.friendRequests.toString() == "") {
+                    sock.write("norequests");
+                } else {
+                    sock.write(result.friendRequests.toString());
+                }
+                console.log('getting friend requests');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+    
+}
+
+const getFriendRequestsSent = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+    
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error("user not found");
+                }
+    
+                if (result.friendRequestsSent.toString() == "") {
+                    sock.write("nofriendrequestssent");
+                } else {
+                    sock.write(result.friendRequestsSent.toString());
+                }
+                console.log('get sent friend requests');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
 exports.getAllUsernames = getAllUsernames;
 exports.sendFriendRequest = sendFriendRequest;
 exports.acceptFriendRequest = acceptFriendRequest;
 exports.rejectFriendRequest = rejectFriendRequest;
 exports.removeFriend = removeFriend;
 exports.getAllFriends = getAllFriends;
+exports.getFriendRequests = getFriendRequests;
+exports.getFriendRequestsSent = getFriendRequestsSent;

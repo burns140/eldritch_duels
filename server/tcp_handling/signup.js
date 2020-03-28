@@ -100,7 +100,8 @@ const signup = (data, sock) => {
                         friendRequestsSent: [],             // array of user emails who I've sent friend requests to
                         reports: [],                        // array of reports I have of { user, time }
                         banLength: 0,                          // length of current tempBan
-                        emailToChange: ""                   // Email they are trying to change to
+                        emailToChange: "",                   // Email they are trying to change to
+                        reported: []
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
