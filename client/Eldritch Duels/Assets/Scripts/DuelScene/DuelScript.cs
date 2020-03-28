@@ -118,9 +118,22 @@ public class DuelScript : MonoBehaviour
         while (true) {
             Byte[] data = new byte[1024];
             int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
+
+            int len = 1024;
+            while (len > 0 && data[len - 1] == 0) {
+                len--;
+            }
+            
+            byte[] cropped = new byte[len];
+            if (len > 0) {
+                Array.Copy(data, 0, cropped, 0, len);
+            }
+            data = cropped;
+
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
             Debug.Log($"Trimmed: {trimmed}");
             receivedDataFromOpp(trimmed);
+            
         }
 
     }

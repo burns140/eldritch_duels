@@ -102,6 +102,11 @@ public class Login : MonoBehaviour
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
                 Global.email = email;
+                if (Global.hasCustomAvatar())
+                {
+                    Global.CustomAvatar = Global.getCustomAvatar();
+                    Global.hasCustom = true;
+                }
                 return tempFile;
             }
             catch (Exception e)

@@ -156,6 +156,8 @@ public class EditProfilePicScript : MonoBehaviour
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Global.hasCustom = true;
+                Global.CustomAvatar = Global.getCustomAvatar();
                 dropdownSetup();
             }
             else
