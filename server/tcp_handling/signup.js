@@ -120,7 +120,7 @@ const signup = (data, sock) => {
 
                         transporter.sendMail(mailOptions, (error, info) => {    // Send verification email
                             if (error) {
-                                console.log(err);
+                                console.log(error);
                             } else {
                                 console.log('Email send: ' + info.response);
                             }

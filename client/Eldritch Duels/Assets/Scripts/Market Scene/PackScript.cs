@@ -1,16 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SimpleFileBrowser;
-using Newtonsoft.Json;
-using System.IO;
-using System;
-using System.Net.Sockets;
-using eldritch;
 
-public class Upload : MonoBehaviour
+public class PackScript : MonoBehaviour
 {
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,9 +13,7 @@ public class Upload : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
-
-    
-
+    //TODO: send pack request, verify credit amount, receive packs in comma delimited list, send request to add card for each card, show cards on UI
 }

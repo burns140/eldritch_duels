@@ -7,6 +7,7 @@ public class LoadGameSettings : MonoBehaviour
 {
     private const string WINDOW_PREF_KEY = "window"; // PLAYER PREF KEY to store window mode
     private const string RESOLUTION_PREF_KEY = "resolution"; // PLAYER PREF KEY to store resolution
+    private const string MUSIC_PREF_KEY = "music"; // PLAYER PREF KEY to store music volume
     private int width = 1920; // Default resoultion width
     private int height = 1080; // Default resolution height
     private string window = "fullScreen"; // Default screen mode
@@ -14,6 +15,12 @@ public class LoadGameSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+        float musicVolume = PlayerPrefs.GetFloat(MUSIC_PREF_KEY, .5f); // Get the music volume from PLAYER PREFS
+        AudioListener.volume = musicVolume; // Set music volume to saved volume
+        Debug.Log("Saved Volume: "+musicVolume);
+        
+        
         string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY); // Get the resolution from PLAYER PREFS
        
         window = PlayerPrefs.GetString(WINDOW_PREF_KEY); // Get the windowed mode from PLAYER PREFS

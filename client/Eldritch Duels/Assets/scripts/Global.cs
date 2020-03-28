@@ -97,23 +97,6 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
-
-    public class profilepicture
-    {
-        public byte[] picture;
-        public string token;
-        public string id;
-        public string cmd;
-
-        public profilepicture(byte[] picture, string token, string id, string cmd)
-        {
-            this.picture = picture;
-            this.token = token;
-            this.id = id;
-            this.cmd = cmd;
-        }
-    }
-
     public class EditProfileRequest
     {
         public string cmd;
@@ -133,7 +116,6 @@ namespace eldritch {
             this.username = username;
         }
     }
-
     public class CreditRequest
     {
         public string cmd;
@@ -149,6 +131,21 @@ namespace eldritch {
             this.credit = credit;
         }
     }
+    public class profilepicture
+    {
+        public byte[] picture;
+        public string token;
+        public string id;
+        public string cmd;
+
+        public profilepicture(byte[] picture, string token, string id, string cmd)
+        {
+            this.picture = picture;
+            this.token = token;
+            this.id = id;
+            this.cmd = cmd;
+        }
+    }
     #endregion
     public static class Global
     {
@@ -156,6 +153,7 @@ namespace eldritch {
         #region vars
         //Global variables, can be called by any class and script via Global.(variable) as long as "using eldritch" is in the imports
         public static string username = "";
+        public static string email = "";
         public static string enemyUsername = null;
         public static string matchID = null;
         public static int userID = 0;
@@ -733,7 +731,6 @@ namespace eldritch {
                 }
             }
         }
-
         public static String NetworkRequest(object o) // Use this for anything that returns a string
         {
             string json = JsonConvert.SerializeObject(o);
