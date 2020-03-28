@@ -790,6 +790,26 @@ namespace eldritch {
             return imagesprite;
         }
 
+        public static Sprite getOtherCustomAvatar(string email)
+        {
+            getprofilepicture cust = new getprofilepicture(email, Global.getToken(), Global.getID(), "getCustomAvatar");
+            string json = JsonConvert.SerializeObject(cust);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[100000];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Texture2D imagetexture = new Texture2D(100, 100);
+
+            imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            imagetexture.Apply();
+
+            Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
+            return imagesprite;
+        }
+
         public static bool hasCustomAvatar()
         {
             return avatar < 0;
