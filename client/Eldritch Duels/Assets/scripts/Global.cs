@@ -187,6 +187,8 @@ namespace eldritch {
         private static string hostIP = "66.253.158.241";
         public static bool hasCustom;
         public static Sprite CustomAvatar;
+
+        public static bool DuelMyTurn = false;
         #endregion
 
 

@@ -106,6 +106,7 @@ public class DuelScript : MonoBehaviour
         StartCoroutine(initCoroutines());
 
         readStreamAsync();
+        this.isMyTurn = Global.DuelMyTurn;
 
         /* Thread T = new Thread((new ThreadStart(Listener)));
         T.Start(); */
@@ -904,6 +905,7 @@ public class DuelScript : MonoBehaviour
     private void endGame(bool iWin){
         // Calculate credits
         // Change scene
+        Global.DuelMyTurn = false;
         if(iWin){
             PlayerPrefs.SetString(WON_PREF_KEY, "you");
         }
@@ -912,6 +914,7 @@ public class DuelScript : MonoBehaviour
         }
         //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
         SceneManager.LoadScene("EndDuel");
+
     }
     #endregion
 }
