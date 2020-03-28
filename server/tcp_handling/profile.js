@@ -456,12 +456,12 @@ const getCustomAvatar = (data, sock) => {
             const db = client.db('eldritch_data');
 
             db.collection('users').findOne(
-                { email: ObjectID(email) },
+                { email: email },
             ).then(result => {
                 if (result == null) {
                     throw new Error('no user found');
                 }
-                sock.write(result.customArt);
+                sock.write(result.customArt.read(0, result.customArt.length));
                 console.log('returned custom art');
             }).catch(err => {
                 console.log(err);
