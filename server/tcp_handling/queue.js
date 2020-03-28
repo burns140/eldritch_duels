@@ -102,7 +102,7 @@ function matchPlayers() {
                 let users = results.map(u => u.username);
 
                 // create a Match object
-                let match = new Match();
+                let match = new Match(dataHandler);
 
                 // get sockets
                 /** @type {import("net").Socket[]}  */
@@ -122,8 +122,12 @@ function matchPlayers() {
 
                 // notify the waiting users
                 let matchID = `${users[0]} vs ${users[1]}`;
-                connections[0].write(`match found: ${users[1]}\n${matchID}`);
-                connections[1].write(`match found: ${users[0]}\n${matchID}`);
+                connections[0].write(`match found: ${users[1]}\n${matchID}\n`);
+                connections[1].write(`match found: ${users[0]}\n${matchID}\n`);
+
+                let firstIndex = Math.floor(Math.random() * 2);
+                connections[firstIndex].write("you are first\n");
+
                 return true;
             });
         }).catch(e => console.log(e));

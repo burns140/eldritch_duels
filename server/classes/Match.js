@@ -1,5 +1,3 @@
-
-
 module.exports = class Match {
     init() {
         /** @type {ID[]} */
@@ -31,9 +29,6 @@ module.exports = class Match {
         console.log(this.ids);
         this.ids.push(id);
         this.sockets.push(socket);
-        if (this.sockets.length == 1) {
-            this.sockets[0].write("my turn");
-        }
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
@@ -41,7 +36,7 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
-            if (data == "YOU LOSE") {
+            if (data == "YOU LOSE\n") {
                 this.endMatch(data, id);
                 return;
             }
