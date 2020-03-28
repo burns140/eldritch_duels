@@ -236,6 +236,12 @@ function onClientConnected(sock) {
                     case "getMyReportedPlayers":
                         Profile.getMyReportedPlayers(obj, sock);
                         break;
+                    case "setCustomAvatar":
+                        Profile.setCustomAvatar(obj, sock);
+                        break;
+                    case "getCustomAvatar":
+                        Profile.getCustomAvatar(obj, sock);
+                        break;
                     default:                            // Command was invalid
                         sock.write('Not a valid command');
                         break;
