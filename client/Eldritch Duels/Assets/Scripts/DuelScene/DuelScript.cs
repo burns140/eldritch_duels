@@ -92,6 +92,8 @@ public class DuelScript : MonoBehaviour
     [SerializeField]
     private PlayerState oppState;
 
+    private const string WON_PREF_KEY = "whowon"; // PREF KEY to store who won
+
     #endregion
 
     #region Awake
@@ -840,7 +842,16 @@ public class DuelScript : MonoBehaviour
     #region End Game
     // End game
     private void endGame(bool iWin){
-        
+        // Calculate credits
+        // Change scene
+        if(iWin){
+            PlayerPrefs.SetString(WON_PREF_KEY, "you");
+        }
+        else{
+            PlayerPrefs.SetString(WON_PREF_KEY, "opp");
+        }
+        //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
+        SceneManager.LoadScene("EndDuel");
     }
     #endregion
 }
