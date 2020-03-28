@@ -116,10 +116,11 @@ public class DuelScript : MonoBehaviour
 
     public async void readStreamAsync() {
         while (true) {
-            Byte[] data = new byte[1024];
-            int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
+            Debug.Log("ready to receive");
+            Byte[] data = new byte[128];
+            int read_bytes = await Global.stream.ReadAsync(data, 0, 128);
 
-            int len = 1024;
+            int len = 128;
             while (len > 0 && data[len - 1] == 0) {
                 len--;
             }
