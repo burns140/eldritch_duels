@@ -174,13 +174,13 @@ public class DuelScript : MonoBehaviour
         }else if(currentPhase == Phase.ATTACK && isMyTurn){
             currentPhase = Phase.WAITING;
             phaseText.text = "WAITING";
-            //TODO send attackers and tell opp to block
+            confirmAttackers();
         }else if(!isMyTurn && currentPhase == Phase.BLOCK){
             phaseText.text = "CONFIRM";
 
         }else if(currentPhase == Phase.BLOCK && !isMyTurn){
             currentPhase = Phase.END;
-            //TODO send blockers and resolve 
+            confirmBlockers();
         }
     }
 
