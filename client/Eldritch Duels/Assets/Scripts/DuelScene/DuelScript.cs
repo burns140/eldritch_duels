@@ -104,7 +104,7 @@ public class DuelScript : MonoBehaviour
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
 
-        System.Threading.Thread T = new System.Threading.Thread((new System.Threading.ThreadStart(Listener)));
+        Thread T = new Thread((new ThreadStart(Listener)));
         T.Start();
     }
 
@@ -116,6 +116,7 @@ public class DuelScript : MonoBehaviour
         while (true) {
             Byte[] data = new byte[1024];
             int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
+            Debug.Log("Received data");
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
             receivedDataFromOpp(trimmed);
         }
