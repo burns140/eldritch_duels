@@ -68,14 +68,14 @@ public class SearchFriendsScript : MonoBehaviour
         }
 
         // @TODO Get the 3 last played users from server
-        string user1 = "user1"; // temp users
-        string user2 = "user2";
-        string user3 = "user3";
+        // string user1 = "user1"; // temp users
+        // string user2 = "user2";
+        // string user3 = "user3";
 
-        // Add 3 last played users to lastPlayedList for displaying on frontend
-        lastPlayedList.Add(user1);
-        lastPlayedList.Add(user2);
-        lastPlayedList.Add(user3); 
+        // // Add 3 last played users to lastPlayedList for displaying on frontend
+        // lastPlayedList.Add(user1);
+        // lastPlayedList.Add(user2);
+        // lastPlayedList.Add(user3); 
 
         // Add temporary users to search results list
         /*searchPlayersList.Add("Hola");
@@ -94,17 +94,17 @@ public class SearchFriendsScript : MonoBehaviour
         searchPlayersList.Add("HolaAmigo");*/
 
         // Set buttons to show those players on frontend
-        GameObject userButton1 = (GameObject)Instantiate(buttonPrefab);
-        userButton1.GetComponentInChildren<Text>().text = user1;
-        GameObject userButton2 = (GameObject)Instantiate(buttonPrefab);
-        userButton2.GetComponentInChildren<Text>().text = user2;
-        GameObject userButton3 = (GameObject)Instantiate(buttonPrefab);
-        userButton3.GetComponentInChildren<Text>().text = user3;
+        // GameObject userButton1 = (GameObject)Instantiate(buttonPrefab);
+        // userButton1.GetComponentInChildren<Text>().text = user1;
+        // GameObject userButton2 = (GameObject)Instantiate(buttonPrefab);
+        // userButton2.GetComponentInChildren<Text>().text = user2;
+        // GameObject userButton3 = (GameObject)Instantiate(buttonPrefab);
+        // userButton3.GetComponentInChildren<Text>().text = user3;
 
-        // Add players buttons to the panel in UI
-        userButton1.transform.SetParent(lastPlayedPanel.transform, false); 
-        userButton2.transform.SetParent(lastPlayedPanel.transform, false); 
-        userButton3.transform.SetParent(lastPlayedPanel.transform, false); 
+        // // Add players buttons to the panel in UI
+        // userButton1.transform.SetParent(lastPlayedPanel.transform, false); 
+        // userButton2.transform.SetParent(lastPlayedPanel.transform, false); 
+        // userButton3.transform.SetParent(lastPlayedPanel.transform, false); 
 
     }
       
