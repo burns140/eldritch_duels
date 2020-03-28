@@ -747,6 +747,11 @@ namespace eldritch {
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             return responseData;
         }
+
+        public static void addCredits()
+        {
+            CreditRequest asdf = new CreditRequest("updateCredits", getID(), getToken(), 100);
+        }
         #endregion
 
 
