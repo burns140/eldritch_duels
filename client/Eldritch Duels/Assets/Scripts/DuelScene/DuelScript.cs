@@ -92,6 +92,8 @@ public class DuelScript : MonoBehaviour
     [SerializeField]
     private PlayerState oppState;
 
+    private const string WON_PREF_KEY = "whowon"; // PREF KEY to store who won
+
     #endregion
 
     #region Awake
@@ -101,6 +103,24 @@ public class DuelScript : MonoBehaviour
         setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
+
+        Thread T = new Thread((new ThreadStart(Listener)));
+        T.Start();
+    }
+
+    private void Listener() {
+        readStreamAsync();
+    }
+
+    public async void readStreamAsync() {
+        while (true) {
+            Byte[] data = new byte[1024];
+            int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
+            Debug.Log("Received data");
+            string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            receivedDataFromOpp(trimmed);
+        }
+
     }
     #endregion
 
@@ -601,8 +621,8 @@ public class DuelScript : MonoBehaviour
 
     //send string to opponent
     private void sendDataToOpp(string formatted){
-        //TODO
-
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(formatted);
+        Global.stream.Write(data, 0, data.Length);
     }
 
     //parce data received from opp
@@ -851,7 +871,16 @@ public class DuelScript : MonoBehaviour
     #region End Game
     // End game
     private void endGame(bool iWin){
-        
+        // Calculate credits
+        // Change scene
+        if(iWin){
+            PlayerPrefs.SetString(WON_PREF_KEY, "you");
+        }
+        else{
+            PlayerPrefs.SetString(WON_PREF_KEY, "opp");
+        }
+        //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
+        SceneManager.LoadScene("EndDuel");
     }
     #endregion
 }

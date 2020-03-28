@@ -415,6 +415,60 @@ const getMyReportedPlayers = (data, sock) => {
     }
 }
 
+const setCustomAvatar = (data, sock) => {
+    const id = data.id;
+    const pic = data.pic;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').updateOne(
+                { _id: ObjectID(id) },
+                { $set: { customArt: pic, avatar: -1 } }
+            ).then(result => {
+                if (result.matchedCount != 1) {
+                    throw new Error('no user modified');
+                }
+                sock.write('Custom avatar uploaded');
+                console.log('custom avatar uploaded')
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        sock.write(err.toString());
+        console.log(err);
+    }
+}
+
+const getCustomAvatar = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').findOne(
+                { _id: ObjectID(id) },
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('no user found');
+                }
+                sock.write(result.customArt);
+                console.log('returned custom art');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        sock.write(err.toString());
+        console.log(err);
+    }
+}
+
 exports.reportPlayer = reportPlayer;
 exports.getMyReportedPlayers = getMyReportedPlayers;
 exports.deleteAccount = deleteAccount;
@@ -422,3 +476,5 @@ exports.editProfile = editProfile;
 exports.changePassword = changePassword;
 exports.changeEmail = changeEmail;
 exports.viewProfile = viewProfile;
+exports.setCustomAvatar = setCustomAvatar;
+exports.getCustomAvatar = getCustomAvatar;
