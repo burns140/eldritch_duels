@@ -116,8 +116,8 @@ public class DuelScript : MonoBehaviour
         while (true) {
             Byte[] data = new byte[1024];
             int read_bytes = await Global.stream.ReadAsync(data, 0, 1024);
-            Debug.Log("Received data");
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            Debug.Log($"Trimmed: {trimmed}");
             receivedDataFromOpp(trimmed);
         }
 

@@ -108,13 +108,9 @@ function matchPlayers() {
                 /** @type {import("net").Socket[]}  */
                 let connections = matches.map(id => clientConnections[id]);
 
-                console.log('connections\n-----------------');
-
-                console.log(connections);
-
                 for (let i = 0; i < matches.length; i++) {
                     // add player to match
-                    match.addPlayer(match[i], connections[i]);
+                    match.addPlayer(matches[i], connections[i]);
 
                     // player cannot be removed after they are matched
                     connections[i].removeListener('close', connections[i]._temp_remove);
