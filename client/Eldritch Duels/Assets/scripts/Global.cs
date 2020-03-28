@@ -170,7 +170,6 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
-        public static string email = "";
         #endregion
 
 
