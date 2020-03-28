@@ -770,8 +770,8 @@ public class DuelScript : MonoBehaviour
             addOppBlocker(b);
         }
 
-        StartCoroutine(checker());
-
+        //StartCoroutine(checker());
+        Debug.Log("Entering end turn");
         string data = "end";
         sendDataToOpp(data);
         currentPhase = Phase.END;
