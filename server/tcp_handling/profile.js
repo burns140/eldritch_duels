@@ -456,7 +456,7 @@ const getCustomAvatar = (data, sock) => {
             const db = client.db('eldritch_data');
 
             db.collection('users').findOne(
-                { email: ObjectID(email) },
+                { email: email },
             ).then(result => {
                 if (result == null) {
                     throw new Error('no user found');
