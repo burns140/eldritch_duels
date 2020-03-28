@@ -400,6 +400,7 @@ public class DuelScript : MonoBehaviour
 
     // Play opponent's card
     public void playOppCard(string cardName){
+        Debug.Log("cardName");
         Card played = Library.GetCard(cardName);
         //update manager
         oppState.onField.Add(played);
