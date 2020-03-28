@@ -447,10 +447,10 @@ public class ProfileScript : MonoBehaviour
                     StartCoroutine(showError("Could not add user as friend, please try again")); // set error message
                 }
                 else {
-                    AddButton.GetComponentInChildren<Text>().text = "Unfriend"; // set button text
-                    AddButton.GetComponentInChildren<Button>().interactable = true;
-                    alreadyFriend = true; // since we added user as friend, set alreadyFriend to true
-                    alreadySentRequest = false; // just to be sure
+                    AddButton.GetComponentInChildren<Text>().text = "Request Sent"; // set button text
+                    AddButton.GetComponentInChildren<Button>().interactable = false;
+                    alreadyFriend = false; // since we added user as friend, set alreadyFriend to true
+                    alreadySentRequest = true; // just to be sure
                     alreadyReceivedRequest = false; // just to be sure
                 }
             } 
