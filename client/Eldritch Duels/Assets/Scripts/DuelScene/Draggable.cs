@@ -25,7 +25,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		this.GetComponent<Button>().enabled = false;
 	}
 	void Update(){
-		if(duelScript.currentPhase == Phase.ATTACK || duelScript.currentPhase == Phase.BLOCK){
+		if(duelScript.currentPhase == Phase.ATTACK || duelScript.currentPhase == Phase.BLOCK || duelScript.currentPhase == Phase.DISCARD){
 			this.GetComponent<Button>().enabled = true;
 		}else{
 			this.GetComponent<Button>().enabled = false;
@@ -34,7 +34,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 	
 	public void toggleAttack(){
-		if(this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.ATTACK){
+		if(this.transform.parent.name.Equals("HandAreaPanel") && duelScript.currentPhase == Phase.DISCARD){
+			duelScript.DiscardCard(this.gameObject);
+		}
+		else if(this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.ATTACK){
 			if(isAttacking){
 				isAttacking = false;
 				this.GetComponent<Image>().color = Color.white;
@@ -135,7 +138,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel")){
 				
 				Debug.Log("this card:"+this.name);
-				duelScript.playMyCard(this.name);
+				duelScript.playMyCard(this.name, this.gameObject);
 			}
 			else if(startArea.name == "MyPlayAreaPanel" && this.transform.parent.name.Equals("HandAreaPanel")){
 				Debug.Log("this card:"+this.name);
