@@ -35,7 +35,8 @@ public class ProfileScript : MonoBehaviour
 
     public GameObject buttonPanel; // Panel with all buttons on UI
 
-    public Button GoBackButton; // go back button
+    public GameObject GoBackButton; // go back button
+    public GameObject GoToLobbyButton; // go to lobby button
     public GameObject EditProfileButton; // edit profile button
     public GameObject FriendsButton; // button to show friends list
     public GameObject FriendRequestsButton; // button to show friend requests
@@ -55,6 +56,7 @@ public class ProfileScript : MonoBehaviour
     public GameObject cancelRequestButton; // button to hide handle request panel in UI 
     public Text ErrorText; // Display error message on UI
     private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store user email
+    private const string PREV_SCENE_PREF_KEY = "prevscene"; // PREF KEY to store the previous scene
     #endregion
 
     public class getBlockedRequest {
@@ -118,6 +120,8 @@ public class ProfileScript : MonoBehaviour
         email = PlayerPrefs.GetString(EMAIL_PREF_KEY); // Get the user email from PLAYER PREFS;
         isItMe();
         if(isMe){
+            GoToLobbyButton.SetActive(true);
+            GoBackButton.SetActive(false);
             EditProfileButton.SetActive(true);
             FriendsButton.SetActive(true);
             FriendRequestsButton.SetActive(true);
@@ -129,6 +133,7 @@ public class ProfileScript : MonoBehaviour
             displayScreenName(); 
         }
         else if(!getBlockedMe()){ // Hide profile if I am blocked by user
+            GoBackButton.SetActive(true);
             displayPic();
             displayBio();
             displayScreenName(); 
@@ -671,12 +676,21 @@ public class ProfileScript : MonoBehaviour
     }
 
     public void goBack(){ // Load Previous Scene
-        if(isMe){
-            SceneManager.LoadScene("Lobby");
+        string prev = PlayerPrefs.GetString(PREV_SCENE_PREF_KEY);
+        if(prev == "myprofile"){
+            PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.getEmail()); // Save the my email to EMAIL PREF KEY
+            SceneManager.LoadScene("ProfileScene");
         }
+        // else if(isMe){
+        //     SceneManager.LoadScene("Lobby");
+        // }
         else{
             SceneManager.LoadScene("SearchFriendsScene");
         }
+    }
+
+    public void goToLobby(){ // Load lobby scene
+        SceneManager.LoadScene("Lobby");
     }
 
     public void loadEditProfile(){ // Load Edit Profile Scene
@@ -768,6 +782,7 @@ public class ProfileScript : MonoBehaviour
     public void loadUserProfile(Button btn){ // Go to the user's profile page scene
         PlayerPrefs.SetString(EMAIL_PREF_KEY,btn.GetComponentInChildren<Text>().text); // store user email in PLAYER PREFS
         Debug.Log("Opening profile of: "+btn.GetComponentInChildren<Text>().text);
+        PlayerPrefs.SetString(PREV_SCENE_PREF_KEY,"myprofile");
         SceneManager.LoadScene("ProfileScene");
     }
 

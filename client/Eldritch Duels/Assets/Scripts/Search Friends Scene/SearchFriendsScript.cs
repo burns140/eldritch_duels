@@ -28,7 +28,8 @@ public class SearchFriendsScript : MonoBehaviour
     private List<string> lastPlayedList = new List<string>(); // To store last 3 opponents played
     
     private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store email of user
-    
+    private const string PREV_SCENE_PREF_KEY = "prevscene"; // PREF KEY to store the previous scene
+
     #endregion
 
     List<string> usernames;
@@ -180,6 +181,7 @@ public class SearchFriendsScript : MonoBehaviour
 
     private void loadUserProfile(){ // load the clicked user's profile
         // this will just change scene to profile scene
+        PlayerPrefs.SetString(PREV_SCENE_PREF_KEY,"search");
         SceneManager.LoadScene("ProfileScene");
     }
 
