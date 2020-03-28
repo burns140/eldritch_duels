@@ -35,6 +35,7 @@ public enum Phase{
     MAIN,
     ATTACK,
     BLOCK,
+    PRE_BLOCK,
     WAITING,
     DISCARD,
     END
@@ -175,9 +176,9 @@ public class DuelScript : MonoBehaviour
             currentPhase = Phase.WAITING;
             phaseText.text = "WAITING";
             confirmAttackers();
-        }else if(!isMyTurn && currentPhase == Phase.BLOCK){
-            phaseText.text = "CONFIRM";
-
+        }else if(!isMyTurn && currentPhase == Phase.PRE_BLOCK){
+            phaseText.text = "BLOCK";
+            
         }else if(currentPhase == Phase.BLOCK && !isMyTurn){
             currentPhase = Phase.END;
             confirmBlockers();
@@ -660,6 +661,9 @@ public class DuelScript : MonoBehaviour
                     AddOppAttackers(firstPass[1]);
                 else
                     AddOppAttackers("");
+                
+                currentPhase = Phase.PRE_BLOCK;
+                phaseText.text = "BLOCK";
                 break;
             case "block":
                 if(firstPass.Length > 1)
