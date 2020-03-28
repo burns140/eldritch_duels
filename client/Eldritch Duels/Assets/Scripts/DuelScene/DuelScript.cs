@@ -108,6 +108,10 @@ public class DuelScript : MonoBehaviour
         StartCoroutine(initCoroutines());
 
         readStreamAsync();
+        this.isMyTurn = Global.DuelMyTurn;
+        if(isMyTurn){
+            phaseText.text = "ATTACK";
+        }
 
         /* Thread T = new Thread((new ThreadStart(Listener)));
         T.Start(); */
@@ -505,7 +509,7 @@ public class DuelScript : MonoBehaviour
     public void SetToBlock(GameObject attacker){
         if(atb != null){
             atb.GetComponent<Draggable>().isBlocking = false;
-            atb.GetComponent<Image>().color = Color.white;
+            atb.GetComponent<Image>().color = Color.red;
         }
         this.atb = attacker;
         if(atb != null && blockwith != null){
@@ -533,7 +537,7 @@ public class DuelScript : MonoBehaviour
                 ab.blocker = null;
                 attackers[i] = ab;
                 attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
-                attackers[i].attacker.GetComponent<Image>().color = Color.white;
+                attackers[i].attacker.GetComponent<Image>().color = Color.red;
                 break;
             }
         }
@@ -548,7 +552,7 @@ public class DuelScript : MonoBehaviour
                 ab.blocker = null;
                 attackers[i] = ab;
                 attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
-                attackers[i].attacker.GetComponent<Image>().color = Color.white;
+                attackers[i].attacker.GetComponent<Image>().color = Color.red;
                 break;
             }
         }
@@ -719,6 +723,9 @@ public class DuelScript : MonoBehaviour
     private void myAttack(){
         
         foreach(AttackBlock ab in attackers){
+            if(ab.blocker != null)
+                ab.blocker.GetComponent<Image>().color = Color.white;
+            ab.attacker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null && ab.attackCard != null){
                 updateOppHealth(ab.attackCard.AttackPower);
             }else if(ab.attackCard != null){
@@ -807,6 +814,10 @@ public class DuelScript : MonoBehaviour
     }
     private void oppAttack(){
         foreach(AttackBlock ab in attackers){
+            
+            ab.attacker.GetComponent<Image>().color = Color.white;
+            if(ab.blocker != null)
+                ab.blocker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null){
                 updateMyHealth(ab.attackCard.AttackPower);
             }else{
@@ -827,17 +838,17 @@ public class DuelScript : MonoBehaviour
     }
 
     // After my card attacks opponent
-    private void updateOppHealth(float hit){
-        oppCurrentHP -= hit; // Decrease attack from HP
-        oppHPImage.fillAmount = oppCurrentHP/MAX_HEALTH; // Update opponent's HP on UI
+    private void updateOppHealth(int hit){
+        oppState.hp -= hit; // Decrease attack from HP
+        oppHPImage.fillAmount = oppState.hp/MAX_HEALTH; // Update opponent's HP on UI
 
     }
 
     // After opponent's card attacks me
-    private void updateMyHealth(float hit=0){
+    private void updateMyHealth(int hit){
          // @TODO get attack value from server (@KEVIN M)
-        myCurrentHP -= hit; // Decrease attack from HP
-        myHPImage.fillAmount = myCurrentHP/MAX_HEALTH; // Update my HP on UI
+        myState.hp -= hit; // Decrease attack from HP
+        myHPImage.fillAmount = myState.hp/MAX_HEALTH; // Update my HP on UI
     }
 
     private void setOppHealth(int health){
@@ -883,6 +894,7 @@ public class DuelScript : MonoBehaviour
         isMyTurn = false; // No longer my turn
         string endString = "YOUR TURN"; // Send this to server
         currentPhase = Phase.WAITING; //wait for opp move
+        oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
         currentTurn++;
     }
 
@@ -902,6 +914,7 @@ public class DuelScript : MonoBehaviour
     private void endGame(bool iWin){
         // Calculate credits
         // Change scene
+        Global.DuelMyTurn = false;
         if(iWin){
             PlayerPrefs.SetString(WON_PREF_KEY, "you");
         }
@@ -910,6 +923,7 @@ public class DuelScript : MonoBehaviour
         }
         //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
         SceneManager.LoadScene("EndDuel");
+
     }
     #endregion
 }

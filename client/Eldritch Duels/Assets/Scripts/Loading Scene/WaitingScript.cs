@@ -67,8 +67,12 @@ public class WaitingScript : MonoBehaviour
                     Debug.Log(e);
                 }
             }
-            else
+            else{
                 Debug.Log(responseData);
+                if(responseData.Contains("my turn")){
+                    Global.DuelMyTurn = true;
+                }
+            }
         }
     }
 }
