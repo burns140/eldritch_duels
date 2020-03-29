@@ -102,7 +102,7 @@ const signup = (data, sock) => {
                         banLength: 0,                          // length of current tempBan
                         emailToChange: "",                   // Email they are trying to change to
                         reported: [],
-                        customArt: []
+                        customArt: ""
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
