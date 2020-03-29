@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID;
 var commonCardNames = [
     "Mi_Go",
     "Beast Patient",
-    "Mi-Go Zombie",
+    "Mi_Go Zombie",
     "Nightmare Apostle",
     "Blood Vial"
 ]

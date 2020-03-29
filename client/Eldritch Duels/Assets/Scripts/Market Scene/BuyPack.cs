@@ -80,7 +80,7 @@ public class BuyPack : MonoBehaviour
             foreach (string c in cards)
             {
                 Debug.Log(c);
-                AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), "addCard", c);
+                AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), c, "addCard");
                 string added = Global.NetworkRequest(newcard);
             }
             for (int a = 0; a < cards.Length; a++)
