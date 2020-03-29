@@ -40,7 +40,7 @@ public class WaitingScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /* void Update()
     {
         // Since async doesn't want to work, just check if there is data every frame
         if (Global.client.Available != 0)
@@ -92,5 +92,5 @@ public class WaitingScript : MonoBehaviour
                 }
             }
         }
-    }
+    } */
 }
