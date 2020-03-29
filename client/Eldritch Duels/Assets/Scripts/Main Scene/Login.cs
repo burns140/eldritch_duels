@@ -104,8 +104,13 @@ public class Login : MonoBehaviour
                 Global.email = email;
                 if (Global.hasCustomAvatar())
                 {
+                    Debug.Log("Custom avatar detected");
                     Global.CustomAvatar = Global.getCustomAvatar();
                     Global.hasCustom = true;
+                }
+                else
+                {
+                    Debug.Log("No custom avatar");
                 }
                 return tempFile;
             }

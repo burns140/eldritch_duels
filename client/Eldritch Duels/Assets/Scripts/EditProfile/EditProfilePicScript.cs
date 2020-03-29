@@ -82,12 +82,12 @@ public class EditProfilePicScript : MonoBehaviour
             picItems.Add(picOption); 
         }
 
-        Sprite uploaded = Global.getCustomAvatar();
-
-        var customavatar = new Dropdown.OptionData("Uploaded", uploaded);
-        picItems.Add(customavatar);
-
-        //TODO: QUERY SERVER IF THERE IS UPLOADED IMAGE, IF SO, RETRIEVE IMAGE AND ADD TO PICTURE LIST
+        if (Global.hasCustom)
+        {
+            Sprite uploaded = Global.getCustomAvatar();
+            var customavatar = new Dropdown.OptionData("Uploaded", uploaded);
+            picItems.Add(customavatar);
+        }
 
         dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
     }
@@ -98,13 +98,18 @@ public class EditProfilePicScript : MonoBehaviour
     }
 
     private void displayPic(){
-
         int originalPic = Global.avatar; // Get original picnum from global variable
         picnum = Global.avatar; // in case it's cancelled
         Debug.Log("displayPic: Global.avatar value is "+Global.avatar);
         var dropdownInstance = dropdown.GetComponent<Dropdown>();
-        dropdownInstance.value = originalPic; // Select original picture option on the UI
-
+        if (Global.hasCustom)
+        {
+            dropdownInstance.value = 9;
+        }
+        else
+        {
+            dropdownInstance.value = originalPic; // Select original picture option on the UI
+        }
     }
 
     private void displayBio(){
@@ -161,6 +166,7 @@ public class EditProfilePicScript : MonoBehaviour
                 Global.hasCustom = true;
                 Global.CustomAvatar = Global.getCustomAvatar();
                 dropdownSetup();
+                displayPic();
             }
             else
             {
