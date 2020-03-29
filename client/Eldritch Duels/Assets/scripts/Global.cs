@@ -677,6 +677,7 @@ namespace eldritch {
         #region root
         public static void InitNewPlayer()
         {
+            return;
             if (userCards.Count == 0)
             {
                 InitUserCards("0-32", 0);
