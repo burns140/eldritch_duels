@@ -78,7 +78,7 @@ MonoBehaviour:
     defence: 5
     type: 0
     rartiy: 2
-    cardImage: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
+    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
     canFly: 1
     isStealth: 0
     isDefender: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
     defence: 3
     type: 0
     rartiy: 0
-    cardImage: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
+    cardImage: {fileID: 2100000, guid: 2a1a4e245c0ef1a40a68e65549068961, type: 2}
     canFly: 0
     isStealth: 0
     isDefender: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
     defence: 6
     type: 0
     rartiy: 2
-    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
+    cardImage: {fileID: 2100000, guid: f6ef397774c8b6843ac1d7345ef17970, type: 2}
     canFly: 0
     isStealth: 0
     isDefender: 0

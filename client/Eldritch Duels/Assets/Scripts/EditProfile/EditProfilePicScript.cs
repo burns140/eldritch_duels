@@ -19,6 +19,7 @@ public class EditProfilePicScript : MonoBehaviour
     public Dropdown dropdown; // Picture Dropdown on the UI
     public Sprite[] pictures; // List of available pictures
     public Image errorimage; // Image for error message
+    public Text errortext; // Text on error message
     public InputField screenNameInput; // Screenname field on the UI
     public InputField bioInput; // Bio field on the UI
     public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" }; // for checking picture files
@@ -149,7 +150,15 @@ public class EditProfilePicScript : MonoBehaviour
 
                 byte[] imagebytes = File.ReadAllBytes(path);
 
-                string bytetostring = Encoding.Default.GetString(imagebytes);
+                if (imagebytes.Length > 16000000)
+                {
+                    Debug.Log("Image is too large!");
+                    errortext.text = "Image must be less than 16 MB.";
+                    errorimage.gameObject.SetActive(true);
+                    return;
+                }
+
+                string bytetostring = Convert.ToBase64String(imagebytes);
 
                 profilepicture pfp = new profilepicture(bytetostring, Global.getToken(), Global.getID(), "setCustomAvatar");
 
@@ -171,6 +180,7 @@ public class EditProfilePicScript : MonoBehaviour
             else
             {
                 //MAKE ERROR MESSAGE
+                errortext.text = "Invalid file selected.";
                 errorimage.gameObject.SetActive(true);
                 Debug.Log("Invalid file!");
             }
