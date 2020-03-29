@@ -422,7 +422,9 @@ const setCustomAvatar = (data, sock) => {
     const id = data.id;
     const pic = data.pic;
 
-    const insertdata = Binary(pic);
+    var insertdata = Binary(pic);
+
+    console.log(insertdata);
 
     try {
         MongoClient.get().then(client => {
@@ -461,7 +463,9 @@ const getCustomAvatar = (data, sock) => {
                 if (result == null) {
                     throw new Error('no user found');
                 }
-                sock.write(result.customArt.read(0, result.customArt.length));
+                console.log(result.customArt);
+                sock.write(result.customArt);
+                //sock.write(result.customArt.read(0, result.customArt.length));
                 console.log('returned custom art');
             }).catch(err => {
                 console.log(err);

@@ -133,12 +133,12 @@ namespace eldritch {
     }
     public class profilepicture
     {
-        public byte[] pic;
+        public string pic;
         public string token;
         public string id;
         public string cmd;
 
-        public profilepicture(byte[] picture, string token, string id, string cmd)
+        public profilepicture(string picture, string token, string id, string cmd)
         {
             this.pic = picture;
             this.token = token;
@@ -786,6 +786,21 @@ namespace eldritch {
             {
                 Debug.Log("error");
             }
+        }
+
+        public static void addDuelCredits(bool won, int turns, bool AI)
+        {
+            double multi = 1;
+            if (!won)
+            {
+                multi /= 2;
+            }
+            if (AI)
+            {
+                multi /= 2;
+            }
+            int credits = (int)(((turns * 5)/2 + 50) * multi);
+            CreditRequest result = new CreditRequest("updateCredits", getID(), getToken(), credits);
         }
 
         public static Sprite getCustomAvatar()

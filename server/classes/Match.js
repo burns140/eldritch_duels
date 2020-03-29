@@ -36,6 +36,9 @@ module.exports = class Match {
             this.sockets[0].write("my turn");
         }
 
+        //ask/discuss on discord before changing anything in this file plz, also matchmaking files too
+        //help us help you, k?
+
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
