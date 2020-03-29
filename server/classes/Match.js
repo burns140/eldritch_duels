@@ -35,6 +35,8 @@ module.exports = class Match {
             this.sockets[0].write("my turn");
         }*/
 
+        //ask on discord before changing anything in this file plz
+
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
