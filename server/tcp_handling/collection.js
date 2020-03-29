@@ -23,7 +23,7 @@ var legendaryCardNames = [
     "Great One's Wisdom",
     "Blood Starved Beast",
     "Moon Presence",
-    "Ludwig, Holy Blade",
+    "Ludwig Holy Blade",
     "Lady Maria"
 ]
 

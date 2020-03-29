@@ -155,7 +155,7 @@ const cards = [
     },
 
     {
-        Name: "Ludwig, Holy Blade",
+        Name: "Ludwig Holy Blade",
         ID: 15,
         Cost: 15,
         Power: 15,
