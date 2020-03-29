@@ -126,6 +126,8 @@ MonoBehaviour:
     - Damage Opp
     - Damage Opp
     - Damage Opp
+    - Damage Opp
+    - Damage Opp
   - cardName: Brain of Mensis
     id: 8
     owned: 0
@@ -134,7 +136,7 @@ MonoBehaviour:
     defence: 2
     type: 0
     rartiy: 1
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 2100000, guid: d3960105a387e0a418430780181bef97, type: 2}
     canFly: 1
     isStealth: 0
     isDefender: 0

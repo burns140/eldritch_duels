@@ -176,7 +176,7 @@ namespace eldritch.cards {
                         //check id deck already contains same card
                         if(inDeck[j].c.CardID == c.CardID)
                         {
-                            if(inDeck[i].count >= Constants.MAX_CARD_ALLOWED)
+                            if(inDeck[i].count >= Constants.MAX_CARD_ALLOWED && inDeck[i].c.SpellRarity == CardRarity.LEGENDARY)
                             {
                                 return;
                             }
