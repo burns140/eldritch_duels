@@ -157,6 +157,13 @@ public class Login : MonoBehaviour
             ErrorText.gameObject.SetActive(true);
             return;
         }
+        else if (result.Contains("Account with that email doesn't exist")) {
+            Debug.Log("No account with that email exists");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "No email with this account";
+            ErrorText.gameObject.SetActive(true);
+            return;
+        }
         else if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {
             Debug.Log("Login successful! Temp file is: " + result);
