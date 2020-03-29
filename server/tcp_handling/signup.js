@@ -64,8 +64,8 @@ const signup = (data, sock) => {
                     var startDecks = [              // The decks they will start with
                         {
                             deckname: "First Deck",
-                            "Test 0": 20,
-                            "Test 1": 12
+                            "Mi_Go": 20,
+                            "Blood Vial": 12
                         }
                     ];
 
