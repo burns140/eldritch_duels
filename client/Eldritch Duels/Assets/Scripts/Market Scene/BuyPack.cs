@@ -47,6 +47,7 @@ public class BuyPack : MonoBehaviour
     {
         getCollection creds = new getCollection("getCredits", Global.getID(), Global.getToken());
         string amount = Global.NetworkRequest(creds);
+        Global.usercredits = Int32.Parse(amount);
         moneyAmount.text = amount;
         card1.onClick.AddListener(clickedButton);
         card2.onClick.AddListener(clickedButton);
@@ -63,24 +64,25 @@ public class BuyPack : MonoBehaviour
 
     public void purchasePack()
     {
-        getCollection creds = new getCollection("getCredits", Global.getID(), Global.getToken());
+        /*getCollection creds = new getCollection("getCredits", Global.getID(), Global.getToken());
         string amount = Global.NetworkRequest(creds);
         Debug.Log(amount);
         Int32 amountnum = Int32.Parse(amount);
-        if (amountnum > 100) //CHANGE TO WHATEVER THE COST SHOULD BE
+        if (amountnum > 100) //CHANGE TO WHATEVER THE COST SHOULD BE*/
+        if (Global.usercredits > 100)
         {
             clicked = 0;
             getCollection asdf = new getCollection("openPack", Global.getID(), Global.getToken());
             string res = Global.NetworkRequest(asdf);
             string[] cards = res.Split(',');
-            amountnum -= 100;
-            moneyAmount.text = amountnum.ToString();
+            Global.usercredits -= 100;
+            moneyAmount.text = Global.usercredits.ToString();
             CreditRequest decrease = new CreditRequest("updateCredits", Global.getID(), Global.getToken(), -100);
             Global.NetworkRequest(decrease);
             foreach (string c in cards)
             {
                 Debug.Log(c);
-                AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), "addCard", c);
+                AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), c, "addCard");
                 string added = Global.NetworkRequest(newcard);
             }
             for (int a = 0; a < cards.Length; a++)
