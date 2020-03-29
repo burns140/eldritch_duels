@@ -80,6 +80,7 @@ public class ProfileScript : MonoBehaviour
             this.id = id;
             this.token = token;
             this.cmd = cmd;
+            Debug.Log("Generic request being sent");
         }
     }
 
@@ -317,7 +318,7 @@ public class ProfileScript : MonoBehaviour
     }
 
     private void setAddButton(){ // set up the add friend/unfriend button
-
+        Debug.Log("Setting up add button");
         if(isMe){
             AddButton.SetActive(false); // cannot add myself as friend
         }
@@ -788,6 +789,7 @@ public class ProfileScript : MonoBehaviour
     }
 
     private List<string> setUpFriendRequestsList(){ // Set up friend requests list
+        Debug.Log("Setting up friend request list");
         // List<string> friendRequestsList = new List<string>(); // To store all my friend requests
         
         Button[] gameObjects = requestsPanel.GetComponentsInChildren<Button>(); // Get previous request buttons
