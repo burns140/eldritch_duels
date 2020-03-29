@@ -46,7 +46,7 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
-            if (data == "YOU LOSE\n") {
+            if (data == "MATCH END\n") {
                 this.endMatch(data, id);
                 return;
             }

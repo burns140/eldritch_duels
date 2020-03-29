@@ -88,14 +88,15 @@ namespace eldritch.cards
                 BaseCard.material = baseCardSRC.CardImage;
             if(fodderCardSRC != null)
                 FodderCard.material = fodderCardSRC.CardImage;
-
+            ResultCard.material = null;
             if (baseCardSRC != null && fodderCardSRC != null)
             {
                 Debug.Log("Showing recipe");
                 CraftingRecipe cr = Library.PreviewCraft(baseCardSRC.CardName, fodderCardSRC.CardName);
                 if (!cr.Equals(CraftingRecipe.Empty))
                 {
-                    CraftCost.text = "COST: " + cr.CraftCost + "";
+
+                    //CraftCost.text = "COST: " + cr.CraftCost + "";
                     resultCardSRC = Library.GetCard(cr.ResultCard);
                     if (resultCardSRC != null)
                     {

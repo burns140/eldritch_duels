@@ -142,8 +142,10 @@ public class DuelScript : MonoBehaviour
 
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
             Debug.Log($"Trimmed: {trimmed}");
+            if (trimmed.Contains("MATCH END")) {
+                break;
+            }
             receivedDataFromOpp(trimmed);
-            
         }
 
     }
@@ -970,6 +972,7 @@ public class DuelScript : MonoBehaviour
         // Change scene
         Global.DuelMyTurn = false;
         Global.numTurns = currentTurn;
+        sendDataToOpp("MATCH END");
         if(iWin){
             PlayerPrefs.SetString(WON_PREF_KEY, "you");
         }

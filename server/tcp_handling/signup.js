@@ -19,7 +19,8 @@ const signup = (data, sock) => {
     const username = data.name;     // username
     const password = data.password; // password
     const hash = bcrypt.hashSync(password, 10);     // Hash password
-    const host = "localhost:7999";
+    //const host = "localhost:7999";
+    const host = "66.253.158.241:7999";
 
     try {
         MongoClient.get().then(client => {
@@ -63,8 +64,8 @@ const signup = (data, sock) => {
                     var startDecks = [              // The decks they will start with
                         {
                             deckname: "First Deck",
-                            "Test 0": 20,
-                            "Test 1": 12
+                            "Mi_Go": 20,
+                            "Blood Vial": 12
                         }
                     ];
 
@@ -145,4 +146,4 @@ const signup = (data, sock) => {
     }
 }
 
-exports.signup = signup;
+exports.signup = signup
