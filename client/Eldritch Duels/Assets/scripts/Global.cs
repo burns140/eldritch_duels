@@ -123,12 +123,12 @@ namespace eldritch {
         public string token;
         public int value;
 
-        public CreditRequest(string cmd, string id, string token, int credit)
+        public CreditRequest(string cmd, string id, string token, int value)
         {
             this.cmd = cmd;
             this.id = id;
             this.token = token;
-            this.value = credit;
+            this.value = value;
         }
     }
     public class profilepicture

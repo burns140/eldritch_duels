@@ -62,6 +62,11 @@ public class BuyPack : MonoBehaviour
         
     }
 
+    void Awake()
+    {
+        
+    }
+
     public void purchasePack()
     {
         /*getCollection creds = new getCollection("getCredits", Global.getID(), Global.getToken());
@@ -77,10 +82,12 @@ public class BuyPack : MonoBehaviour
             string[] cards = res.Split(',');
             Global.usercredits -= 100;
             moneyAmount.text = Global.usercredits.ToString();
+            System.Threading.Thread.Sleep(100);
             CreditRequest decrease = new CreditRequest("updateCredits", Global.getID(), Global.getToken(), -100);
-            Global.NetworkRequest(decrease);
+            string consumer = Global.NetworkRequest(decrease);
             foreach (string c in cards)
             {
+                System.Threading.Thread.Sleep(100);
                 Debug.Log(c);
                 AddCardRequest newcard = new AddCardRequest(Global.getID(), Global.getToken(), c, "addCard");
                 string added = Global.NetworkRequest(newcard);
@@ -119,7 +126,6 @@ public class BuyPack : MonoBehaviour
         {
             ErrorPanel.gameObject.SetActive(true);
         }
-
     }
 
     public void clickedButton() // shows confirm button
