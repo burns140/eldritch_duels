@@ -146,4 +146,4 @@ const signup = (data, sock) => {
     }
 }
 
-exports.signup = signup;
+exports.signup = signup
