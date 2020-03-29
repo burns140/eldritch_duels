@@ -40,8 +40,6 @@ const signup = (data, sock) => {
 
 
                     var startCollection = {         // The collection they start with
-                        "Test 0": 30,
-                        "Test 1": 30,
                         "Mi_Go": 24,
                         "Mi_Go Worker": 21,
                         "Mi_Go Queen": 6,
