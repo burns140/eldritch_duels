@@ -185,7 +185,7 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
-        public static bool hasCustom;
+        public static bool hasCustom = false;
         public static Sprite CustomAvatar;
 
         public static bool DuelMyTurn = false;
