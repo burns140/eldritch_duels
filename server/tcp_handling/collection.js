@@ -191,13 +191,13 @@ const openPack = (data, sock) => {
         if (cardFive >= 1 && cardFive < 4) {
             pack.push(legendaryCardNames[Math.floor(Math.random() * legendaryCardNames.length)]);
         } else if (cardFive >= 4 && cardFive < 9 ) {
-            pack.push(rareCardNames[Math.floor(Math.random() *rareCardNames.length)]);
+            pack.push(rareCardNames[Math.floor(Math.random() * rareCardNames.length)]);
         } else {
             pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
         }
 
         sock.write(pack.toString());
-        console.log('pack written successfully');
+        console.log(pack.toString());
     } catch (err) {
         sock.write(err.toString());
         console.log(err);
@@ -218,7 +218,7 @@ const getCredits = (data, sock) => {
                     throw new Error("no user found");
                 }
 
-                sock.write(result.credits.toString());
+                sock.write(result.credits);
                 console.log("credits returned");
             }).catch(err => {
                 sock.write(err.toString());
