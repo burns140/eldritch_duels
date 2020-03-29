@@ -788,7 +788,7 @@ namespace eldritch {
             }
         }
 
-        public static void addDuelCredits(bool won, int turns, bool AI)
+        public static int addDuelCredits(bool won, int turns, bool AI)
         {
             double multi = 1;
             if (!won)
@@ -801,6 +801,7 @@ namespace eldritch {
             }
             int credits = (int)(((turns * 5)/2 + 50) * multi);
             CreditRequest result = new CreditRequest("updateCredits", getID(), getToken(), credits);
+            return credits;
         }
 
         public static Sprite getCustomAvatar()

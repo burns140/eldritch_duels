@@ -86,6 +86,7 @@ public class DuelScript : MonoBehaviour
     private const int MAX_MANA = 1; // Max Mana for a user
     public Phase currentPhase = Phase.MAIN;
     public int currentTurn = 1;
+    public int myTurnsNum = 0;
 
     public Text phaseText = null;
     
@@ -96,6 +97,7 @@ public class DuelScript : MonoBehaviour
     private PlayerState oppState;
 
     private const string WON_PREF_KEY = "whowon"; // PREF KEY to store who won
+    private const string CREDIT_PREF_KEY = "credits"; // PREF KEY to store credits
 
     #endregion
 
@@ -923,6 +925,7 @@ public class DuelScript : MonoBehaviour
         oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
         phaseText.text = "WAITING";
         currentTurn++;
+        myTurnsNum++;
     }
 
 
@@ -973,9 +976,10 @@ public class DuelScript : MonoBehaviour
         else{
             PlayerPrefs.SetString(WON_PREF_KEY, "opp");
         }
+        int cred = Global.addDuelCredits(iWin, myTurnsNum, false);
+        PlayerPrefs.SetInt(CREDIT_PREF_KEY, cred);
         //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
         SceneManager.LoadScene("EndDuel");
-
     }
     #endregion
 }
