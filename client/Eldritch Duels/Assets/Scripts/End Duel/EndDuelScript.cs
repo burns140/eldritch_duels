@@ -20,16 +20,19 @@ public class EndDuelScript : MonoBehaviour
     public GameObject wonText; // who won text in UI
     public GameObject creditsValue; // value of credits earned text in UI
     public Button goToLobbyButton; // button to go to lobby
-    void Awake(){
+    void Start(){
+        int baseCredit = Global.numTurns * 5 /2 + 50;
+        int myCred = baseCredit;
         string who = PlayerPrefs.GetString(WON_PREF_KEY);
         if(who == "you"){
             wonText.GetComponent<Text>().text = "YOU WON !!";
         }
         else{
             wonText.GetComponent<Text>().text = "YOU LOST";
+            myCred /=2;
         }
-        Global.addCredits();
-        creditsValue.GetComponent<Text>().text = "100";
+        Global.addCredits(myCred);
+        creditsValue.GetComponent<Text>().text = myCred + "";
     }
 
     public void goToLobby(){ // go to the lobby scene
