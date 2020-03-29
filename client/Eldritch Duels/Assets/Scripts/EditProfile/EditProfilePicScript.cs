@@ -144,7 +144,9 @@ public class EditProfilePicScript : MonoBehaviour
 
                 byte[] imagebytes = File.ReadAllBytes(path);
 
-                profilepicture pfp = new profilepicture(imagebytes, Global.getToken(), Global.getID(), "setCustomAvatar");
+                string bytetostring = Encoding.Default.GetString(imagebytes);
+
+                profilepicture pfp = new profilepicture(bytetostring, Global.getToken(), Global.getID(), "setCustomAvatar");
 
                 string json = JsonConvert.SerializeObject(pfp);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
