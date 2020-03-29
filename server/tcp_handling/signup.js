@@ -19,7 +19,8 @@ const signup = (data, sock) => {
     const username = data.name;     // username
     const password = data.password; // password
     const hash = bcrypt.hashSync(password, 10);     // Hash password
-    const host = "localhost:7999";
+    //const host = "localhost:7999";
+    const host = "66.253.158.241:7999";
 
     try {
         MongoClient.get().then(client => {
