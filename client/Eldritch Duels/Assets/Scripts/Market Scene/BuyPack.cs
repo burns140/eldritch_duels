@@ -66,6 +66,7 @@ public class BuyPack : MonoBehaviour
         getCollection creds = new getCollection("getCredits", Global.getID(), Global.getToken());
         string amount = Global.NetworkRequest(creds);
         Debug.Log(amount);
+        Int32 amountnum = Int32.Parse(amount);
         if (amountnum > 100) //CHANGE TO WHATEVER THE COST SHOULD BE
         {
             clicked = 0;
