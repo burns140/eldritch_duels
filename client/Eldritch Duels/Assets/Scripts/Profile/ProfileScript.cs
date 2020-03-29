@@ -80,7 +80,6 @@ public class ProfileScript : MonoBehaviour
             this.id = id;
             this.token = token;
             this.cmd = cmd;
-            Debug.Log("Generic request being sent");
         }
     }
 

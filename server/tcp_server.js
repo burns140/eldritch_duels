@@ -128,6 +128,7 @@ function dataHandler(data) {
                     break;
                 case "updateCredits":
                     Collection.updateCredits(obj, sock);
+                    break;
                 case "getFriendRequests":
                     Friends.getFriendRequests(obj, sock);
                     break;
