@@ -142,8 +142,10 @@ public class DuelScript : MonoBehaviour
 
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
             Debug.Log($"Trimmed: {trimmed}");
+            if (trimmed.Contains("MATCH END")) {
+                break;
+            }
             receivedDataFromOpp(trimmed);
-            
         }
 
     }
