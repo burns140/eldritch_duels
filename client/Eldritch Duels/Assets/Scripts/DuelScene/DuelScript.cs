@@ -972,6 +972,7 @@ public class DuelScript : MonoBehaviour
         // Change scene
         Global.DuelMyTurn = false;
         Global.numTurns = currentTurn;
+        sendDataToOpp("MATCH END");
         if(iWin){
             PlayerPrefs.SetString(WON_PREF_KEY, "you");
         }
