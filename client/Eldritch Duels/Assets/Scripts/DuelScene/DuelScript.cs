@@ -969,6 +969,7 @@ public class DuelScript : MonoBehaviour
         // Calculate credits
         // Change scene
         Global.DuelMyTurn = false;
+        Global.numTurns = currentTurn;
         if(iWin){
             PlayerPrefs.SetString(WON_PREF_KEY, "you");
         }

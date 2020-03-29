@@ -189,6 +189,7 @@ namespace eldritch {
         public static Sprite CustomAvatar;
 
         public static bool DuelMyTurn = false;
+        public static int numTurns = 0;
         #endregion
 
 
@@ -767,9 +768,24 @@ namespace eldritch {
             return responseData;
         }
 
-        public static void addCredits()
+        public static void addCredits(int amount)
         {
-            CreditRequest asdf = new CreditRequest("updateCredits", getID(), getToken(), 100);
+           
+            try
+            {
+                CreditRequest arc = new CreditRequest("updateCredits", getID(), getToken(), amount);
+                string json = JsonConvert.SerializeObject(arc);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[100000];
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            catch (Exception)
+            {
+                Debug.Log("error");
+            }
         }
 
         public static int addDuelCredits(bool won, int turns, bool AI)
