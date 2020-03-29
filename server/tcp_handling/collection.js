@@ -1,7 +1,6 @@
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
 var commonCardNames = [
-    "Test 1",
     "Mi_Go",
     "Beast Patient",
     "Mi-Go Zombie",
@@ -20,7 +19,6 @@ var rareCardNames =  [
 ]
 
 var legendaryCardNames = [
-    "Test 0",
     "Mi_Go Queen",
     "Great One's Wisdom",
     "Blood Starved Beast",
