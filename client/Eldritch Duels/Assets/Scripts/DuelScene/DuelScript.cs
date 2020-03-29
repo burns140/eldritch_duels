@@ -190,6 +190,8 @@ public class DuelScript : MonoBehaviour
 
     public void EndTurnNow(){
         if(isMyTurn && currentPhase != Phase.WAITING){
+            string data = "end";
+            sendDataToOpp(data);
             endMyTurn();
         }
     }
@@ -214,6 +216,7 @@ public class DuelScript : MonoBehaviour
     #region Bookkeeping Before Playing
     IEnumerator initCoroutines(){
         yield return StartCoroutine(initalDraw()); // Set up hand to have 6 cards
+        yield return StartCoroutine(startText());
         //yield return (StartCoroutine(testPlays()));
         //yield return StartCoroutine(testPlayArea()); // Test moving cards from hand to my play area
         //yield return StartCoroutine(testOppArea()); // Test add cards to opponent play area
@@ -279,6 +282,17 @@ public class DuelScript : MonoBehaviour
         
         
 
+    }
+
+    private IEnumerator startText(){
+        if(Global.DuelMyTurn){
+            gameText.text = "FIRST PLAYER";
+        }else{
+            gameText.text = "SECOND PLAYER";
+        }
+
+        yield return new WaitForSeconds(2);
+        gameText.text = "";
     }
 
     // Called at start of game to set up card list from deck being used
@@ -593,6 +607,11 @@ public class DuelScript : MonoBehaviour
 
     //format and sent attacker to opponent
     private void confirmAttackers(){
+        if(attackers.Count == 0){
+            sendDataToOpp("end");
+            endMyTurn();
+            return;
+        }
         string data = "attack:";
         bool first = true;
         foreach(AttackBlock ab in attackers){
@@ -681,6 +700,7 @@ public class DuelScript : MonoBehaviour
             case "surrender":
                 endGame(true);
                 break;
+                
             case "my turn":
                 isMyTurn = true;
                 break;
@@ -753,6 +773,10 @@ public class DuelScript : MonoBehaviour
         foreach(string s in attackers){
             addOppAttacker(s); //add opp attacker
         }
+        if(myState.onField.Count > 0)
+            currentPhase = Phase.BLOCK;
+        else
+            confirmBlockers();
     }
     private void addOppAttacker(string attacker){
         for(int i = 0; i < oppPlayAreaPanel.transform.childCount;i++){
@@ -760,6 +784,7 @@ public class DuelScript : MonoBehaviour
             !oppPlayAreaPanel.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking &&
             oppPlayAreaPanel.transform.GetChild(i).gameObject.name.Equals(attacker)){ //check card is not already set to attacker
                 AttackBlock attackBlock; //create blank attacker blocker struct
+                oppPlayAreaPanel.transform.GetChild(i).gameObject.GetComponent<Image>().color = Color.red;
                 attackBlock.attacker = oppPlayAreaPanel.transform.GetChild(i).gameObject; //add teh attacker ui object
                 attackBlock.attackCard = Library.GetCard(attacker); //get the attacker card
                 attackBlock.blocker = null;
@@ -768,7 +793,7 @@ public class DuelScript : MonoBehaviour
                 break;
             }
         }
-        currentPhase = Phase.BLOCK;
+        
     }
 
     public void AddOppBlockers(string blockers){
@@ -891,25 +916,51 @@ public class DuelScript : MonoBehaviour
 
     // End my turn
     private void endMyTurn(){
+        resetStates();
         isMyTurn = false; // No longer my turn
         string endString = "YOUR TURN"; // Send this to server
         currentPhase = Phase.WAITING; //wait for opp move
         oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
+        phaseText.text = "WAITING";
         currentTurn++;
     }
 
 
     // End opponent's play
     private void endOppTurn(){
+        resetStates();
         isMyTurn = true; // Now it's my turn
         currentPhase = Phase.MAIN; //start my turn
         myState.mana = myState.mana + currentTurn /8 + 1; //increase mana
+        phaseText.text = "ATTACK";
         currentTurn++;
         drawCard();
     }
+
+    private void resetStates(){
+        //reset opp
+        for(int i = 0; i< oppPlayAreaPanel.transform.childCount;i++){
+            oppPlayAreaPanel.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
+            oppPlayAreaPanel.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
+            oppPlayAreaPanel.transform.GetChild(i).GetComponent<Image>().color = Color.white;
+        }
+
+        //reset me
+        for(int i = 0; i< myPlayAreaPanel.transform.childCount;i++){
+            myPlayAreaPanel.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
+            myPlayAreaPanel.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
+            myPlayAreaPanel.transform.GetChild(i).GetComponent<Image>().color = Color.white;
+        }
+    }
+
     #endregion
 
     #region End Game
+
+    public void Surrender(){
+        sendDataToOpp("surrender");
+        endGame(false);
+    }
     // End game
     private void endGame(bool iWin){
         // Calculate credits

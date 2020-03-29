@@ -8,7 +8,7 @@ using eldritch;
 
 public class WaitingScript : MonoBehaviour
 {
-    public string nextSceneName = "Scenes/DuelScene";
+    public string nextSceneName = "DuelScene";
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +54,7 @@ public class WaitingScript : MonoBehaviour
                 try
                 {
                     string[] lines = responseData.Split('\n');
+                    Debug.Log("resp " + responseData);
                     if (lines.Length == 3 || lines.Length == 4)
                     {
                         Global.enemyUsername = lines[0].Substring(expectedBeginning.Length);
@@ -63,7 +64,7 @@ public class WaitingScript : MonoBehaviour
                         Debug.Log("Match ID: " + Global.matchID);
 
                         if (lines.Length == 4) {
-                            if (lines[2] == "my turn")
+                            if (lines[2].Contains("my turn"))
                                 Global.DuelMyTurn = true;
                             else
                                 Debug.Log("Unknown line: " + lines[2]);
@@ -79,12 +80,15 @@ public class WaitingScript : MonoBehaviour
                 catch (Exception e)
                 {
                     Debug.Log(e);
+                }finally{
+                    SceneManager.LoadScene(nextSceneName);
                 }
             }
             else{
                 Debug.Log(responseData);
                 if(responseData.Contains("my turn")){
                     Global.DuelMyTurn = true;
+                    SceneManager.LoadScene(nextSceneName);
                 }
             }
         }
