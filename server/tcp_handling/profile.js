@@ -465,8 +465,8 @@ const getCustomAvatar = (data, sock) => {
                 }
                 console.log(result.customArt);
                 //sock.write(result.customArt);
-                //sock.write(result.customArt.read(0, result.customArt.length));
-                sock.write(result.customArt.value());
+                sock.write(result.customArt.read(0, result.customArt.length));
+                //sock.write(result.customArt);
                 console.log('returned custom art');
             }).catch(err => {
                 console.log(err);

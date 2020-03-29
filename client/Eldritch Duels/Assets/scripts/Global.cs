@@ -817,8 +817,16 @@ namespace eldritch {
 
             Texture2D imagetexture = new Texture2D(100, 100);
 
-            imagetexture.LoadImage(Convert.FromBase64String(responseData));
-            imagetexture.Apply();
+            bool success = imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            if (success)
+            {
+                Debug.Log("Image conversion successful");
+            }
+            else
+            {
+                Debug.Log("Image conversion failed");
+            }
+            imagetexture.Apply(true);
 
             Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
             return imagesprite;

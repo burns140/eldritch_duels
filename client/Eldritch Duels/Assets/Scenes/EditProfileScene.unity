@@ -298,6 +298,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: efcb7f098b6132d4094e64f29c284ac3, type: 3}
   - {fileID: 21300000, guid: 32d2de7c4072e8f4dbc93b081c3a8b6b, type: 3}
   errorimage: {fileID: 741230853}
+  errortext: {fileID: 1238690380}
   screenNameInput: {fileID: 704537422}
   bioInput: {fileID: 676138866}
   upload: {fileID: 7744967}
@@ -785,7 +786,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1225820685}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.5962917
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2430,7 +2431,7 @@ GameObject:
   - component: {fileID: 1238690381}
   - component: {fileID: 1238690380}
   m_Layer: 5
-  m_Name: Text
+  m_Name: ErrorText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
