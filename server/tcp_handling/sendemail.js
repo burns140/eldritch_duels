@@ -102,7 +102,7 @@ const resetPassword = (data, sock) => {
 const resendVerification = (data, sock) => {
     const toEmail = data.email;
     const id = data.id;
-    const host = "localhost:7999";
+    const host = "66.253.158.241:7999";
 
 
     try {
