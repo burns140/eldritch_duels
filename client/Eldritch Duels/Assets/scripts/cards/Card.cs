@@ -124,6 +124,9 @@ namespace eldritch.cards
         public void AddAbility(Effect ability){
             this.effectnames.Add(ability.GetName());
         }
+        public void resetEffect(){
+            this.effectnames = new List<string>();
+        }
 
         public void RemoveAbility(string abilityName){
             

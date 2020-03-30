@@ -124,10 +124,6 @@ MonoBehaviour:
     effectnames:
     - Damage Opp
     - Damage Opp
-    - Damage Opp
-    - Damage Opp
-    - Damage Opp
-    - Damage Opp
   - cardName: Brain of Mensis
     id: 8
     owned: 0

@@ -118,7 +118,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			Debug.Log("parentToReturnTo:"+parentToReturnTo.name);
 			Debug.Log("placeholder:"+placeholder.name);
 			Debug.Log("placeholder_siblingindex:"+placeholder.transform.GetSiblingIndex());
-			if(childCount < 7 && !startArea.name.Equals("OppPlayAreaPanel")){
+			if(childCount <= 7 && !startArea.name.Equals("OppPlayAreaPanel")){
 				this.transform.SetParent( parentToReturnTo ); 
 				this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
 				GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -143,7 +143,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			}
 			else if(startArea.name == "MyPlayAreaPanel" && this.transform.parent.name.Equals("HandAreaPanel")){
 				Debug.Log("this card:"+this.name);
-				duelScript.recallCard(this.name);
+				if(duelScript.CanRecall())
+					duelScript.recallCard(this.name);
+				else
+					this.gameObject.transform.SetParent(startArea.transform);
 			}else if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel") && !duelScript.CanCast(this.gameObject)){
 				Debug.Log("Not enough mana");
 				this.gameObject.transform.SetParent(startArea.transform);
