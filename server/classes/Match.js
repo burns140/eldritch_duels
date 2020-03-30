@@ -90,8 +90,8 @@ module.exports = class Match {
 
                 sock.write(data);
 
-                //sock.on("data", this.dataHandler);
-                sock.addListener("data", this.dataHandler);
+                sock.on("data", this.dataHandler);
+                //sock.addListener("data", this.dataHandler);
             } catch (err) {
                 console.log(err);
                 sock.write(err.toString());
