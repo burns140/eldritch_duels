@@ -112,7 +112,7 @@ public class ProfileScript : MonoBehaviour
     string email;
     string returnedUsername;
     string returnedBio;
-    
+    string returnedAvatar;
 
     void Awake() // Awake is called when the script instance is being loaded
 
@@ -189,9 +189,9 @@ public class ProfileScript : MonoBehaviour
         } 
     }
 
-    private void displayPic(){ // get profile pic & display it
+    /*private void displayPic(){ // get profile pic & display it
         hasPicIndex = true;
-        if (Global.hasCustom)
+        if (Global.hasCustomAvatar())
         {
             hasPicIndex = false;
         }
@@ -204,10 +204,12 @@ public class ProfileScript : MonoBehaviour
                 int picIndex; // Store pic index
                 if(isMe){ 
                     picIndex = Global.avatar; // get my pic index 
+                    Debug.Log("isMe & haveIndex: "+ picIndex);
                     profilePic.GetComponent<Image>().sprite = pictures[picIndex]; // Set profile pic on UI
                 }
                 else{
                     picIndex = 0; // get user's pic index @STEPHEN
+                    Debug.Log("otherUser & hasIndex: "+picIndex);
                     // @TODO Let me know if server didn't work as expected @STEPHEN
                     bool userIndexFailed = false;
                     if(userIndexFailed){
@@ -221,6 +223,7 @@ public class ProfileScript : MonoBehaviour
             else{ // The picture was uploaded
                 Sprite newImage;
                 if(isMe){
+                    Debug.Log("isMe & customPic");
                     newImage = Global.CustomAvatar;
                     bool newImgFailed = false;
                     if(newImgFailed){
@@ -231,6 +234,7 @@ public class ProfileScript : MonoBehaviour
                     }
                 }
                 else{
+                    Debug.Log("otherUser & customPic");
                     // @TODO GET UPLOADED PICTURE FROM SERVER (@KEVING)
                     newImage = Global.getOtherCustomAvatar(email);
                     // @TODO Let me know if server didn't work as expected @KEVIN
@@ -242,6 +246,31 @@ public class ProfileScript : MonoBehaviour
                         profilePic.GetComponent<Image>().sprite = newImage;
                     }
                 }
+            }
+        }
+    }*/
+
+    private void displayPic(){ // get profile pic & display it
+        if(isMe){ // my profile
+            if(Global.hasCustomAvatar()){ // has a custom uploaded pic
+                Debug.Log("isMe & customPic");
+                profilePic.GetComponent<Image>().sprite = Global.CustomAvatar;
+            }
+            else{ // has a pic index
+                Debug.Log("isMe & haveIndex: "+ Global.avatar);
+                profilePic.GetComponent<Image>().sprite = pictures[Global.avatar]; // Set profile pic on UI
+            }
+        }
+        else{ // other user's profile
+            getInfo();
+            int picNum = Int32.Parse(returnedAvatar);
+            if( picNum < 0 || picNum > 8){ // has a custom uploaded pic
+                Debug.Log("otherUser & customPic");
+                profilePic.GetComponent<Image>().sprite = Global.getOtherCustomAvatar(email);
+            }
+            else{ // has a pic index
+                Debug.Log("otherUser & hasIndex: "+picNum);
+                profilePic.GetComponent<Image>().sprite = pictures[picNum]; // Set profile pic on UI
             }
         }
     }
@@ -257,6 +286,8 @@ public class ProfileScript : MonoBehaviour
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
         string[] info = responseData.Split(',');
+        
+        returnedAvatar = info[0].Split('-')[1];
         returnedBio = info[1].Split('-')[1];
         returnedUsername = info[2].Split('-')[1];
     }

@@ -855,7 +855,7 @@ namespace eldritch {
 
         public static bool hasCustomAvatar()
         {
-            return avatar < 0;
+            return (avatar < 0 || avatar > 8);
         }
         #endregion
 
