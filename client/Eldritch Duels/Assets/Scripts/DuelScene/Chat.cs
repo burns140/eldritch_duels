@@ -15,6 +15,7 @@ public class Chat : MonoBehaviour, IChatClientListener
     public UnityEngine.UI.Button sendbutton;
     public UnityEngine.UI.InputField sendtext;
     public UnityEngine.UI.Text textbox;
+    private string channel;
     private string messagetext;
 
     public void DebugReturn(DebugLevel level, string message)
@@ -40,7 +41,7 @@ public class Chat : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        chatClient.Subscribe(new string[] { Global.matchID });
+        chatClient.Subscribe(new string[] { channel });
     }
 
     public void OnDisconnected()
@@ -51,13 +52,13 @@ public class Chat : MonoBehaviour, IChatClientListener
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
         int msgCount = messages.Length;
-        textbox.text = "";
         for (int i = 0; i < msgCount; i++)
         { //go through each received msg
             string sender = senders[i];
             string msg = (string)(messages[i]);
             Debug.Log(sender + ": " + msg);
-            textbox.text += sender + ": " + msg + "\n";
+            textbox.text = textbox.text + sender + ": " + msg + "\n";
+            Debug.Log(textbox.text.Length);
         }
     }
 
@@ -122,12 +123,15 @@ public class Chat : MonoBehaviour, IChatClientListener
     public void sendMessage()
     {
         Debug.Log("Attempting to send message...");
-        chatClient.PublishMessage(Global.matchID, messagetext);
+        chatClient.PublishMessage(channel, messagetext);
     }
 
     // Start is called before the first frame update
     void Start() // REWORK TO CONNECT WHEN DUEL SCENE IS OPENED
     {
+        textbox.text = "";
+        channel = "Test";
+        //channel = Global.matchID;
         connect();
         sendbutton.onClick.AddListener(sendMessage);
     }
