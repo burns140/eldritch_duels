@@ -811,7 +811,7 @@ namespace eldritch {
             string json = JsonConvert.SerializeObject(cust);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
-            data = new Byte[100000];
+            data = new Byte[16000000];
             string responseData = string.Empty;
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
