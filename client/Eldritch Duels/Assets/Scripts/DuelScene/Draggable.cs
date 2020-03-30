@@ -118,7 +118,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			Debug.Log("parentToReturnTo:"+parentToReturnTo.name);
 			Debug.Log("placeholder:"+placeholder.name);
 			Debug.Log("placeholder_siblingindex:"+placeholder.transform.GetSiblingIndex());
-			if(childCount < 7 && !startArea.name.Equals("OppPlayAreaPanel")){
+			if(childCount <= 7 && !startArea.name.Equals("OppPlayAreaPanel")){
 				this.transform.SetParent( parentToReturnTo ); 
 				this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() ); // Set the level to current parent's children
 				GetComponent<CanvasGroup>().blocksRaycasts = true;

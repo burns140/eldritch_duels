@@ -412,7 +412,7 @@ public class DuelScript : MonoBehaviour
 
     private bool hasRecalled = false;
     public bool CanRecall(){
-        if(myState.onField.Count < DuelFunctions.MAX_FIELD || hasRecalled){
+        if(myState.onField.Count < (DuelFunctions.MAX_FIELD - 1) || hasRecalled){
             return false;
         }
         return true;
