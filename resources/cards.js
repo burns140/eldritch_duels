@@ -1,3 +1,7 @@
+const assert = require('assert');
+const MongoClient = require('mongodb').MongoClient;
+const dbconfig = require('../server/dbconfig.json');
+
 const TYPE_CREATURE = "Creature";
 const TYPE_SPELL = "Spell";
 const COMMON = "Common";
@@ -7,29 +11,7 @@ const LEGENDARY = "Legendary";
 const defaultPath =  "client/Eldritch Duels/Assets/images";
 
 const cards = [
-    {
-        Name: "Test 0",
-        ID: 0,
-        Cost: 10,
-        Power: 10,
-        Defense: 100,
-        Type: TYPE_CREATURE,
-        Rarity: LEGENDARY,
-        Image: "TestCard0"
-    },
-
-    {
-        Name: "Test 1",
-        ID: 1,
-        Cost: 5,
-        Power: 0,
-        Defense: 0,
-        Type: TYPE_SPELL,
-        Rarity: COMMON,
-        Image: "TestCard1"
-    },
-
-    {
+{
         Name: "Mi_Go",
         ID: 2,
         Cost: 1,
@@ -173,7 +155,7 @@ const cards = [
     },
 
     {
-        Name: "Ludwig, Holy Blade",
+        Name: "Ludwig Holy Blade",
         ID: 15,
         Cost: 15,
         Power: 15,
@@ -227,3 +209,23 @@ const cards = [
         Image: "MadmansKnowledge"
     }
 ];
+
+try {
+    MongoClient.connect(dbconfig.url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+        assert.equal(null, err);
+        
+        const db = client.db('eldritch_data');
+
+        for (var c of cards) {
+            db.collection('cards').insertOne(
+                c
+            ).then(result => {
+                console.log(`inserted ${c.Name}`);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    });
+} catch (err) {
+    console.log(err);
+}

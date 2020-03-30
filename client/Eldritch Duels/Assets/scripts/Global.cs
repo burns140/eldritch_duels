@@ -121,14 +121,14 @@ namespace eldritch {
         public string cmd;
         public string id;
         public string token;
-        public int credit;
+        public int value;
 
-        public CreditRequest(string cmd, string id, string token, int credit)
+        public CreditRequest(string cmd, string id, string token, int value)
         {
             this.cmd = cmd;
             this.id = id;
             this.token = token;
-            this.credit = credit;
+            this.value = value;
         }
     }
     public class profilepicture
@@ -811,15 +811,23 @@ namespace eldritch {
             string json = JsonConvert.SerializeObject(cust);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
-            data = new Byte[100000];
+            data = new Byte[16000000];
             string responseData = string.Empty;
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
             Texture2D imagetexture = new Texture2D(100, 100);
 
-            imagetexture.LoadImage(Convert.FromBase64String(responseData));
-            imagetexture.Apply();
+            bool success = imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            if (success)
+            {
+                Debug.Log("Image conversion successful");
+            }
+            else
+            {
+                Debug.Log("Image conversion failed");
+            }
+            imagetexture.Apply(true);
 
             Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
             return imagesprite;

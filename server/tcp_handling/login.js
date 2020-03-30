@@ -19,6 +19,7 @@ const login = (data, sock) => {
                 email: email
             }).then(result => {
                 if (!result) {
+                    console.log('no account with that email');
                     sock.write('Account with that email doesn\'t exist');     // No result
                     return;
                 } else {

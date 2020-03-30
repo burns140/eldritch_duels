@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID;
 var commonCardNames = [
     "Mi_Go",
     "Beast Patient",
-    "Mi-Go Zombie",
+    "Mi_Go Zombie",
     "Nightmare Apostle",
     "Blood Vial"
 ]
@@ -23,7 +23,7 @@ var legendaryCardNames = [
     "Great One's Wisdom",
     "Blood Starved Beast",
     "Moon Presence",
-    "Ludwig, Holy Blade",
+    "Ludwig Holy Blade",
     "Lady Maria"
 ]
 
@@ -191,13 +191,13 @@ const openPack = (data, sock) => {
         if (cardFive >= 1 && cardFive < 4) {
             pack.push(legendaryCardNames[Math.floor(Math.random() * legendaryCardNames.length)]);
         } else if (cardFive >= 4 && cardFive < 9 ) {
-            pack.push(rareCardNames[Math.floor(Math.random() *rareCardNames.length)]);
+            pack.push(rareCardNames[Math.floor(Math.random() * rareCardNames.length)]);
         } else {
             pack.push(commonCardNames[Math.floor(Math.random() * commonCardNames.length)]);
         }
 
         sock.write(pack.toString());
-        console.log('pack written successfully');
+        console.log(pack.toString());
     } catch (err) {
         sock.write(err.toString());
         console.log(err);
