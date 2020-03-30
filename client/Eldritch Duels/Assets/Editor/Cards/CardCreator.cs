@@ -124,6 +124,7 @@ namespace eldritch.editor
                             c.SpellType = this.cardType;
                             c.HasFly = this.hasFly;
                             c.HasStealth = this.hasStealth;
+                            c.resetEffect();
                             foreach(Effect e in effects){
                                 Debug.Log("Adding Ability: " + e.GetName());
                                 c.AddAbility(e);

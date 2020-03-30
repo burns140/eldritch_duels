@@ -68,6 +68,7 @@ public class DuelScript : MonoBehaviour
     private List<GameObject> oppPlayList = new List<GameObject>(); // Store cards in opponent Play Area
 
     public Button recallButton; // Recall button on the UI
+    public Text recallText;
     public GameObject myProfilePic; // My profile pic on the UI
     public GameObject oppProfilePic; // Opponent's profile pic on the UI
 
@@ -409,6 +410,14 @@ public class DuelScript : MonoBehaviour
         return false;
     }
 
+    private bool hasRecalled = false;
+    public bool CanRecall(){
+        if(myState.onField.Count < DuelFunctions.MAX_FIELD || hasRecalled){
+            return false;
+        }
+        return true;
+    }
+
     public bool recallCard(string cardName){
         if(myState.onField.Count >= DuelFunctions.MAX_FIELD || true){ //remove true for demo
             Card recalled = null;
@@ -424,6 +433,8 @@ public class DuelScript : MonoBehaviour
             if(recalled == null){
                 return false;
             }
+            hasRecalled = true;
+            recallButton.gameObject.GetComponent<Image>().color = Color.red;
             //sync with opp
             string data = "recall:" + cardName;
             sendDataToOpp(data);
@@ -578,6 +589,14 @@ public class DuelScript : MonoBehaviour
 
     //sets up link between attacker and blocker
     private void makeAttackBlockLink(){
+        //check if can block
+        if(!DuelFunctions.CanBlock(Library.GetCard(atb.name), Library.GetCard(blockwith.name))){
+            blockwith.GetComponent<Image>().color = Color.white;
+            blockwith.GetComponent<Draggable>().isBlocking = false;
+            blockwith = null;
+            return;
+        }
+
         for(int i = 0; i < attackers.Count;i++){
             if(attackers[i].attacker.GetHashCode().Equals(atb.GetHashCode())){
                 AttackBlock ab = attackers[i];
@@ -926,6 +945,12 @@ public class DuelScript : MonoBehaviour
         currentPhase = Phase.WAITING; //wait for opp move
         oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
         phaseText.text = "WAITING";
+        hasRecalled = false;
+        if(CanRecall())
+            recallButton.gameObject.GetComponent<Image>().color = Color.green;
+        else
+            recallButton.gameObject.GetComponent<Image>().color = Color.red;
+
         currentTurn++;
         myTurnsNum++;
     }
