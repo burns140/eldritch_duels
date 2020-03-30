@@ -128,7 +128,7 @@ public class Chat : MonoBehaviour, IChatClientListener
     // Start is called before the first frame update
     void Start() // REWORK TO CONNECT WHEN DUEL SCENE IS OPENED
     {
-        connectbutton.onClick.AddListener(connect);
+        connect();
         sendbutton.onClick.AddListener(sendMessage);
     }
 
