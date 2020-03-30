@@ -46,7 +46,7 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
-            if (data == "MATCH END\n") {
+            if (data == "MATCH END") {
                 this.endMatch(data, id);
                 return;
             }
@@ -79,9 +79,9 @@ module.exports = class Match {
 
             try {
                 console.log('skipping id');
-                if (skipID == id)
+                /*if (skipID == id)
                     return;
-
+                */
                 console.log('made it past skipid');
                 let fn;
                 if (fn = this.closeFuncs[id])
