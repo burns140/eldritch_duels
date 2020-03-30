@@ -143,7 +143,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			}
 			else if(startArea.name == "MyPlayAreaPanel" && this.transform.parent.name.Equals("HandAreaPanel")){
 				Debug.Log("this card:"+this.name);
-				duelScript.recallCard(this.name);
+				if(duelScript.CanRecall())
+					duelScript.recallCard(this.name);
+				else
+					this.gameObject.transform.SetParent(startArea.transform);
 			}else if(startArea.name == "HandAreaPanel" && this.transform.parent.name.Equals("MyPlayAreaPanel") && !duelScript.CanCast(this.gameObject)){
 				Debug.Log("Not enough mana");
 				this.gameObject.transform.SetParent(startArea.transform);
