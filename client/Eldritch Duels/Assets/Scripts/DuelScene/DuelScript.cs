@@ -332,14 +332,14 @@ public class DuelScript : MonoBehaviour
     }
 
     // Set up profile pics on the UI
-    private void setUpProfilePics(){
+    /*private void setUpProfilePics(){
         bool hasMyPicIndex=true; // Check if my pic is uploaded or has index (@KEVIN G)
         bool hasOppPicIndex=true; // Check if opponent's pic is uploaded or has index (@KEVIN G)
         int myPicIndex=Global.avatar; // @TODO Get my profile pic index from server (@Stephen)
         int oppPicIndex=Int32.Parse(returnedAvatar); // @TODO Get opponent's profile pic index from server (@Stephen)
 
         if(Global.hasCustomAvatar()){ // has custom pic
-            profilePic.GetComponent<Image>().sprite = Global.CustomAvatar;
+            myProfilePic.GetComponent<Image>().sprite = Global.CustomAvatar;
             
         }
         else{ // has pic index
@@ -348,7 +348,7 @@ public class DuelScript : MonoBehaviour
         myProfilePic.SetActive(true); // Unhide the image UI
 
         if(oppPicIndex < 0 || oppPicIndex > 8){ // has custom pic
-            profilePic.GetComponent<Image>().sprite = Global.getOtherCustomAvatar(email);
+            oppProfilePic.GetComponent<Image>().sprite = Global.getOtherCustomAvatar(email);
         }
         else{ // has pic index
             oppProfilePic.GetComponent<Image>().sprite = availablePictures[oppPicIndex]; // Set image from list
@@ -357,12 +357,23 @@ public class DuelScript : MonoBehaviour
         oppProfilePic.SetActive(true); // Unhide the image UI
 
         
-    }
+    }*/
 
     string returnedUsername;
     string returnedAvatar;
 
-    private void getInfo() {
+    public class getProfileRequest {
+        public string theirEmail;
+        public string token;
+        public string cmd;
+
+        public getProfileRequest(string email, string token, string cmd) {
+            this.theirEmail = email;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+    /*private void getInfo() {
         getProfileRequest req = new getProfileRequest(email, Global.getToken(), "viewProfile");
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
@@ -376,7 +387,7 @@ public class DuelScript : MonoBehaviour
         
         returnedAvatar = info[0].Split('-')[1];
         returnedUsername = info[2].Split('-')[1];
-    }
+    }*/
     
     #endregion
 
