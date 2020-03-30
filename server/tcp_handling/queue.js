@@ -117,7 +117,7 @@ function matchPlayers() {
                     delete connections[i]._temp_remove;
 
                     // player is now not using the old data handler
-                    // connections[i].removeListener('data', dataHandler);
+                    connections[i].removeListener('data', dataHandler);
                 }
 
                 // notify the waiting users

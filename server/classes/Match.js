@@ -78,9 +78,11 @@ module.exports = class Match {
         this.forEachPlayer((id, sock) => {
 
             try {
+                console.log('skipping id');
                 if (skipID == id)
                     return;
 
+                console.log('made it past skipid');
                 let fn;
                 if (fn = this.closeFuncs[id])
                     sock.off('close', fn);
@@ -88,9 +90,11 @@ module.exports = class Match {
                 if (fn = this.dataFuncs[id])
                     sock.off('data', fn);
 
+                console.log(`writing data: ${data}`);
                 sock.write(data);
 
-                sock.on("data", this.dataHandler);
+                console.log(this.dataHandler);
+                sock.on('data', this.dataHandler);
                 //sock.addListener("data", this.dataHandler);
             } catch (err) {
                 console.log(err);
