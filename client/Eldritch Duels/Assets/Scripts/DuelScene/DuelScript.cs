@@ -104,8 +104,9 @@ public class DuelScript : MonoBehaviour
     #region Awake
     // Awake is called when the script instance is being loaded.
     void Start(){
+        //getInfo();
         setUpDeck(); // Set up card list from deck being used
-        setUpProfilePics(); // Set up profile pics for both users
+        //setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
 
@@ -333,31 +334,47 @@ public class DuelScript : MonoBehaviour
     private void setUpProfilePics(){
         bool hasMyPicIndex=true; // Check if my pic is uploaded or has index (@KEVIN G)
         bool hasOppPicIndex=true; // Check if opponent's pic is uploaded or has index (@KEVIN G)
-        int myPicIndex=0; // @TODO Get my profile pic index from server (@Stephen)
-        int oppPicIndex=1; // @TODO Get opponent's profile pic index from server (@Stephen)
+        int myPicIndex=Global.avatar; // @TODO Get my profile pic index from server (@Stephen)
+        int oppPicIndex=Int32.Parse(returnedAvatar); // @TODO Get opponent's profile pic index from server (@Stephen)
 
-        if(hasMyPicIndex){
-            myProfilePic.GetComponent<Image>().sprite = availablePictures[myPicIndex]; // Set image from list
+        if(Global.hasCustomAvatar()){ // has custom pic
+            profilePic.GetComponent<Image>().sprite = Global.CustomAvatar;
+            
         }
-        else{
-            // @TODO GET MY UPLOADED PICTURE FROM SERVER (@KEVIN G)
-            // Sprite newImage = ;
-            // myProfilePic.GetComponent<Image>().sprite = newImage;
+        else{ // has pic index
+            myProfilePic.GetComponent<Image>().sprite = availablePictures[myPicIndex];  // Set image from list
         }
         myProfilePic.SetActive(true); // Unhide the image UI
 
-        if(hasOppPicIndex){
-            oppProfilePic.GetComponent<Image>().sprite = availablePictures[oppPicIndex]; // Set image from list
+        if(oppPicIndex < 0 || oppPicIndex > 8){ // has custom pic
+            profilePic.GetComponent<Image>().sprite = Global.getOtherCustomAvatar(email);
         }
-        else{
-            // @TODO GET OPP UPLOADED PICTURE FROM SERVER (@KEVIN G)
-            // Sprite newImage = ;
-            // oppProfilePic.GetComponent<Image>().sprite = newImage;
+        else{ // has pic index
+            oppProfilePic.GetComponent<Image>().sprite = availablePictures[oppPicIndex]; // Set image from list
         }
 
         oppProfilePic.SetActive(true); // Unhide the image UI
 
         
+    }
+
+    string returnedUsername;
+    string returnedAvatar;
+
+    private void getInfo() {
+        getProfileRequest req = new getProfileRequest(email, Global.getToken(), "viewProfile");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        string[] info = responseData.Split(',');
+        
+        returnedAvatar = info[0].Split('-')[1];
+        returnedUsername = info[2].Split('-')[1];
     }
     
     #endregion
