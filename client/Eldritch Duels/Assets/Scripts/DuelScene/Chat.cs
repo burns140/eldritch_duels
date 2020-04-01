@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Chat;
 using eldritch;
+using System;
 
 
 //TODO: LINK UP TO DUEL SCREEN UI
@@ -17,17 +18,18 @@ public class Chat : MonoBehaviour
     private string channel;
     private string messagetext;
 
-    public void onMessageGet(string sender, string message)
+    public void onMessageGet(string message)
     {
-        Debug.Log(sender + ": " + message);
-        textbox.text = textbox.text + sender + ": " + message + "\n";
-
+        Debug.Log(message);
+        textbox.text = textbox.text + message + "\n";
     }
 
     public void sendMessage()
     {
         Debug.Log("Attempting to send message...");
-        DuelScript.
+        string message = "chat:" + Global.username + ":" + messagetext;
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+        Global.stream.Write(data, 0, data.Length);
     }
 
     // Start is called before the first frame update

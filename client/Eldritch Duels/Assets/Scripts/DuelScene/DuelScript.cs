@@ -713,7 +713,7 @@ public class DuelScript : MonoBehaviour
 
 
     //send string to opponent
-    private void sendDataToOpp(string formatted){
+    public void sendDataToOpp(string formatted){
         Debug.Log("In OP : " + formatted);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(formatted);
         Global.stream.Write(data, 0, data.Length);
@@ -754,7 +754,7 @@ public class DuelScript : MonoBehaviour
                 break;
             case "chat":
                 if(chatScript != null && firstPass.Length > 1){
-                        //chatScript.sendMessage(firstPass[1]);
+                        chatScript.onMessageGet(firstPass[1]);
                 }
                 break;
                 
