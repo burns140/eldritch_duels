@@ -1893,6 +1893,7 @@ MonoBehaviour:
     onField: []
     oppField: []
     library: []
+  chatScript: {fileID: 932829364}
   attackers: []
 --- !u!1 &654505639
 GameObject:
