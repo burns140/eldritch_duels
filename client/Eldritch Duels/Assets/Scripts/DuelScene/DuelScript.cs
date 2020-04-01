@@ -196,6 +196,7 @@ public class DuelScript : MonoBehaviour
         }
     }
     public void RecallClick(){
+        if(isMyTurn && currentPhase == Phase.MAIN)
         this.currentPhase = Phase.RECALL;
     }
 
