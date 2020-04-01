@@ -802,6 +802,7 @@ namespace eldritch {
             }
             int credits = (int)(((turns * 5)/2 + 50) * multi);
             CreditRequest result = new CreditRequest("updateCredits", getID(), getToken(), credits);
+            Global.NetworkRequest(result);
             return credits;
         }
 
