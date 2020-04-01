@@ -150,7 +150,7 @@ MonoBehaviour:
     isStealth: 1
     isDefender: 0
     effectnames: []
-  - cardName: Great Ones Wisdom
+  - cardName: Great One's Wisdom
     id: 10
     owned: 0
     cost: 0
@@ -196,7 +196,7 @@ MonoBehaviour:
     effectnames:
     - Damage Opp
     - Add mana
-  - cardName: Madmans Knowledge
+  - cardName: Madman's Knowledge
     id: 13
     owned: 0
     cost: 0
@@ -210,7 +210,7 @@ MonoBehaviour:
     isDefender: 0
     effectnames:
     - Add mana
-  - cardName: Migo Zombie
+  - cardName: Mi_Go Zombie
     id: 14
     owned: 0
     cost: 1
@@ -264,7 +264,7 @@ MonoBehaviour:
     isDefender: 0
     effectnames:
     - Gain health
-  - cardName: Quicksilver Bullet
+  - cardName: Quicksilver Bullets
     id: 18
     owned: 0
     cost: 0
@@ -298,8 +298,8 @@ MonoBehaviour:
     FodderCard: Beast Patient
     CraftCost: 0
     ResultCard: Blood Vial
-  - BaseCard: Migo Zombie
-    FodderCard: Migo Zombie
+  - BaseCard: Mi_Go Zombie
+    FodderCard: Mi_Go Zombie
     CraftCost: 0
     ResultCard: Brain of Mensis
   - BaseCard: Nightmare Apostle
@@ -309,9 +309,9 @@ MonoBehaviour:
   - BaseCard: Nightmare Apostle
     FodderCard: Blood Vial
     CraftCost: 0
-    ResultCard: Madmans Knowledge
+    ResultCard: Madman's Knowledge
   - BaseCard: Mi_Go
-    FodderCard: Migo Zombie
+    FodderCard: Mi_Go Zombie
     CraftCost: 0
     ResultCard: Mi_Go Worker
   - BaseCard: Nightmare Apostle
@@ -319,23 +319,23 @@ MonoBehaviour:
     CraftCost: 0
     ResultCard: Pungent Blood Cocktail
   - BaseCard: Mi_Go
-    FodderCard: Quicksilver Bullet
+    FodderCard: Quicksilver Bullets
     CraftCost: 0
     ResultCard: Snatcher
   - BaseCard: Brain of Mensis
     FodderCard: Blood Vial
     CraftCost: 0
     ResultCard: Blood Starved Beast
-  - BaseCard: Madmans Knowledge
-    FodderCard: Madmans Knowledge
+  - BaseCard: Madman's Knowledge
+    FodderCard: Madman's Knowledge
     CraftCost: 0
-    ResultCard: Great Ones Wisdom
+    ResultCard: Great One's Wisdom
   - BaseCard: Chime Maiden
-    FodderCard: Madmans Knowledge
+    FodderCard: Madman's Knowledge
     CraftCost: 0
     ResultCard: Lady Maria
   - BaseCard: Brain of Mensis
-    FodderCard: Quicksilver Bullet
+    FodderCard: Quicksilver Bullets
     CraftCost: 0
     ResultCard: Ludwig Holy Blade
   - BaseCard: Mig_Go Worker
@@ -343,10 +343,10 @@ MonoBehaviour:
     CraftCost: 0
     ResultCard: Mi_Go Queen
   - BaseCard: Mi_Go Queen
-    FodderCard: Madmans Knowledge
+    FodderCard: Madman's Knowledge
     CraftCost: 0
     ResultCard: Moon Presence
   - BaseCard: Pungent Blood Cocktail
     FodderCard: Pungent Blood Cocktail
     CraftCost: 0
-    ResultCard: Quicksilver Bullet
+    ResultCard: Quicksilver Bullets
