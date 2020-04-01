@@ -146,6 +146,7 @@ function dataHandler(data) {
                     break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
+                    console.log('Not a valid command');
                     break;
             }
         }
