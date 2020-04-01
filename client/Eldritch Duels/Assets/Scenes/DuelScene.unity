@@ -4067,7 +4067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -24.814026, y: -81.6}
+  m_AnchoredPosition: {x: -24.814026, y: -81.6001}
   m_SizeDelta: {x: -474.8, y: -795.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1444714784
@@ -5423,7 +5423,17 @@ PrefabInstance:
     - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 647516715}
+    - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RecallClick
       objectReference: {fileID: 0}
     - target: {fileID: 3537660962130806377, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
@@ -5840,7 +5850,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 1822986117}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
