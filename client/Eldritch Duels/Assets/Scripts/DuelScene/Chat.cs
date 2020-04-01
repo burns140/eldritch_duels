@@ -28,9 +28,10 @@ public class Chat : MonoBehaviour
     {
         Debug.Log("Attempting to send message...");
         string message = "chat:" + Global.username + ":" + messagetext;
+        string format = Global.username + ":" + messagetext;
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
         Global.stream.Write(data, 0, data.Length);
-        textbox.text = textbox.text + message + "\n";
+        textbox.text = textbox.text + format + "\n";
     }
 
     // Start is called before the first frame update
