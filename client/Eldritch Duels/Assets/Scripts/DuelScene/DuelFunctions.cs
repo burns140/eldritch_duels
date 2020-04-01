@@ -15,6 +15,7 @@ public static class DuelFunctions
         return false;
     }
 
+
     public static bool CanBlock(Card attacker, Card blocker){
         if(attacker.HasStealth){
             return false;

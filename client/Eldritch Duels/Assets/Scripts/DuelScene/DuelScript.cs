@@ -39,6 +39,7 @@ public enum Phase{
     PRE_BLOCK,
     WAITING,
     DISCARD,
+    RECALL,
     END
 }
 
@@ -193,6 +194,9 @@ public class DuelScript : MonoBehaviour
             currentPhase = Phase.END;
             confirmBlockers();
         }
+    }
+    public void RecallClick(){
+        this.currentPhase = Phase.RECALL;
     }
 
     public void EndTurnNow(){
