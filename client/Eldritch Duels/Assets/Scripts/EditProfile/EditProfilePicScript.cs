@@ -150,6 +150,8 @@ public class EditProfilePicScript : MonoBehaviour
 
                 byte[] imagebytes = File.ReadAllBytes(path);
 
+                Debug.Log("Image converted");
+
                 if (imagebytes.Length > 20000)
                 {
                     Debug.Log("Image is too large!");
@@ -160,19 +162,27 @@ public class EditProfilePicScript : MonoBehaviour
 
                 string bytetostring = Convert.ToBase64String(imagebytes);
 
+                Debug.Log("Image converted to string");
+
                 profilepicture pfp = new profilepicture(bytetostring, Global.getToken(), Global.getID(), "setCustomAvatar");
 
                 string json = JsonConvert.SerializeObject(pfp);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 NetworkStream stream = Global.client.GetStream();
 
+                Debug.Log("Request made, attempting to write");
+
                 stream.Write(data, 0, data.Length);
+
+                Debug.Log("Write done");
                 data = new Byte[1000];
                 string responseData = string.Empty;
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                if (Global.hasCustomAvatar())
+
+                Debug.Log("Response received");
+                if (String.Equals(responseData, "Custom avatar uploaded"))
                 {
                     Global.hasCustom = true;
                     Global.CustomAvatar = Global.getCustomAvatar();
