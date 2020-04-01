@@ -20,7 +20,7 @@ namespace eldritch.cards {
 
         private void updateUI()
         {
-            int pos = 0;
+            int pos = page*12;
             foreach(Transform child in control.transform)
             {
                 child.gameObject.SetActive(false);

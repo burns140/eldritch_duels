@@ -162,7 +162,7 @@ namespace eldritch.cards {
         //add card to deck being added
         public void AddCard(Card c)
         {
-            if(deckSize >= Constants.MAX_DECK_SIZE && c.SpellRarity != CardRarity.COMMON)
+            if(deckSize >= Constants.MAX_DECK_SIZE)
             {
                 return;
             }
@@ -176,7 +176,7 @@ namespace eldritch.cards {
                         //check id deck already contains same card
                         if(inDeck[j].c.CardID == c.CardID)
                         {
-                            if(inDeck[i].count >= Constants.MAX_CARD_ALLOWED && inDeck[i].c.SpellRarity == CardRarity.LEGENDARY)
+                            if(inDeck[j].count >= Constants.MAX_CARD_ALLOWED && inDeck[j].c.SpellRarity == CardRarity.LEGENDARY)
                             {
                                 return;
                             }

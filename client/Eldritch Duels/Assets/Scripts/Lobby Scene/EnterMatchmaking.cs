@@ -25,10 +25,10 @@ public class EnterMatchmaking : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-        enter.onClick.AddListener(clicked);
+        //enter.onClick.AddListener(clicked);
     }
 
-    void clicked()
+    public void clicked()
     {
         if (!Global.inQueue) // checks if already in queue somehow
         {

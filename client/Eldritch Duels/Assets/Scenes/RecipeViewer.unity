@@ -449,6 +449,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1783906404}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &420153502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1489,6 +1500,17 @@ MonoBehaviour:
       - m_Target: {fileID: 939006017}
         m_MethodName: PageRight
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783906404}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3270,8 +3292,8 @@ MonoBehaviour:
   ResultCard: {fileID: 485511464}
   CraftCost: {fileID: 1779276779}
   Indicator: {fileID: 471905847}
-  Green: {fileID: 2100000, guid: 8d93b8c00d6dfe842a8df7eb4a2514bd, type: 2}
-  Gray: {fileID: 2100000, guid: 626f00c94cead454ea7cac7ce31db80a, type: 2}
+  Green: {fileID: 2100000, guid: f8ada047ab63f9345b1058c7964f6c3f, type: 2}
+  Gray: {fileID: 2100000, guid: d7dc3d5e47e225a4a94f8d40689a8372, type: 2}
 --- !u!114 &1783906409
 MonoBehaviour:
   m_ObjectHideFlags: 0
