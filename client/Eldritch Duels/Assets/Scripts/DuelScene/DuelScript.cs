@@ -722,7 +722,7 @@ public class DuelScript : MonoBehaviour
     //parce data received from opp
     public void receivedDataFromOpp(string formatted){
         Debug.Log("Received: " + formatted);
-        string[] firstPass = formatted.Split(':');
+        string[] firstPass = formatted.Split(new char[] {':'}, 2);
         switch (firstPass[0]){
             case "play":
                 playOppCard(firstPass[1]);
