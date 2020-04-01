@@ -1030,6 +1030,7 @@ public class DuelScript : MonoBehaviour
         // Calculate credits
         // Change scene
         Global.DuelMyTurn = false;
+        Global.inQueue = false;
         Global.numTurns = currentTurn;
         sendDataToOpp("MATCH END");
         if(iWin){
