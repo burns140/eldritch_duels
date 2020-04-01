@@ -763,10 +763,10 @@ namespace eldritch {
         {
             string json = JsonConvert.SerializeObject(o);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
+            stream.Write(data, 0, data.Length);
             data = new Byte[256];
             string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             return responseData;
         }
@@ -779,10 +779,10 @@ namespace eldritch {
                 CreditRequest arc = new CreditRequest("updateCredits", getID(), getToken(), amount);
                 string json = JsonConvert.SerializeObject(arc);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-                Global.stream.Write(data, 0, data.Length);
+                stream.Write(data, 0, data.Length);
                 data = new Byte[100000];
                 string responseData = string.Empty;
-                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             }
             catch (Exception)
@@ -804,19 +804,19 @@ namespace eldritch {
             }
             int credits = (int)(((turns * 5)+ 50) * multi);
             CreditRequest result = new CreditRequest("updateCredits", getID(), getToken(), credits);
-            Global.NetworkRequest(result);
+            NetworkRequest(result);
             return credits;
         }
 
         public static Sprite getCustomAvatar()
         {
-            getprofilepicture cust = new getprofilepicture(Global.getEmail(), Global.getToken(), Global.getID(), "getCustomAvatar");
+            getprofilepicture cust = new getprofilepicture(getEmail(), getToken(), getID(), "getCustomAvatar");
             string json = JsonConvert.SerializeObject(cust);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
+            stream.Write(data, 0, data.Length);
             data = new Byte[16000000];
             string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
             Texture2D imagetexture = new Texture2D(100, 100);
@@ -838,13 +838,13 @@ namespace eldritch {
 
         public static Sprite getOtherCustomAvatar(string email)
         {
-            getprofilepicture cust = new getprofilepicture(email, Global.getToken(), Global.getID(), "getCustomAvatar");
+            getprofilepicture cust = new getprofilepicture(email, getToken(), getID(), "getCustomAvatar");
             string json = JsonConvert.SerializeObject(cust);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
+            stream.Write(data, 0, data.Length);
             data = new Byte[100000];
             string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
             Texture2D imagetexture = new Texture2D(100, 100);
