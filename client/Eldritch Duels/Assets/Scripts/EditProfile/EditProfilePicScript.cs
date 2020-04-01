@@ -150,10 +150,10 @@ public class EditProfilePicScript : MonoBehaviour
 
                 byte[] imagebytes = File.ReadAllBytes(path);
 
-                if (imagebytes.Length > 16000000)
+                if (imagebytes.Length > 20000)
                 {
                     Debug.Log("Image is too large!");
-                    errortext.text = "Image must be less than 16 MB.";
+                    errortext.text = "Image must be less than 20 KB.";
                     errorimage.gameObject.SetActive(true);
                     return;
                 }
