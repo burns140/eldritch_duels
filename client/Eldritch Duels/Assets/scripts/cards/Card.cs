@@ -111,7 +111,6 @@ namespace eldritch.cards
             set { this.isDefender = value; }
         }
 
-
         [SerializeField]
         public List<Effect> effects = new List<Effect>();
         [SerializeField]

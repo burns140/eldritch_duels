@@ -78,6 +78,15 @@ public class DuelScript : MonoBehaviour
     public Text oppHPText; // Text to show opponent's current HP
     public Image myHPImage; // Image to show my current HP
 
+    // for corruption
+    // the objects that hold the corruption UI elements
+    public GameObject myCorruption; 
+    public GameObject oppCorruption;
+
+    // the corruption counter text
+    private Text myCorruptionText;
+    private Text oppCorruptionText;
+
     public Image oppHPImage; // Image to show opponent's current HP
 
     public Sprite[] availablePictures; // Available profile pics
@@ -85,6 +94,7 @@ public class DuelScript : MonoBehaviour
     private float oppCurrentHP; // Opp Current HP
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
+    private const int INITIAL_CORRUPTION = 0;
     public Phase currentPhase = Phase.MAIN;
     public int currentTurn = 1;
     public int myTurnsNum = 0;
@@ -109,6 +119,7 @@ public class DuelScript : MonoBehaviour
         setUpDeck(); // Set up card list from deck being used
         //setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
+        setUpCorruption();
         StartCoroutine(initCoroutines());
 
         readStreamAsync();
@@ -172,6 +183,18 @@ public class DuelScript : MonoBehaviour
             endGame(false);
         }
 
+        // update corruption
+        if (myState.corruption > 0)
+        {
+            myCorruptionText.text = myState.corruption.ToString();
+            myCorruption.SetActive(true);
+        }
+
+        if (oppState.corruption > 0)
+        {
+            oppCorruptionText.text = oppState.corruption.ToString();
+            oppCorruption.SetActive(true);
+        }
     }
 
     public void NextPhase(){
@@ -329,6 +352,18 @@ public class DuelScript : MonoBehaviour
         myManaText.text = MAX_MANA + " MANA";
         oppHPText.text = MAX_HEALTH + " HP";
         oppManaText.text = MAX_MANA + " MANA";
+    }
+
+    private void setUpCorruption()
+    {
+        myCorruptionText = myCorruption.GetComponentInChildren<Text>();
+        oppCorruptionText = oppCorruption.GetComponentInChildren<Text>();
+
+        myState.corruption = INITIAL_CORRUPTION;
+        oppState.corruption = INITIAL_CORRUPTION;
+
+        myCorruptionText.text = myState.corruption.ToString();
+        oppCorruptionText.text = myState.corruption.ToString();
     }
 
     // Set up profile pics on the UI

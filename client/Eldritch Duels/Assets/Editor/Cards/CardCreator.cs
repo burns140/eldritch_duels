@@ -245,9 +245,9 @@ namespace eldritch.editor
                 if(GUI.Button(new Rect(150,140,20,20), "-")){
                     removeEffect(new AddMana());
                 }
-
+                
                 //fly
-                if(GUI.Button(new Rect(10,170,100,20), "Fly: " + hasFly)){
+                if (GUI.Button(new Rect(10,170,100,20), "Fly: " + hasFly)){
                     hasFly = !hasFly;
                 }
                 //stealth
@@ -255,7 +255,18 @@ namespace eldritch.editor
                     hasStealth = !hasStealth;
                 }
                 
-                    
+                // corruption
+                GUI.Label(new Rect(10, 230, 100, 20), ("Corrupt: " + countEfect(new Corrupt())));
+                if (GUI.Button(new Rect(120, 230, 20, 20), "+"))
+                {
+                    addEffect(new Corrupt());
+                }
+                if (GUI.Button(new Rect(150, 230, 20, 20), "-"))
+                {
+                    removeEffect(new Corrupt());
+                }
+
+
                 GUILayout.EndArea();
             }else if(mode == 3)
             {

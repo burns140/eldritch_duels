@@ -293,6 +293,20 @@ MonoBehaviour:
     isDefender: 0
     effectnames:
     - Damage Opp
+  - cardName: Elder Thing
+    id: 20
+    owned: 0
+    cost: 2
+    power: 4
+    defence: 4
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 8b5a0c531e3b1a647b1607fad1f607f1, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Corrupt
   recipes:
   - BaseCard: Mi_Go
     FodderCard: Beast Patient
