@@ -985,10 +985,18 @@ public class DuelScript : MonoBehaviour
         oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
         phaseText.text = "WAITING";
         hasRecalled = false;
-        if(CanRecall())
+        if(CanRecall()){
             recallButton.gameObject.GetComponent<Image>().color = Color.green;
-        else
+            ColorBlock cb = recallButton.gameObject.GetComponent<Button>().colors;
+            cb.normalColor = Color.green;
+            recallButton.gameObject.GetComponent<Button>().colors = cb;
+        }
+        else{
             recallButton.gameObject.GetComponent<Image>().color = Color.red;
+            ColorBlock cb = recallButton.gameObject.GetComponent<Button>().colors;
+            cb.normalColor = Color.red;
+            recallButton.gameObject.GetComponent<Button>().colors = cb;
+        }
 
         currentTurn++;
         myTurnsNum++;
