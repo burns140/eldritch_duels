@@ -520,6 +520,7 @@ public class DuelScript : MonoBehaviour
                 break;
             }
         }
+        sendDataToOpp("wAITING");
     }
     
     #endregion
