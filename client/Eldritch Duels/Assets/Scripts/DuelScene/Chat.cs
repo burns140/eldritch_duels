@@ -130,8 +130,9 @@ public class Chat : MonoBehaviour, IChatClientListener
     void Start() // REWORK TO CONNECT WHEN DUEL SCENE IS OPENED
     {
         textbox.text = "";
-        channel = "Test";
-        //channel = Global.matchID;
+        //channel = "Test";
+        channel = Global.matchID;
+        Debug.Log(channel);
         connect();
         sendbutton.onClick.AddListener(sendMessage);
     }

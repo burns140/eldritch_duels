@@ -99,6 +99,7 @@ public class DuelScript : MonoBehaviour
 
     private const string WON_PREF_KEY = "whowon"; // PREF KEY to store who won
     private const string CREDIT_PREF_KEY = "credits"; // PREF KEY to store credits
+    public Chat chatScript = null;
 
     #endregion
 
@@ -719,7 +720,7 @@ public class DuelScript : MonoBehaviour
     }
 
     //parce data received from opp
-    private void receivedDataFromOpp(string formatted){
+    public void receivedDataFromOpp(string formatted){
         Debug.Log("Received: " + formatted);
         string[] firstPass = formatted.Split(':');
         switch (firstPass[0]){
@@ -750,6 +751,11 @@ public class DuelScript : MonoBehaviour
                 break;
             case "surrender":
                 endGame(true);
+                break;
+            case "chat":
+                if(chatScript != null && firstPass.Length > 1){
+                        //chatScript.sendMessage(firstPass[1]);
+                }
                 break;
                 
             case "my turn":
