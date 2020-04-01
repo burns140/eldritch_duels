@@ -167,15 +167,23 @@ public class EditProfilePicScript : MonoBehaviour
                 NetworkStream stream = Global.client.GetStream();
 
                 stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[1000];
                 string responseData = string.Empty;
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Global.hasCustom = true;
-                Global.CustomAvatar = Global.getCustomAvatar();
-                dropdownSetup();
-                displayPic();
+                if (Global.hasCustomAvatar())
+                {
+                    Global.hasCustom = true;
+                    Global.CustomAvatar = Global.getCustomAvatar();
+                    dropdownSetup();
+                    displayPic();
+                }
+                else
+                {
+                    errorimage.gameObject.SetActive(true);
+                    errortext.text = "There was an error with the file upload.";
+                }
             }
             else
             {
