@@ -15,6 +15,7 @@ public class Chat : MonoBehaviour
     public UnityEngine.UI.Button sendbutton;
     public UnityEngine.UI.InputField sendtext;
     public UnityEngine.UI.Text textbox;
+
     private string channel;
     private string messagetext;
 
@@ -27,11 +28,13 @@ public class Chat : MonoBehaviour
     public void sendMessage()
     {
         Debug.Log("Attempting to send message...");
-        string message = "chat:" + Global.username + ":" + messagetext;
-        string format = Global.username + ":" + messagetext;
+        string message = "chat:" + Global.username + ": " + messagetext;
+        string format = Global.username + ": " + messagetext;
+        textbox.text = textbox.text + format + "\n";
+        sendtext.text = "";
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
         Global.stream.Write(data, 0, data.Length);
-        textbox.text = textbox.text + format + "\n";
+        
     }
 
     // Start is called before the first frame update
