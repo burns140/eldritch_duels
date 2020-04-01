@@ -50,8 +50,9 @@ public class Signup : MonoBehaviour
             signupbutton.gameObject.SetActive(true);
             if (ErrorPanel.IsActive())
             {
-                ErrorPanel.gameObject.SetActive(false);
-                ErrorText.gameObject.SetActive(false);
+                ErrorPanel.gameObject.SetActive(true);
+                ErrorText.gameObject.SetActive(true);
+                ErrorText.text = "Verification email sent";
             }
         }
         Debug.Log(result);
