@@ -21,6 +21,7 @@ namespace eldritch {
 #if DEBUG
             //testCardCollection();
 #endif
+            Global.InitUserCards(Global.GetCollection(), 1);
             updateCardUI();
         }
 
