@@ -30,6 +30,7 @@ public class Chat : MonoBehaviour
         string message = "chat:" + Global.username + ":" + messagetext;
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
         Global.stream.Write(data, 0, data.Length);
+        textbox.text = textbox.text + message + "\n";
     }
 
     // Start is called before the first frame update
