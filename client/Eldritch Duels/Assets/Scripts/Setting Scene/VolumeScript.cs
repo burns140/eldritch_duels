@@ -17,7 +17,7 @@ public class VolumeScript : MonoBehaviour
 
     void Awake(){
        
-        wantedVolume=PlayerPrefs.GetFloat(MUSIC_PREF_KEY, .5f); // Get the music volume from PLAYER PREFS    
+        wantedVolume=PlayerPrefs.GetFloat(MUSIC_PREF_KEY, 1); // Get the music volume from PLAYER PREFS    
     
         slider.value = wantedVolume; // Move slider on UI to the saved volume
         Debug.Log("This is the saved volume: "+wantedVolume);
