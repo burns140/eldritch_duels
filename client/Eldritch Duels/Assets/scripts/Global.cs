@@ -603,6 +603,7 @@ namespace eldritch {
                     break;
                 }
             }
+            
             if (toCopy == null)
                 return false;
 
@@ -611,13 +612,14 @@ namespace eldritch {
             {
                 if (cc.c.CopiesOwned < cc.count)
                 {
-                    return false;
+                    Debug.Log(cc.c.CopiesOwned + "owned");
+                    //return false;
                 }
             }
-
+            
             //duplicate to userdecks
-            userDecks.Add(toCopy);
-
+            //userDecks.Add(toCopy);
+            Debug.Log(toCopy.DeckName);
             //sync with server
             try
             {
