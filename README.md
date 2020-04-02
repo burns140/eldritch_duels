@@ -1,3 +1,8 @@
+# UNIT TEST REPO
+
+https://github.com/burns140/eldritch_unit
+
+
 # Eldritch Duels
 
 CS407 Senior project. Lovecraftian card game.
