@@ -12,7 +12,7 @@ const AllPlayerList = require('./classes/AllPlayerList.js');
 var playList = new AllPlayerList();
 const Queue = require('./tcp_handling/queue.js');
 
-const noTokenNeeded = ["signup", "login", "tempPass"];
+const noTokenNeeded = ["signup", "login", "tempPass", "logout"];
 const MongoClient = require('./mongo_connection');
 
 /* Create server */
