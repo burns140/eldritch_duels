@@ -360,6 +360,19 @@ namespace eldritch {
                 Debug.Log("error");
             }
         }
+
+        public static void logout(){
+            string json = "{cmd: \"logout\"}";
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1000000];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            Debug.Log(responseData);
+            return ;
+
+        }
         //get user collection
         public static string GetCollection()
         {
