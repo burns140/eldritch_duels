@@ -314,6 +314,9 @@ const copySharedDeck = (data, sock) => {
             ).then(result => {
                 var deckToCopy;
 
+                if (result == null) {
+                    throw new Error('No user found to share deck to');
+                }
                 /* Find deck to copy in result array */
                 for (deck of result.sharedwithme) {
                     if (deck.deckname == deckname) {

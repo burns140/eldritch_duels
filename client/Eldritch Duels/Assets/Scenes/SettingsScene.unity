@@ -2200,6 +2200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1475233360}
+  wantedVolume: 0
 --- !u!1 &1220467486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2541,7 +2542,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 10
   m_WholeNumbers: 1
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

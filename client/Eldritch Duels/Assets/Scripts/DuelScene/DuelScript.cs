@@ -39,6 +39,7 @@ public enum Phase{
     PRE_BLOCK,
     WAITING,
     DISCARD,
+    RECALL,
     END
 }
 
@@ -109,6 +110,7 @@ public class DuelScript : MonoBehaviour
 
     private const string WON_PREF_KEY = "whowon"; // PREF KEY to store who won
     private const string CREDIT_PREF_KEY = "credits"; // PREF KEY to store credits
+    public Chat chatScript = null;
 
     #endregion
 
@@ -215,6 +217,9 @@ public class DuelScript : MonoBehaviour
             currentPhase = Phase.END;
             confirmBlockers();
         }
+    }
+    public void RecallClick(){
+        this.currentPhase = Phase.RECALL;
     }
 
     public void EndTurnNow(){
@@ -747,16 +752,16 @@ public class DuelScript : MonoBehaviour
 
 
     //send string to opponent
-    private void sendDataToOpp(string formatted){
+    public void sendDataToOpp(string formatted){
         Debug.Log("In OP : " + formatted);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(formatted);
         Global.stream.Write(data, 0, data.Length);
     }
 
     //parce data received from opp
-    private void receivedDataFromOpp(string formatted){
+    public void receivedDataFromOpp(string formatted){
         Debug.Log("Received: " + formatted);
-        string[] firstPass = formatted.Split(':');
+        string[] firstPass = formatted.Split(new char[] {':'}, 2);
         switch (firstPass[0]){
             case "play":
                 playOppCard(firstPass[1]);
@@ -785,6 +790,11 @@ public class DuelScript : MonoBehaviour
                 break;
             case "surrender":
                 endGame(true);
+                break;
+            case "chat":
+                if(chatScript != null && firstPass.Length > 1){
+                        chatScript.onMessageGet(firstPass[1]);
+                }
                 break;
                 
             case "my turn":
@@ -1059,6 +1069,7 @@ public class DuelScript : MonoBehaviour
         // Calculate credits
         // Change scene
         Global.DuelMyTurn = false;
+        Global.inQueue = false;
         Global.numTurns = currentTurn;
         sendDataToOpp("MATCH END");
         if(iWin){

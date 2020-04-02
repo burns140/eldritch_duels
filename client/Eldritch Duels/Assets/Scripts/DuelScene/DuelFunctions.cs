@@ -9,11 +9,12 @@ public static class DuelFunctions
     public static int MAX_FIELD = 7;
     public static bool CanCast(Card castingcard, PlayerState ps){
         Debug.Log(ps.onField.Count);
-        if((castingcard.CardCost <= ps.mana && ps.onField.Count <= MAX_FIELD) || castingcard.SpellType == CardType.SPELL){
+        if((castingcard.CardCost <= ps.mana && ps.onField.Count <= MAX_FIELD) || (castingcard.SpellType == CardType.SPELL && castingcard.CardCost <= ps.mana)){
             return true;
         }
         return false;
     }
+
 
     public static bool CanBlock(Card attacker, Card blocker){
         if(attacker.HasStealth){

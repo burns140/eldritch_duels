@@ -80,8 +80,6 @@ const login = (data, sock) => {
                             return; 
                         }
                         
-                        sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
-                        console.log('login successful; token returned');
 
                         var playList = server.getPlayList();        // Get list of all ids currently connected
 
@@ -106,6 +104,12 @@ const login = (data, sock) => {
                            close the connection later */
                         playList.addPlayer(idString, sock);
                         console.log(playList);
+
+                        
+                        sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
+                        console.log('login successful; token returned');
+
+                        
                         
                         
                         /* If password array length is greater than 1, the user had requested a temporary password.

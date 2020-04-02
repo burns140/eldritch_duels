@@ -50,8 +50,9 @@ public class Signup : MonoBehaviour
             signupbutton.gameObject.SetActive(true);
             if (ErrorPanel.IsActive())
             {
-                ErrorPanel.gameObject.SetActive(false);
-                ErrorText.gameObject.SetActive(false);
+                ErrorPanel.gameObject.SetActive(true);
+                ErrorText.gameObject.SetActive(true);
+                ErrorText.text = "Verification email sent";
             }
         }
         Debug.Log(result);
@@ -69,12 +70,12 @@ public class Signup : MonoBehaviour
     static string ServerSignup(string email, string password, string username)
     {
         // server query
-        /*try
+        try
         {
             //regex checker
             System.Net.Mail.MailAddress emailtest = new System.Net.Mail.MailAddress(email);
             if (String.Equals(emailtest.Address, email))
-            {*/
+            {
                 User user = new User("signup", email, password, username);
                 string json = JsonConvert.SerializeObject(user);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
@@ -87,7 +88,7 @@ public class Signup : MonoBehaviour
                 
 
                 return responseData;
-            /*}
+            }
             else
             {
                 return "email error";
@@ -96,6 +97,6 @@ public class Signup : MonoBehaviour
         {
             Debug.Log(e.Message);
             return "email error";
-        }*/
+        }
     }
 }

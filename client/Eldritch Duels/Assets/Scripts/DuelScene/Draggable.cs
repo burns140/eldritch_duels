@@ -25,7 +25,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		this.GetComponent<Button>().enabled = false;
 	}
 	void Update(){
-		if(duelScript.currentPhase == Phase.ATTACK || duelScript.currentPhase == Phase.BLOCK || duelScript.currentPhase == Phase.DISCARD){
+		if(duelScript.currentPhase == Phase.ATTACK || duelScript.currentPhase == Phase.BLOCK || duelScript.currentPhase == Phase.DISCARD || duelScript.currentPhase == Phase.RECALL){
 			this.GetComponent<Button>().enabled = true;
 		}else{
 			this.GetComponent<Button>().enabled = false;
@@ -67,6 +67,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 				this.GetComponent<Image>().color = Color.white;
 				this.isBlocking = false;
 			}
+		}else if(this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.RECALL){
+				duelScript.recallCard(this.gameObject.name);
 		}
 	}
 
