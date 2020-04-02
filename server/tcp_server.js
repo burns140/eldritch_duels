@@ -80,6 +80,7 @@ function dataHandler(data) {
                     break;
                 case "logout":                     // Logout
                     playList.removeSocket(sock);
+                    sock.write("logged out");
                     break;
                 case "enterQueue":                 // Enter matchmaking queue
                     Queue.enterQueue(obj, sock);

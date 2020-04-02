@@ -362,7 +362,7 @@ namespace eldritch {
         }
 
         public static void logout(){
-            string json = "{cmd: \"logout\"}";
+            string json = "{\"cmd\": \"logout\"}";
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
             data = new Byte[1000000];
