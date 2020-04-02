@@ -115,6 +115,8 @@ public class DuelScript : MonoBehaviour
 
         readStreamAsync();
         this.isMyTurn = Global.DuelMyTurn;
+        this.currentTurn = 1;
+        this.myTurnsNum = 0;
         if(isMyTurn){
             phaseText.text = "ATTACK";
         }
