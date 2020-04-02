@@ -69,7 +69,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			}
 		}else if(this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.RECALL){
 				duelScript.recallCard(this.gameObject.name);
-		}
+		} else if (this.transform.parent.name.Equals("MyPlayAreaPanel") && duelScript.currentPhase == Phase.CORRUPT)
+        {
+            duelScript.corrupt(this.gameObject);
+        }
 	}
 
     public void OnBeginDrag(PointerEventData eventData) {

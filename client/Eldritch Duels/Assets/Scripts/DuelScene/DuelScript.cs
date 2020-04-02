@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using eldritch;
 using eldritch.cards;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -37,10 +38,12 @@ public enum Phase{
     ATTACK,
     BLOCK,
     PRE_BLOCK,
+    CORRUPT,
     WAITING,
     DISCARD,
     RECALL,
-    END
+    END,
+    NULL // used as a placeholder
 }
 
 public class DuelScript : MonoBehaviour 
@@ -83,10 +86,6 @@ public class DuelScript : MonoBehaviour
     // the objects that hold the corruption UI elements
     public GameObject myCorruption; 
     public GameObject oppCorruption;
-
-    // the corruption counter text
-    private Text myCorruptionText;
-    private Text oppCorruptionText;
 
     public Image oppHPImage; // Image to show opponent's current HP
 
@@ -189,13 +188,19 @@ public class DuelScript : MonoBehaviour
         if (myState.corruption > 0)
         {
             myCorruptionText.text = myState.corruption.ToString();
-            myCorruption.SetActive(true);
+            if (!myCorruption.activeSelf)
+            {
+                myCorruption.SetActive(true);
+            }
         }
 
         if (oppState.corruption > 0)
         {
             oppCorruptionText.text = oppState.corruption.ToString();
-            oppCorruption.SetActive(true);
+            if (!oppCorruption.activeSelf)
+            {
+                oppCorruption.SetActive(true);
+            }
         }
     }
 
@@ -359,16 +364,66 @@ public class DuelScript : MonoBehaviour
         oppManaText.text = MAX_MANA + " MANA";
     }
 
+    private const int flightCost = 2;
+    private const int stealthCost = 4;
+
+    // the corruption counter text
+    private Text myCorruptionText;
+    private Text oppCorruptionText;
+
+    // Corruption Buttons
+    private Button flightButton;
+    private Button stealthButton;
+
     private void setUpCorruption()
     {
-        myCorruptionText = myCorruption.GetComponentInChildren<Text>();
-        oppCorruptionText = oppCorruption.GetComponentInChildren<Text>();
-
         myState.corruption = INITIAL_CORRUPTION;
         oppState.corruption = INITIAL_CORRUPTION;
 
+        myCorruptionText = myCorruption.GetComponentInChildren<Text>();
+        oppCorruptionText = oppCorruption.GetComponentInChildren<Text>();
+
         myCorruptionText.text = myState.corruption.ToString();
         oppCorruptionText.text = myState.corruption.ToString();
+
+        Button[] bs = myCorruption.GetComponentsInChildren<Button>();
+
+        // initialize cost in button's text using consts
+        foreach (Button b in bs)
+        {
+            // Debug.Log("\"" + b.name + "\"");
+
+            switch (b.name)
+            {
+                case "FlightButton":
+                    if (flightButton != null)
+                    {
+                        Debug.Log("Two flight corruption buttons found");
+                        return;
+                    }
+                    this.flightButton = b;
+                    initializeCorruptionButton(b, flightCost, this.CorruptFlight);
+                    break;
+
+                case "StealthButton":
+                    if (stealthButton != null)
+                    {
+                        Debug.Log("Two stealth corruption buttons found");
+                        return;
+                    }
+                    this.stealthButton = b;
+                    initializeCorruptionButton(b, stealthCost, this.CorruptStealth);
+                    break;
+            }
+        }
+    }
+
+    delegate void CorruptionDelegate();
+    private void initializeCorruptionButton(Button b, int cost, CorruptionDelegate del)
+    {
+        b.GetComponentInChildren<Text>().text += ": " + cost;
+        var ua = new UnityAction(del);
+        b.onClick.AddListener(ua);
     }
 
     // Set up profile pics on the UI
@@ -826,11 +881,54 @@ public class DuelScript : MonoBehaviour
     }
     #endregion
 
+    #region Corruption
 
+    private Phase previousPhase = Phase.NULL;
+    void beginCorruption(Button button)
+    {
+        if (previousPhase != Phase.NULL)
+        {
+            Debug.Log("Attempting to corrupt while already corrupting.");
+            return;
+        }
+
+        previousPhase = currentPhase;
+        Debug.Log(button.name);
+    }
+
+    void CorruptFlight()
+    {
+        Debug.Log("Corrupt flight clicked");
+        if (myState.corruption < flightCost)
+            return;
+
+        beginCorruption(this.flightButton);
+    }
+
+    void CorruptStealth()
+    {
+        Debug.Log("Corrupt stealth clicked");
+        if (myState.corruption < stealthCost)
+            return;
+
+        beginCorruption(this.stealthButton);
+    }
+
+    public void corrupt(GameObject card)
+    {
+        Debug.Log(card.name);
+    }
+
+    void endCorruption()
+    {
+        Debug.Log("Corruption ended");
+        previousPhase = Phase.NULL;
+    }
+    #endregion
 
     #region Attack & Update Health
 
-    
+
 
 
 
