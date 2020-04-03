@@ -25,7 +25,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		this.GetComponent<Button>().enabled = false;
 	}
 	void Update(){
-		if(duelScript.currentPhase == Phase.ATTACK || duelScript.currentPhase == Phase.BLOCK || duelScript.currentPhase == Phase.DISCARD || duelScript.currentPhase == Phase.RECALL){
+		if(duelScript.currentPhase == Phase.ATTACK || duelScript.currentPhase == Phase.BLOCK || duelScript.currentPhase == Phase.DISCARD || duelScript.currentPhase == Phase.RECALL || duelScript.currentPhase == Phase.CORRUPT){
 			this.GetComponent<Button>().enabled = true;
 		}else{
 			this.GetComponent<Button>().enabled = false;
@@ -73,6 +73,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             duelScript.corrupt(this.gameObject);
         }
+
+        // Debug.Log("toggleAttack\nParentArea: " + this.transform.parent.name + "\nPhase: " + duelScript.currentPhase.ToString());
 	}
 
     public void OnBeginDrag(PointerEventData eventData) {

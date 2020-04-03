@@ -66,6 +66,8 @@ public class DuelScript : MonoBehaviour
     public GameObject myCard; // my Card object to create instances
     public GameObject oppCard; // opponent Card object to create instances
 
+    public GameObject counter; // counter object for instances
+
     private Queue<GameObject> deckList = new Queue<GameObject>(); // Store cards in Deck
     private List<GameObject> handList = new List<GameObject>(); // Store cards in Hand
     private List<GameObject> myPlayList = new List<GameObject>(); // Store cards in my Play Area
@@ -89,12 +91,13 @@ public class DuelScript : MonoBehaviour
 
     public Image oppHPImage; // Image to show opponent's current HP
 
+
     public Sprite[] availablePictures; // Available profile pics
     private float myCurrentHP; // My Current HP
     private float oppCurrentHP; // Opp Current HP
     private const int MAX_HEALTH = 30; // Max Health for a user
     private const int MAX_MANA = 1; // Max Mana for a user
-    private const int INITIAL_CORRUPTION = 0;
+    private const int INITIAL_CORRUPTION = 10;
     public Phase currentPhase = Phase.MAIN;
     public int currentTurn = 1;
     public int myTurnsNum = 0;
@@ -193,6 +196,13 @@ public class DuelScript : MonoBehaviour
                 myCorruption.SetActive(true);
             }
         }
+        else
+        {
+            if (myCorruption.activeSelf)
+            {
+                myCorruption.SetActive(false);
+            }
+        }
 
         if (oppState.corruption > 0)
         {
@@ -200,6 +210,13 @@ public class DuelScript : MonoBehaviour
             if (!oppCorruption.activeSelf)
             {
                 oppCorruption.SetActive(true);
+            }
+        }
+        else
+        {
+            if (oppCorruption.activeSelf)
+            {
+                oppCorruption.SetActive(false);
             }
         }
     }
@@ -375,6 +392,8 @@ public class DuelScript : MonoBehaviour
     private Button flightButton;
     private Button stealthButton;
 
+    public GameObject corruptionPanel;
+
     private void setUpCorruption()
     {
         myState.corruption = INITIAL_CORRUPTION;
@@ -386,7 +405,9 @@ public class DuelScript : MonoBehaviour
         myCorruptionText.text = myState.corruption.ToString();
         oppCorruptionText.text = myState.corruption.ToString();
 
-        Button[] bs = myCorruption.GetComponentsInChildren<Button>();
+        corruptionPanel.SetActive(false);
+        
+        Button[] bs = corruptionPanel.GetComponentsInChildren<Button>();
 
         // initialize cost in button's text using consts
         foreach (Button b in bs)
@@ -813,7 +834,7 @@ public class DuelScript : MonoBehaviour
         Global.stream.Write(data, 0, data.Length);
     }
 
-    //parce data received from opp
+    //parse data received from opp
     public void receivedDataFromOpp(string formatted){
         Debug.Log("Received: " + formatted);
         string[] firstPass = formatted.Split(new char[] {':'}, 2);
@@ -855,6 +876,16 @@ public class DuelScript : MonoBehaviour
             case "my turn":
                 isMyTurn = true;
                 break;
+
+            case "corrupt": {
+                var stuff = firstPass[1].Split(new char[] { ':' });
+                corruptOppCard(stuff[0], getCorruptionType(stuff[1]));
+                break;
+            }
+
+            default:
+                Debug.Log("Unknown command from opp: " + firstPass[0]);
+                break;
         }
     }
 
@@ -883,47 +914,197 @@ public class DuelScript : MonoBehaviour
 
     #region Corruption
 
-    private Phase previousPhase = Phase.NULL;
-    void beginCorruption(Button button)
+    public void ToggleCorruptionPanel()
     {
-        if (previousPhase != Phase.NULL)
+        corruptionPanel.SetActive(!corruptionPanel.activeSelf);
+    }
+
+    private Phase previousPhase = Phase.NULL;
+
+    enum CorruptionType
+    {
+        Flight,
+        Stealth,
+        NULL
+    }
+
+    static CorruptionType getCorruptionType(string s)
+    {
+        switch (s)
         {
-            Debug.Log("Attempting to corrupt while already corrupting.");
+            case "Flight":
+                return CorruptionType.Flight;
+
+            case "Stealth":
+                return CorruptionType.Stealth;
+
+            default:
+                return CorruptionType.NULL;
+        }
+    }
+
+    private CorruptionType currentCorruptionType = CorruptionType.NULL;
+
+    void beginCorruption(Button button, int cost, CorruptionType t)
+    {
+        Debug.Log("Corrupt " + t.ToString() + " began");
+        if (myState.corruption < cost)
+        {
+            endCorruption();
             return;
         }
 
-        previousPhase = currentPhase;
-        Debug.Log(button.name);
+        if (previousPhase != Phase.NULL)
+        {
+            if (t == CorruptionType.NULL || t == currentCorruptionType)
+            {
+                Debug.Log("Cancelled Corruption");
+                endCorruption();
+                return;
+            }
+            else if (t != currentCorruptionType)
+            {
+                Debug.Log("Switched Corruption type from " + currentCorruptionType.ToString() + " to " + t.ToString());
+            }
+        }
+        else if (currentPhase != Phase.CORRUPT)
+        {
+            // The phase was changed via other means e.g. End Turn
+            previousPhase = Phase.NULL;
+        }
+
+        if (previousPhase == Phase.NULL)
+        {
+            previousPhase = currentPhase;
+            currentPhase = Phase.CORRUPT;
+        }
+
+        currentCorruptionType = t;
     }
 
     void CorruptFlight()
-    {
-        Debug.Log("Corrupt flight clicked");
-        if (myState.corruption < flightCost)
-            return;
-
-        beginCorruption(this.flightButton);
+    {       
+        beginCorruption(this.flightButton, flightCost, CorruptionType.Flight);
     }
 
     void CorruptStealth()
     {
-        Debug.Log("Corrupt stealth clicked");
-        if (myState.corruption < stealthCost)
-            return;
+        beginCorruption(this.stealthButton, stealthCost, CorruptionType.Stealth);
+    }
 
-        beginCorruption(this.stealthButton);
+    static int getCorruptionCost(CorruptionType t)
+    {
+        switch (t)
+        {
+            case CorruptionType.Flight:
+                return flightCost;
+
+            case CorruptionType.Stealth:
+                return stealthCost;
+
+            default:
+                return 0;
+        }
+
+        return 0;
+    }
+
+    static string getCorruptionCounterText(CorruptionType t)
+    {
+        switch (t)
+        {
+            case CorruptionType.Flight:
+                return "F";
+
+            case CorruptionType.Stealth:
+                return "S";
+
+            default:
+                return "ERROR";
+        }
     }
 
     public void corrupt(GameObject card)
     {
-        Debug.Log(card.name);
+        if (currentCorruptionType == CorruptionType.NULL)
+        {
+            endCorruption();
+            return;
+        }
+
+        Debug.Log("Corrupt " + card.name + " with " + currentCorruptionType.ToString());
+
+        var cost = getCorruptionCost(currentCorruptionType);
+        var counterText = getCorruptionCounterText(currentCorruptionType);
+
+        myState.corruption -= cost;
+
+        var go = (GameObject)Instantiate(counter);
+        go.transform.SetParent(card.transform, false);
+        var text = go.GetComponentInChildren<Text>();
+        text.text = counterText;
+        var cardName = card.name;
+
+        // add effect
+        for (int i = 0; i < myState.onField.Count; i++)
+        {
+            Card c = myState.onField[i];
+            Debug.Log(c.CardName + " => " + c.CardName.Equals(cardName));
+            if (c.CardName.Equals(cardName))
+            {
+                applyCorruptionEffect(c, currentCorruptionType);
+                sendDataToOpp("corrupt:" + cardName + ":" + currentCorruptionType.ToString());
+                Debug.Log("corrupt:" + cardName + ":" + currentCorruptionType.ToString());
+                break;
+            }
+        }
+
+        Debug.Log(text.text);
+        Debug.Log(go.name);
+        endCorruption();
+    }
+
+    void corruptOppCard(string name, CorruptionType t)
+    {
+        for (int i = 0; i < oppState.onField.Count; i++)
+        {
+            Card c = oppState.onField[i];
+            if (c.CardName.Equals(name))
+            {
+                applyCorruptionEffect(c, t);
+                oppState.corruption -= getCorruptionCost(t);
+            }
+        }
+    }
+
+    static void applyCorruptionEffect(Card c, CorruptionType t)
+    {
+        switch (t)
+        {
+            case CorruptionType.Flight:
+                c.HasFly = true;
+                break;
+
+            case CorruptionType.Stealth:
+                c.HasStealth = true;
+                break;
+
+            default:
+                Debug.Log("Bad corruption type: " + t.ToString() + " (" + t + ")");
+                return;
+        }
     }
 
     void endCorruption()
     {
         Debug.Log("Corruption ended");
+        if (previousPhase != Phase.NULL)
+            currentPhase = previousPhase;
+
         previousPhase = Phase.NULL;
+        currentCorruptionType = CorruptionType.NULL;
     }
+
     #endregion
 
     #region Attack & Update Health
