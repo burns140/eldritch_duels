@@ -86,7 +86,11 @@ const signup = (data, sock) => {
                         avatar: 0,                         // int
                         level: 0,                           // int
                         wins: 0,                            // int
+                        winsToday: 0,
+                        winsThisWeek: 0,
                         losses: 0,                          // int
+                        lossesToday: 0,
+                        lossesThisWeek: 0,
                         recent_games: [],                   // bool[]
                         credits: 100000,                       // int
                         bio: "enter_bio",                   // string
@@ -101,7 +105,13 @@ const signup = (data, sock) => {
                         banLength: 0,                          // length of current tempBan
                         emailToChange: "",                   // Email they are trying to change to
                         reported: [],
-                        customArt: ""
+                        customArt: "",
+                        totalGames: 0,
+                        gamesToday: 0,
+                        gamesThisWeek: 0,
+                        cardsPlayedTotal: 0,
+                        cardsPlayedToday: 0,
+                        cardsPlayedThisWeek: 0, 
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
