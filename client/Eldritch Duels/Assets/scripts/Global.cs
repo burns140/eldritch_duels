@@ -168,7 +168,7 @@ namespace eldritch {
         public string id;
         public string cmd;
 
-        public sendfeedback(string emfeedbackail, string token, string id, string cmd)
+        public sendfeedback(string feedback, string token, string id, string cmd)
         {
             this.feedback = feedback;
             this.token = token;
