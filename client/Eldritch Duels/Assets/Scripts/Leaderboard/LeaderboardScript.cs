@@ -21,12 +21,36 @@ public class LeaderboardScript : MonoBehaviour
 
     private List<string> leaderboardList = new List<string>(); // To store leaderboard content
 
+
+    public class genericRequest {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public genericRequest(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        leaderboardList.Add("   1    Amigo");
-        leaderboardList.Add("   2    Que Paso");
-        leaderboardList.Add("   3    HolaAmigo");
+        genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboard");
+        string json = JsonConvert.SerializeObject(req);
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+        Global.stream.Write(data, 0, data.Length);
+        data = new Byte[1024];
+        string responseData = string.Empty;
+        Int32 bytes = Global.stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        string[] info = responseData.Split(',');
+        
+        // @TODO add the usernames to leaderboardList
+        // If you decide to separate wins then do that too
+
         loadLeaderboard();
     }
 
