@@ -102,6 +102,7 @@ public class DuelScript : MonoBehaviour
     private const string CREDIT_PREF_KEY = "credits"; // PREF KEY to store credits
     public Chat chatScript = null;
 
+    public CardSounds cardsoundsScript;
     #endregion
 
     #region Awake
@@ -425,6 +426,7 @@ public class DuelScript : MonoBehaviour
         if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
             return false;
         }
+        cardsoundsScript.cardPlayedSound(c);
         for(int i = 0; i < myState.inHand.Count;i++){
             if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){
                 Card played = myState.inHand[i];
@@ -773,6 +775,7 @@ public class DuelScript : MonoBehaviour
     }
 
     private void destroyOppCard(GameObject card){
+        cardsoundsScript.cardDestroySound(oppCard);
         //find in oppState.onField
         for(int i = 0; i < oppState.onField.Count;i++){
             if(oppState.onField[i].CardName.Equals(card.name)){
@@ -784,6 +787,7 @@ public class DuelScript : MonoBehaviour
         }
     }
     private void destroyMyCard(GameObject card){
+        cardsoundsScript.cardDestroySound(myCard);
         for(int i = 0; i < myState.onField.Count;i++){
             if(myState.onField[i].CardName.Equals(card.name)){
                 myState.onField.RemoveAt(i);
@@ -812,6 +816,7 @@ public class DuelScript : MonoBehaviour
                 ab.blocker.GetComponent<Image>().color = Color.white;
             ab.attacker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null && ab.attackCard != null){
+                cardsoundsScript.cardAttackSound(myCard);
                 updateOppHealth(ab.attackCard.AttackPower);
             }else if(ab.attackCard != null){
                 Card blocker = Library.GetCard(ab.blocker.name);
@@ -909,6 +914,7 @@ public class DuelScript : MonoBehaviour
             if(ab.blocker != null)
                 ab.blocker.GetComponent<Image>().color = Color.white;
             if(ab.blocker == null){
+                cardsoundsScript.cardAttackSound(oppCard);
                 updateMyHealth(ab.attackCard.AttackPower);
             }else{
                 Card blocker = Library.GetCard(ab.blocker.name);
