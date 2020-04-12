@@ -37,7 +37,7 @@ public class LeaderboardScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboard");
+        /*genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboard");
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);
@@ -47,10 +47,16 @@ public class LeaderboardScript : MonoBehaviour
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
         string[] info = responseData.Split(',');
-        
+        string firstusername = info[0].Split('-')[1];
+        string firstwins = infor[1].Split('-')[1]; 
+        */
         // @TODO add the usernames to leaderboardList
-        // If you decide to separate wins then do that too
-
+        /*for(int i=0; i<info[0].Count; i++){
+        
+        }*/
+        for(int i=0; i<15; i++){
+            leaderboardList.Add(i + "       amigo                               " + 100);
+        }
         loadLeaderboard();
     }
 
