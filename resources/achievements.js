@@ -22,6 +22,10 @@ var names = [
     "50 losses",
     "100 losses",
     "250 losses",
+    "50 cards",
+    "500 cards",
+    "1000 cards",
+    "1500 cards",
 ]
 
 var descriptions = [
@@ -36,7 +40,11 @@ var descriptions = [
     "Lose 25 games",
     "Lose 50 games",
     "Lose 100 games",
-    "Lose 250 games"
+    "Lose 250 games",
+    "Play 50 cards",
+    "Play 500 cards",
+    "Play 1000 cards",
+    "Play 1500 cards"
 ]
 
 function Main() {

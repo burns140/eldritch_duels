@@ -111,7 +111,11 @@ const signup = (data, sock) => {
                         gamesThisWeek: 0,
                         cardsPlayedTotal: 0,
                         cardsPlayedToday: 0,
-                        cardsPlayedThisWeek: 0, 
+                        cardsPlayedThisWeek: 0,
+                        xp: 0,
+                        elo: 100,
+                        dailyChallenge: 0,
+                        weeklyChallenge = 0
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
