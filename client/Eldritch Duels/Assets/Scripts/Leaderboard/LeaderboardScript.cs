@@ -37,7 +37,7 @@ public class LeaderboardScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboardData");
+        genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboard");
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);
@@ -45,24 +45,21 @@ public class LeaderboardScript : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Debug.Log(responseData);
+        Debug.Log("RESPONSE DATA"+responseData);
         string[] info = responseData.Split(',');
-        Debug.Log(info);
+        Debug.Log("INFO:"+info.ToString());
         string firstusername = info[0].Split('_')[0];
-        Debug.Log(firstusername);
+        Debug.Log("First USERNAME:"+firstusername);
         string firstwins = info[0].Split('_')[1]; 
-        Debug.Log(firstwins);
-        */
+        Debug.Log("First WINS:"+firstwins);
+        
         // @TODO add the usernames to leaderboardList
-        /*for(int i=0; i<info.Length; i++){
+        for(int i=0; i<info.Length; i++){
             int j = i+1;
-            leaderboardList.Add(j+"    "+info[0].Split('_')[0]);
-            winsList.Add(info[0].Split('_')[1]);
-        }*/
-        for(int i=1; i<=15; i++){
-            leaderboardList.Add(i+"      amigo");
-            winsList.Add("100");
+            leaderboardList.Add(j+"    "+info[i].Split('_')[0]);
+            winsList.Add(info[i].Split('_')[1]);
         }
+        
         loadLeaderboard();
     }
 
@@ -71,12 +68,13 @@ public class LeaderboardScript : MonoBehaviour
         foreach(Button o in gameObjects){ 
             Destroy(o.gameObject); // Destroy all previous leaderboard items
         }
-
+        int i=0;
         foreach(string value in leaderboardList){
             GameObject valueButoon = (GameObject)Instantiate(buttonPrefab); // Create leaderboard item button
             GameObject winButton = (GameObject)Instantiate(buttonPrefab);
             valueButoon.GetComponentInChildren<Text>().text = value; // Set text to the leaderboard item 
-            winButton.GetComponentInChildren<Text>().text = "100";
+            winButton.GetComponentInChildren<Text>().text = winsList[i];
+            i++;
             valueButoon.GetComponentInChildren<Button>().interactable = false;
             winButton.GetComponentInChildren<Button>().interactable = false;
             valueButoon.SetActive(true);
