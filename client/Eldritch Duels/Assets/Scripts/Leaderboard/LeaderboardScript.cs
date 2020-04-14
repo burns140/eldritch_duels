@@ -20,7 +20,7 @@ public class LeaderboardScript : MonoBehaviour
     public GameObject leaderboardPanel; // Leaderboard panel in UI
 
     private List<string> leaderboardList = new List<string>(); // To store leaderboard content
-
+    private List<string> winsList = new List<string>(); // To store wins for users
 
     public class genericRequest {
         public string id;
@@ -37,7 +37,7 @@ public class LeaderboardScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboard");
+        /*genericRequest req = new genericRequest(Global.getID(), Global.getToken(), "getLeaderboardData");
         string json = JsonConvert.SerializeObject(req);
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);
@@ -45,17 +45,23 @@ public class LeaderboardScript : MonoBehaviour
         string responseData = string.Empty;
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-
+        Debug.Log(responseData);
         string[] info = responseData.Split(',');
-        string firstusername = info[0].Split('-')[1];
-        string firstwins = infor[1].Split('-')[1]; 
+        Debug.Log(info);
+        string firstusername = info[0].Split('_')[0];
+        Debug.Log(firstusername);
+        string firstwins = info[0].Split('_')[1]; 
+        Debug.Log(firstwins);
         */
         // @TODO add the usernames to leaderboardList
-        /*for(int i=0; i<info[0].Count; i++){
-        
+        /*for(int i=0; i<info.Length; i++){
+            int j = i+1;
+            leaderboardList.Add(j+"    "+info[0].Split('_')[0]);
+            winsList.Add(info[0].Split('_')[1]);
         }*/
-        for(int i=0; i<15; i++){
-            leaderboardList.Add(i + "       amigo                               " + 100);
+        for(int i=1; i<=15; i++){
+            leaderboardList.Add(i+"      amigo");
+            winsList.Add("100");
         }
         loadLeaderboard();
     }
@@ -68,9 +74,15 @@ public class LeaderboardScript : MonoBehaviour
 
         foreach(string value in leaderboardList){
             GameObject valueButoon = (GameObject)Instantiate(buttonPrefab); // Create leaderboard item button
+            GameObject winButton = (GameObject)Instantiate(buttonPrefab);
             valueButoon.GetComponentInChildren<Text>().text = value; // Set text to the leaderboard item 
+            winButton.GetComponentInChildren<Text>().text = "100";
+            valueButoon.GetComponentInChildren<Button>().interactable = false;
+            winButton.GetComponentInChildren<Button>().interactable = false;
             valueButoon.SetActive(true);
+            winButton.SetActive(true);
             valueButoon.transform.SetParent(leaderboardPanel.transform, false); // Add item buttons to leaderboard panel
+            winButton.transform.SetParent(leaderboardPanel.transform, false);
         }
     }
 
