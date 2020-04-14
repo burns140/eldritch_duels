@@ -22,7 +22,7 @@ const fetchLeaderboardData = (data, sock) => {
                     if (i == temp.length) {
                         break;
                     }
-                    toReturn.push(`${temp.username}_${temp.elo}`);
+                    toReturn.push(`${temp[i].username}_${temp[i].elo}`);
                 }
 
                 console.log('returning elo data');
