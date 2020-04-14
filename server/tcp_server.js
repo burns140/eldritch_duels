@@ -8,10 +8,12 @@ const Email = require('./tcp_handling/sendemail.js');
 const Profile = require('./tcp_handling/profile.js');
 const Block = require('./tcp_handling/blockUser.js');
 const Friends = require('./tcp_handling/friends.js');
+const Achievements = require('./tcp_handling/achievements.js');
+const MatchEnd = require('./tcp_handling/matchEnd.js')
 const AllPlayerList = require('./classes/AllPlayerList.js');
 var playList = new AllPlayerList();
 const Queue = require('./tcp_handling/queue.js');
-
+const Leaderboard = require('./tcp_handling/leaderboard.js')
 const noTokenNeeded = ["signup", "login", "tempPass", "logout"];
 const MongoClient = require('./mongo_connection');
 
@@ -19,6 +21,9 @@ const MongoClient = require('./mongo_connection');
 const host = 'localhost';
 const port = process.env.port || 8000;
 var server = net.createServer(onClientConnected);
+
+var curDailies = [];        // ids of current daily challenges
+var curWeeklies = [];       // ids of current weekly challenges
 
 function dataHandler(data) {
     const sock = this;
@@ -144,6 +149,21 @@ function dataHandler(data) {
                     break;
                 case "getCustomAvatar":
                     Profile.getCustomAvatar(obj, sock);
+                    break;
+                case "getAchievements":
+                    Achievements.getAchievements(obj, sock);
+                    break;
+                case "addWin":
+                    MatchEnd.addWin(obj, sock);
+                    break;
+                case "addLoss":
+                    MatchEnd.addLoss(obj, sock);
+                    break;
+                case "resolveAchievements":
+                    MatchEnd.resolveAchievements(obj, sock);
+                    break;
+                case "getLeaderboard":
+                    Leaderboard.fetchLeaderboardData(obj, sock);
                     break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
