@@ -1,5 +1,4 @@
 const MongoClient = require('../mongo_connection');
-const ObjectID = require('mongodb').ObjectID;
 const dbconfig = require('../dbconfig.json');
 
 const getAchievements = (data, sock) => {

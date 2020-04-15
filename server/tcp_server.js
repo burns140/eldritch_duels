@@ -165,6 +165,9 @@ function dataHandler(data) {
                 case "getLeaderboard":
                     Leaderboard.fetchLeaderboardData(obj, sock);
                     break;
+                case "xpTest":
+                    MatchEnd.addXPUnit(obj, sock);
+                    break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
                     console.log('Not a valid command');

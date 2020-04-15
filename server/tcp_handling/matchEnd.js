@@ -1,4 +1,6 @@
 const MongoClient = require('../mongo_connection');
+const ObjectID = require('mongodb').ObjectID;
+
 
 const winAch = [5, 10, 25, 50, 100, 250];
 const lossAch = [5, 10, 25, 50, 100, 250];
@@ -81,9 +83,63 @@ const addLoss = (data, sock) => {
     }
 }
 
+const addXPUnit = (data, sock) => {
+    const id = data.id;
+    const amount = data.amount;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            /* Find a user with the given id and set the three given values */
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {            // No document was modified, so error
+                    console.log('modified not 1');
+                    sock.write(`Failed to update profile correctly`);
+                    return;
+                }
+                
+                var xp = result.xp + amount;
+                var levelUp = 0;
+                if (xp >= 500) {
+                    levelUp = 1;
+                    xp = xp % 500;
+                }
+
+                db.collection('users').updateOne(
+                    { _id: ObjectID(id) },
+                    { 
+                        $set: { xp: xp },
+                        $inc: { level: levelUp } 
+                    }
+                ).then(result => {
+                    if (result.modifiedCount != 1) {
+                        throw new Error("xp not added");
+                    }
+                    console.log('xp updated');
+                    sock.write('xp updated');
+                }).catch(err => {
+                    console.log(err);
+                    sock.write(err.toString());
+                })
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+                return;
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
 const resolveAchievements = (data, sock) => {
     const id = data.id;
     const cardsPlayed = data.cardsPlayed;
+    const xpGain = data.xpGain;
 
     try {
         MongoClient.get().then(client => {
@@ -132,15 +188,19 @@ const resolveAchievements = (data, sock) => {
                     weeklyCompleted = checkWeeklyChallenge(checkChallengeObj);
                 }
 
-                var xp = result.xp + 100;
-                var level = result.level;
-                if (xp % 500 == 0) {
-                    level++;
+                var xp = result.xp + xpGain;
+                var levelUp = 0;
+                if (xp >= 500) {
+                    levelUp = 1;
+                    xp = xp % 500;
                 }
 
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
-                    { $set: { achievements: achievements, xp: xp, level: level, dailyChallenge: dailyCompleted, weeklyChallenge: weeklyCompleted, cardsPlayedTotal: cardsTotal, cardsPlayedToday: cardsToday, cardsPlayedThisWeek: cardsWeek } }
+                    { 
+                        $set: { achievements: achievements, xp: xp, dailyChallenge: dailyCompleted, weeklyChallenge: weeklyCompleted, cardsPlayedTotal: cardsTotal, cardsPlayedToday: cardsToday, cardsPlayedThisWeek: cardsWeek },
+                        $inc: { level: levelUp }
+                    }
                 ).then(result => {
                     if (result.matchedCount != 1) {
                         throw new Error("no user with that id");
@@ -236,3 +296,4 @@ function checkWeeklyChallenge(result) {
 exports.addLoss = addLoss;
 exports.addWin = addWin;
 exports.resolveAchievements = resolveAchievements;
+exports.addXPUnit = addXPUnit;
