@@ -7,6 +7,7 @@ using eldritch;
 public static class DuelFunctions
 {
     public static int MAX_FIELD = 7;
+    public static int START_HEALTH = 30;
     public static bool CanCast(Card castingcard, PlayerState ps){
         Debug.Log(ps.onField.Count);
         if((castingcard.CardCost <= ps.mana && ps.onField.Count <= MAX_FIELD) || (castingcard.SpellType == CardType.SPELL && castingcard.CardCost <= ps.mana)){
