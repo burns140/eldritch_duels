@@ -101,13 +101,17 @@ public class DuelScript : MonoBehaviour
     private const string WON_PREF_KEY = "whowon"; // PREF KEY to store who won
     private const string CREDIT_PREF_KEY = "credits"; // PREF KEY to store credits
     public Chat chatScript = null;
-
+    private List<string> logWithoutDetail = new List<string>(); // Log to store moves without details
+    private List<string> logWithDetail = new List<string>(); // Log to store moves with details
+    public GameObject logPanel;
+    public GameObject logPanelHolder;
     #endregion
 
     #region Awake
     // Awake is called when the script instance is being loaded.
     void Start(){
         //getInfo();
+        //loadLog();
         setUpDeck(); // Set up card list from deck being used
         //setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
@@ -411,6 +415,8 @@ public class DuelScript : MonoBehaviour
             c.name = b.CardName;
             c.transform.SetParent(handAreaPanel.transform, false); // Add card to my play area
             handList.Add(c); // Add card to my play list
+            logWithoutDetail.Add("YOU drew "+c.name);
+            logWithDetail.Add("YOU drew "+c.name);
         }
     }
 
@@ -432,12 +438,15 @@ public class DuelScript : MonoBehaviour
                 myState.mana -= played.CardCost;
                 myState.onField.Add(played);
                 myState.inHand.RemoveAt(i);
+                logWithoutDetail.Add("YOU played "+cardName);
+                logWithDetail.Add("YOU played "+cardName);
                 Debug.Log("Resolving abilities");
                 StartCoroutine(resolveAbilities(played, c));
 
                 //sync with opp
                 string data = "play:" + cardName;
                 sendDataToOpp(data);
+                
                 return true;
                 
             }
@@ -471,10 +480,11 @@ public class DuelScript : MonoBehaviour
             }
             hasRecalled = true;
             recallButton.gameObject.GetComponent<Image>().color = Color.red;
+            logWithoutDetail.Add("YOU recalled "+cardName);
+            logWithDetail.Add("YOU recalled "+cardName);
             //sync with opp
             string data = "recall:" + cardName;
             sendDataToOpp(data);
-
             return true;
         }
             return false;
@@ -497,7 +507,8 @@ public class DuelScript : MonoBehaviour
         c.name = played.CardName;
         c.transform.SetParent(oppPlayAreaPanel.transform, false); // Add card to opp play area
         oppPlayList.Add(c); // Add card to opp play list
-
+        logWithoutDetail.Add("OPP played "+cardName);
+        logWithDetail.Add("OPP played "+cardName);
         StartCoroutine(resolveAbilities(played, c));
         
     }
@@ -522,6 +533,8 @@ public class DuelScript : MonoBehaviour
                 break;
             }
         }
+        logWithoutDetail.Add("OPP recalled "+cardName);
+        logWithDetail.Add("OPP recalled "+cardName);
         sendDataToOpp("wAITING");
     }
     
@@ -779,6 +792,8 @@ public class DuelScript : MonoBehaviour
                 oppState.onField.RemoveAt(i);
                 //TODO death animation
                 Destroy(card);
+                logWithoutDetail.Add("OPP card "+card.name+" is destroyed");
+                logWithDetail.Add("OPP card "+card.name+" is destroyed");
                 return;
             }
         }
@@ -789,6 +804,8 @@ public class DuelScript : MonoBehaviour
                 myState.onField.RemoveAt(i);
                 //TODO death animation
                 Destroy(card);
+                logWithoutDetail.Add("YOUR card "+card.name+" is destroyed");
+                logWithDetail.Add("YOUR card "+card.name+" is destroyed");
                 return;
             }
         }
@@ -931,14 +948,16 @@ public class DuelScript : MonoBehaviour
     private void updateOppHealth(int hit){
         oppState.hp -= hit; // Decrease attack from HP
         oppHPImage.fillAmount = oppState.hp/MAX_HEALTH; // Update opponent's HP on UI
-
+        logWithoutDetail.Add("YOU successfully attacked your OPP");
+        logWithDetail.Add("OPP's health decreased by "+hit+" OPP's health is now "+oppState.hp);
     }
 
     // After opponent's card attacks me
     private void updateMyHealth(int hit){
-         // @TODO get attack value from server (@KEVIN M)
         myState.hp -= hit; // Decrease attack from HP
         myHPImage.fillAmount = myState.hp/MAX_HEALTH; // Update my HP on UI
+        logWithoutDetail.Add("YOU were attacked");
+        logWithDetail.Add("YOUR health decreased by "+hit+" YOUR health is now "+myState.hp);
     }
 
     private void setOppHealth(int health){
@@ -1061,4 +1080,33 @@ public class DuelScript : MonoBehaviour
         SceneManager.LoadScene("EndDuel");
     }
     #endregion
+
+    public void showLogPanel(){
+        if(logPanelHolder.activeSelf){
+            logPanelHolder.SetActive(false);
+        }
+        else{
+            logPanelHolder.SetActive(true);
+        }
+    }
+    public void loadLog(){
+        foreach(string value in logWithoutDetail){
+            GameObject logTextObject = new GameObject("logTextObject");
+            Text myText = logTextObject.AddComponent<Text>();
+            myText.text = value;
+            logTextObject.SetActive(true);
+            logTextObject.transform.SetParent(logPanel.transform, false); // Add logs to log panel
+        }
+        for(int i=0; i<10; i++){
+            GameObject logTextObject = new GameObject("logTextObject");
+            Text myText = logTextObject.AddComponent<Text>();
+            myText.text = "test value";
+            Font jazzFont = (Font)Resources.GetBuiltinResource(typeof(Font), "JazzCreateBubble.ttf");
+            myText.font = jazzFont;
+            myText.material = jazzFont.material;
+            myText.fontSize = 30;
+            logTextObject.SetActive(true);
+            logTextObject.transform.SetParent(logPanel.transform, false); // Add logs to log panel
+        }
+    }
 }
