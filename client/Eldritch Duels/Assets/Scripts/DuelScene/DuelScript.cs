@@ -325,7 +325,7 @@ public class DuelScript : MonoBehaviour
         }
     }
     
-    // Set up health and mana text for both users to max values
+    // Set up health and mana text for both users to max 
     private void setUpHealthMana(){
         myState.hp = MAX_HEALTH;
         myState.mana = MAX_MANA;

@@ -398,7 +398,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 647516715}
+      objectReference: {fileID: 647516716}
     - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1477,7 +1477,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536725770}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8483fbee5975478d818d84aa3494b76, type: 3}
   m_Name: 
@@ -1514,6 +1514,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &536725774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536725770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7198bb9b69c66b44dbee59906c7d6a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duelScript: {fileID: 0}
+  parentToReturnTo: {fileID: 0}
+  placeholderParent: {fileID: 0}
+  placeholder: {fileID: 0}
+  startArea: {fileID: 0}
+  isAttacking: 0
+  isBlocking: 0
+  battleResolved: 0
 --- !u!114 &536725776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1557,7 +1577,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 536725771}
+      - m_Target: {fileID: 536725774}
         m_MethodName: toggleAttack
         m_Mode: 1
         m_Arguments:
@@ -1786,7 +1806,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 647516715}
+      objectReference: {fileID: 647516716}
     - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1814,6 +1834,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 647516714}
+  - component: {fileID: 647516716}
   - component: {fileID: 647516715}
   m_Layer: 5
   m_Name: DuelScriptObject
@@ -1848,7 +1869,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647516713}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e7443f0bfa5d4132aa23833e4a20fe1, type: 3}
   m_Name: 
@@ -1905,6 +1926,55 @@ MonoBehaviour:
     oppField: []
     library: []
   chatScript: {fileID: 932829364}
+  attackers: []
+--- !u!114 &647516716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647516713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8465d0403fce1054fa23363810247c59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myState:
+    mana: 0
+    hp: 0
+    corruption: 0
+    inHand: []
+    onField: []
+    oppField: []
+    library: []
+  oppState:
+    mana: 0
+    hp: 0
+    corruption: 0
+    inHand: []
+    onField: []
+    oppField: []
+    library: []
+  currentPhase: 4
+  phaseText: {fileID: 1700945825}
+  CardHolder: {fileID: 536725770}
+  MyHand: {fileID: 674374116}
+  MyField: {fileID: 1444714782}
+  OppField: {fileID: 1373104430}
+  myTurn: 0
+  hasRecalled: 0
+  gameText: {fileID: 666749130}
+  myManaText: {fileID: 830856390}
+  oppManaText: {fileID: 568519722}
+  myHPText: {fileID: 1166810263}
+  oppHPText: {fileID: 149604944}
+  myHPImage: {fileID: 1900704357}
+  oppHPImage: {fileID: 1467211226}
+  recallButton: {fileID: 1943811222}
+  cardBack1: {fileID: 1104460380}
+  cardBack2: {fileID: 1086301414}
+  cardBack3: {fileID: 301504761}
+  cardBack4: {fileID: 30292783}
   attackers: []
 --- !u!1 &654505639
 GameObject:
@@ -2261,7 +2331,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 674374116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7657c717d258b46cc8fbf194703301d1, type: 3}
+  m_Script: {fileID: 11500000, guid: a5925dfb7c647d64bbff1c49cd9c301e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &709842146
@@ -4139,7 +4209,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1444714782}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7657c717d258b46cc8fbf194703301d1, type: 3}
+  m_Script: {fileID: 11500000, guid: a5925dfb7c647d64bbff1c49cd9c301e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1467211224

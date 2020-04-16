@@ -21,8 +21,10 @@ namespace eldritch{
         public GameObject MyHand;
         public GameObject MyField;
         public GameObject OppField;
-        private bool myTurn = false;
-        private bool hasRecalled = false;
+        
+        public bool myTurn = false;
+        
+        public bool hasRecalled = false;
         public Text gameText;
         public Text myManaText; // Text to show my current Mana
         public Text oppManaText; // Text to show opponent's current Mana
@@ -52,6 +54,7 @@ namespace eldritch{
 
             //init draws
             StartCoroutine(initalDraw());
+            
 
             //chose first player
             if(AIScript.randomBool()){
@@ -59,6 +62,7 @@ namespace eldritch{
                 currentPhase = Phase.MAIN;
                 phaseText.text = "ATTACK";
             }
+            StartCoroutine(startText());
         }
         void Update(){
             checkDeckCount(); // Check & update card back quantity on deck UI
@@ -106,7 +110,7 @@ namespace eldritch{
         }
 
         private IEnumerator startText(){
-            if(Global.DuelMyTurn){
+            if(myTurn){
                 gameText.text = "FIRST PLAYER";
             }else{
                 gameText.text = "SECOND PLAYER";
@@ -155,7 +159,7 @@ namespace eldritch{
         //management
         
         public bool CanCast(GameObject c){
-            if(DuelFunctions.CanCast(Library.GetCard(c.name), myState)){
+            if(DuelFunctions.CanCast(Library.GetCard(c.name), myTurn? myState : oppState)){
                 return true;
             }
             return false;
@@ -168,8 +172,40 @@ namespace eldritch{
         }
         //actions
 
-        public void CastCard(string cardName){
+        public void CastCard(string cardName, GameObject c){
+            if(myTurn){
+                if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
+                    return;
+                }
+                for(int i = 0; i < myState.inHand.Count;i++){
+                    if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){
+                        Card played = myState.inHand[i];
+                        //edit state
+                        myState.mana -= played.CardCost;
+                        myState.onField.Add(played);
+                        myState.inHand.RemoveAt(i);
+                        Debug.Log("Resolving abilities");
+                        StartCoroutine(resolveAbilities(played, c));                        
+                        return;
+                        
+                    }
+                }
+            }else{
+                Card played = Library.GetCard(cardName);
+                Debug.Log(played);
+                //update manager
+                oppState.onField.Add(played);
+                oppState.mana -= played.CardCost;
 
+                //update ui
+                GameObject c2 = (GameObject)Instantiate(CardHolder);
+                c2.GetComponent<Image>().sprite = null;
+                c2.GetComponent<Image>().material = played.CardImage;
+                c2.name = played.CardName;
+                c2.transform.SetParent(OppField.transform, false); // Add card to opp play area
+                
+                StartCoroutine(resolveAbilities(played, c2));
+            }
         }
 
         private IEnumerator resolveAbilities(Card card, GameObject c){
@@ -205,7 +241,41 @@ namespace eldritch{
             }
         }
         public void RecallCard(string cardName){
-
+            if(myTurn){
+                if(myState.onField.Count >= DuelFunctions.MAX_FIELD || true){ //remove true for demo
+                    Card recalled = null;
+                    //update manager
+                    for(int i = 0; i< myState.onField.Count;i++){
+                        if(myState.onField[i].CardName.Equals(cardName)){
+                            recalled = myState.onField[i];
+                            myState.onField.RemoveAt(i);
+                            myState.inHand.Add(recalled);
+                            break;
+                        }
+                    }
+                    if(recalled == null){
+                        return;
+                    }
+                    hasRecalled = true;
+                    recallButton.gameObject.GetComponent<Image>().color = Color.red;                    
+                }
+                   
+            }else{
+                //update manager
+                for(int i = 0; i < oppState.onField.Count;i++){
+                    if(oppState.onField[i].CardName.Equals(cardName)){
+                        oppState.onField.RemoveAt(i);
+                        break;
+                    }
+                }
+                //update ui
+                foreach(Transform c in OppField.transform){
+                    if(c.gameObject.name.Equals(cardName)){
+                        Destroy(c.gameObject);
+                        break;
+                    }
+                }
+            }
         }
 
         private void AITurn(){
@@ -356,10 +426,73 @@ namespace eldritch{
                 }
                 currentPhase = Phase.WAITING;
                 AIBlock();
+                myAttack();
+            }
+
+            private void myAttack(){
+        
+                foreach(AttackBlock ab in attackers){
+                    if(ab.blocker != null)
+                        ab.blocker.GetComponent<Image>().color = Color.white;
+                    ab.attacker.GetComponent<Image>().color = Color.white;
+                    if(ab.blocker == null && ab.attackCard != null){
+                        updateOppHealth(ab.attackCard.AttackPower);
+                    }else if(ab.attackCard != null){
+                        Card blocker = Library.GetCard(ab.blocker.name);
+                        if(blocker.DefencePower > ab.attackCard.AttackPower){
+                            destroyMyCard(ab.attacker);
+                        }else if(blocker.DefencePower < ab.attackCard.AttackPower){
+                            destroyOppCard(ab.blocker);
+                        }else if(ab.attackCard.AttackPower != 0){
+                            destroyMyCard(ab.attacker);
+                            destroyOppCard(ab.blocker);
+                        }
+                    }
+                }
+
+                attackers.Clear();
+                endMyTurn();
             }
 
             private void AIBlock(){
                 AIScript.AIBlock(this);
+            }
+
+            public void addOppAttacker(string attacker){
+                for(int i = 0; i < OppField.transform.childCount;i++){
+                    if(OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>() != null && //check child is a card placeholder
+                    !OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking &&
+                    OppField.transform.GetChild(i).gameObject.name.Equals(attacker)){ //check card is not already set to attacker
+                        AttackBlock attackBlock; //create blank attacker blocker struct
+                        OppField.transform.GetChild(i).gameObject.GetComponent<Image>().color = Color.red;
+                        attackBlock.attacker = OppField.transform.GetChild(i).gameObject; //add teh attacker ui object
+                        attackBlock.attackCard = Library.GetCard(attacker); //get the attacker card
+                        attackBlock.blocker = null;
+                        OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking = true; //set card to is attacking
+                        attackers.Add(attackBlock); //add attacker to list
+                        break;
+                    }
+                }
+                
+            }
+            public void addOppBlocker(string blocker){
+                string[] abpair = blocker.Split('-');
+                    for(int a = 0; a < attackers.Count;a++){
+                        AttackBlock ab = attackers[a];
+                        if(ab.attacker.name.Equals(abpair[0]) && ab.blocker == null){
+                            //find ui card
+                            for(int i = 0; i < OppField.transform.childCount;i++){
+                                if(OppField.transform.GetChild(i).gameObject.name.Equals(abpair[1]) &&
+                                !OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isBlocking){
+                                    OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isBlocking = true;
+                                    OppField.transform.GetChild(i).gameObject.GetComponent<Image>().color = Color.gray;
+                                    ab.blocker = OppField.transform.GetChild(i).gameObject;
+                                    attackers[a] = ab;
+                                    return;
+                                }
+                            }
+                        }
+                    }
             }
 
             private void oppAttack(){
@@ -408,6 +541,12 @@ namespace eldritch{
                 }
             }
 
+            private void updateOppHealth(int hit){
+                oppState.hp -= hit; // Decrease attack from HP
+                oppHPImage.fillAmount = oppState.hp/DuelFunctions.START_HEALTH; // Update opponent's HP on UI
+
+            }
+
             private void updateMyHealth(int hit){
                 // @TODO get attack value from server (@KEVIN M)
                 myState.hp -= hit; // Decrease attack from HP
@@ -427,76 +566,85 @@ namespace eldritch{
 
 
 
-                //end turn
-                private void endMyTurn(){
-                    resetStates();
-                    myTurn = false; // No longer my turn
-                    currentPhase = Phase.WAITING; //wait for opp move
-                    oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
-                    phaseText.text = "WAITING";
-                    hasRecalled = false;
-                    if(CanRecall()){
-                        recallButton.gameObject.GetComponent<Image>().color = Color.green;
-                        ColorBlock cb = recallButton.gameObject.GetComponent<Button>().colors;
-                        cb.normalColor = Color.green;
-                        recallButton.gameObject.GetComponent<Button>().colors = cb;
-                    }
-                    else{
-                        recallButton.gameObject.GetComponent<Image>().color = Color.red;
-                        ColorBlock cb = recallButton.gameObject.GetComponent<Button>().colors;
-                        cb.normalColor = Color.red;
-                        recallButton.gameObject.GetComponent<Button>().colors = cb;
-                    }
+        //end turn
+        public void DiscardCard(GameObject card){
 
-                    currentTurn++;
-                    myTurnsNum++;
-                    checkDeckCount();
-                    //ai turn
-                    AITurn();
-                }
-
-                private void checkDeckCount(){
-                if(myState.library.Count<30){
-                    cardBack1.SetActive(false); // Hide first card in deck
-                }
-                if(myState.library.Count<20){
-                    cardBack2.SetActive(false); // Hide second card in deck
-                }
-                if(myState.library.Count<10){
-                    cardBack3.SetActive(false); // Hide third card in deck
-                }
-                if(myState.library.Count<1){
-                    cardBack4.SetActive(false); // Hide fourth/last card in deck
-                }
+        }
+        private void endMyTurn(){
+            resetStates();
+            myTurn = false; // No longer my turn
+            currentPhase = Phase.WAITING; //wait for opp move
+            oppState.mana = oppState.mana + currentTurn /8 + 1; //increase mana
+            phaseText.text = "WAITING";
+            hasRecalled = false;
+            if(CanRecall()){
+                recallButton.gameObject.GetComponent<Image>().color = Color.green;
+                ColorBlock cb = recallButton.gameObject.GetComponent<Button>().colors;
+                cb.normalColor = Color.green;
+                recallButton.gameObject.GetComponent<Button>().colors = cb;
+            }
+            else{
+                recallButton.gameObject.GetComponent<Image>().color = Color.red;
+                ColorBlock cb = recallButton.gameObject.GetComponent<Button>().colors;
+                cb.normalColor = Color.red;
+                recallButton.gameObject.GetComponent<Button>().colors = cb;
             }
 
+            currentTurn++;
+            myTurnsNum++;
+            //checkDeckCount();
+            //ai turn
+            AITurn();
+        }
 
-                // End opponent's play
-                private void endOppTurn(){
-                    resetStates();
-                    myTurn = true; // Now it's my turn
-                    currentPhase = Phase.MAIN; //start my turn
-                    myState.mana = myState.mana + currentTurn /8 + 1; //increase mana
-                    phaseText.text = "ATTACK";
-                    currentTurn++;
-                    drawCard();
-                }
-
-                private void resetStates(){
-                //reset opp
-                for(int i = 0; i< OppField.transform.childCount;i++){
-                    OppField.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
-                    OppField.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
-                    OppField.transform.GetChild(i).GetComponent<Image>().color = Color.white;
-                }
-
-                //reset me
-                for(int i = 0; i< MyField.transform.childCount;i++){
-                    MyField.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
-                    MyField.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
-                    MyField.transform.GetChild(i).GetComponent<Image>().color = Color.white;
-                }
+        private void checkDeckCount(){
+            if(myState.library.Count<30){
+                cardBack1.SetActive(false); // Hide first card in deck
             }
+            if(myState.library.Count<20){
+                cardBack2.SetActive(false); // Hide second card in deck
+            }
+            if(myState.library.Count<10){
+                cardBack3.SetActive(false); // Hide third card in deck
+            }
+            if(myState.library.Count<1){
+                cardBack4.SetActive(false); // Hide fourth/last card in deck
+            }
+        }
+
+
+        // End opponent's play
+        private void endOppTurn(){
+            resetStates();
+            myTurn = true; // Now it's my turn
+            currentPhase = Phase.MAIN; //start my turn
+            myState.mana = myState.mana + currentTurn /8 + 1; //increase mana
+            phaseText.text = "ATTACK";
+            currentTurn++;
+            drawCard();
+        }
+
+        private void resetStates(){
+            //reset opp
+            for(int i = 0; i< OppField.transform.childCount;i++){
+                OppField.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
+                OppField.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
+                OppField.transform.GetChild(i).GetComponent<Image>().color = Color.white;
+            }
+
+            //reset me
+            for(int i = 0; i< MyField.transform.childCount;i++){
+                MyField.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
+                MyField.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
+                MyField.transform.GetChild(i).GetComponent<Image>().color = Color.white;
+            }
+        }
+
+        public void EndTurnNow(){
+        if(myTurn && currentPhase != Phase.WAITING){
+            endMyTurn();
+        }
+    }
 
         #endregion
 

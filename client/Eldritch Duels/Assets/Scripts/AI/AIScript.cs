@@ -61,6 +61,9 @@ namespace eldritch{
 
         }
         public static void AIBlock(AIDuel duelData){
+            if(duelData.oppState.onField.Count ==0){
+                return;
+            }
             if(Difficulty == AIDifficulty.EASY){
                 easyBlock(duelData);
             }else if(Difficulty == AIDifficulty.NORMAL){
@@ -86,6 +89,7 @@ namespace eldritch{
 
         //easy AI make random choices 
         private static void easyTurn(AIDuel ad){
+            return;
             //play cards
             //check hand size, mana, and random bool
             while(ad.oppState.inHand.Count>0 && ad.oppState.mana > 0 && randomBool()){
