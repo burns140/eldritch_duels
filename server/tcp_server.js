@@ -165,8 +165,17 @@ function dataHandler(data) {
                 case "getLeaderboard":
                     Leaderboard.fetchLeaderboardData(obj, sock);
                     break;
-                case "xpTest":
-                    MatchEnd.addXPUnit(obj, sock);
+                case "addXP":
+                    MatchEnd.addXP(obj, sock);
+                    break;
+                case "getAllAchievements":
+                    Achievements.getAllAchievements(obj, sock);
+                    break;
+                case "getOneAchievement":
+                    Achievements.getOneAchievement(obj, sock);
+                    break;
+                case "addCardsPlayed":
+                    MatchEnd.addCardsPlayed(obj, sock);
                     break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');

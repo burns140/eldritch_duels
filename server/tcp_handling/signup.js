@@ -88,9 +88,11 @@ const signup = (data, sock) => {
                         wins: 0,                            // int
                         winsToday: 0,
                         winsThisWeek: 0,
+                        winsThisMonth: 0,
                         losses: 0,                          // int
                         lossesToday: 0,
                         lossesThisWeek: 0,
+                        lossesThisMonth: 0,
                         recent_games: [],                   // bool[]
                         credits: 100000,                       // int
                         bio: "enter_bio",                   // string
@@ -109,13 +111,16 @@ const signup = (data, sock) => {
                         totalGames: 0,
                         gamesToday: 0,
                         gamesThisWeek: 0,
+                        gamesThisMonth: 0,
                         cardsPlayedTotal: 0,
                         cardsPlayedToday: 0,
                         cardsPlayedThisWeek: 0,
+                        cardsPlayedThisMonth: 0,
                         xp: 0,
                         elo: 100,
                         dailyChallenge: 0,
-                        weeklyChallenge: 0
+                        weeklyChallenge: 0,
+                        monthlyChallenge: 0
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
