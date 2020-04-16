@@ -46,6 +46,9 @@ namespace eldritch{
         }
 
         public static void AITurn(AIDuel duelData){
+            //AI draw card
+            DuelFunctions.DrawCard(ref duelData.oppState);
+
             if(Difficulty == AIDifficulty.EASY){
                 easyTurn(duelData);
             }else if(Difficulty == AIDifficulty.NORMAL){
@@ -58,7 +61,27 @@ namespace eldritch{
 
         }
         public static void AIBlock(AIDuel duelData){
+            if(Difficulty == AIDifficulty.EASY){
+                easyBlock(duelData);
+            }else if(Difficulty == AIDifficulty.NORMAL){
+                normalBlock(duelData);
+            }else if(Difficulty == AIDifficulty.HARD){
+                hardBlock(duelData);
+            }else if(Difficulty == AIDifficulty.EXTREME){
+                extremeBlock(duelData);
+            }
+        }
+        private static void easyBlock(AIDuel ad){
 
+        }
+        private static void normalBlock(AIDuel ad){
+            
+        }
+        private static void hardBlock(AIDuel ad){
+            
+        }
+        private static void extremeBlock(AIDuel ad){
+            
         }
 
         //easy AI make random choices 
@@ -66,7 +89,7 @@ namespace eldritch{
             //play cards
             //check hand size, mana, and random bool
             while(ad.oppState.inHand.Count>0 && ad.oppState.mana > 0 && randomBool()){
-
+                PlayCard(ad);
             }
 
             //attack
@@ -88,7 +111,11 @@ namespace eldritch{
             
         }
 
-        private static bool randomBool(){
+        private static void PlayCard(AIDuel ad){
+
+        }
+
+        public static bool randomBool(){
             return Random.Range(0,100) > 50;
         }
 
