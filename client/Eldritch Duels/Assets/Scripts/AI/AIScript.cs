@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using eldritch.cards;
+using System.Threading;
 
 namespace eldritch{
     public enum AIDifficulty{
@@ -13,7 +14,8 @@ namespace eldritch{
     
     public static class AIScript
     {
-        public static AIDifficulty Difficulty = AIDifficulty.NORMAL;
+        public static AIDifficulty Difficulty = AIDifficulty.EASY;
+        private static int AIRandomAdjust = 10;
 
         #region script stuff
         public static List<Card> GetAILibrary(){
@@ -50,7 +52,7 @@ namespace eldritch{
             DuelFunctions.DrawCard(ref duelData.oppState);
 
             if(Difficulty == AIDifficulty.EASY){
-                easyTurn(duelData);
+                duelData.StartCoroutine(easyTurn(duelData));
             }else if(Difficulty == AIDifficulty.NORMAL){
                 normalTurn(duelData);
             }else if(Difficulty == AIDifficulty.HARD){
@@ -75,7 +77,24 @@ namespace eldritch{
             }
         }
         private static void easyBlock(AIDuel ad){
-
+            
+            int blockCount = ad.OppField.transform.childCount;
+            List<GameObject> attackers = new List<GameObject>();
+            foreach(Transform t in ad.MyField.transform){
+                if(t.gameObject.GetComponent<DraggableAI>().isAttacking){
+                    attackers.Add(t.gameObject);
+                }
+            }
+            int attackCount = attackers.Count;
+            int mod = Random.Range(0,attackCount);
+            int end = attackCount > blockCount? blockCount : attackCount;
+            for(int i = 0; i < end; i++){
+                string attacker = attackers[(i+mod)%attackCount].name;
+                string blocker = ad.OppField.transform.GetChild(i).gameObject.name;
+                if(randomBool()){
+                    ad.addOppBlocker(attacker+"-"+blocker);
+                }
+            }
         }
         private static void normalBlock(AIDuel ad){
             
@@ -88,17 +107,27 @@ namespace eldritch{
         }
 
         //easy AI make random choices 
-        private static void easyTurn(AIDuel ad){
-            return;
+        private static IEnumerator easyTurn(AIDuel ad){
+            //wait
+            yield return new WaitForSeconds(.5f);
             //play cards
             //check hand size, mana, and random bool
             while(ad.oppState.inHand.Count>0 && ad.oppState.mana > 0 && randomBool()){
-                PlayCard(ad);
+                if(!PlayRandomCard(ad)){
+                    break;
+                }
+                yield return new WaitForSeconds(.5f);
             }
 
             //attack
             //picks random cards on field to attack with
-
+            foreach(Transform t in ad.OppField.transform){
+                if(randomBool()){
+                    ad.addOppAttacker(t.gameObject.name);
+                }
+            }
+            //player blocks
+            ad.ToBlockPhase();
             
 
         }
@@ -115,12 +144,33 @@ namespace eldritch{
             
         }
 
-        private static void PlayCard(AIDuel ad){
+        private static bool PlayRandomCard(AIDuel ad){
+            
+            int handSize = ad.oppState.inHand.Count;
+            int mod = Random.Range(0,handSize);
+            for(int i = 0; i<handSize;i++){
+                if(ad.oppState.inHand[(i+mod)%handSize].CardCost <= ad.oppState.mana){
+                    ad.CastCard(ad.oppState.inHand[(i+mod)%handSize].CardName, null);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        private static void PlayCard(AIDuel ad, string cardName){
+            
+        }
+
+        private static void RandomAttacks(AIDuel ad){
+
+        }
+
+        private static void AttackWithCard(AIDuel ad){
 
         }
 
         public static bool randomBool(){
-            return Random.Range(0,100) > 50;
+            return (Random.Range(0,100) + AIRandomAdjust) > 50;
         }
 
         #endregion

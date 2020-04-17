@@ -40,6 +40,7 @@ namespace eldritch{
         public GameObject cardBack2;
         public GameObject cardBack3;
         public GameObject cardBack4;
+        public bool haltAttack = false;
 
         void Start(){
             //init myState
@@ -64,6 +65,8 @@ namespace eldritch{
             }
             StartCoroutine(startText());
         }
+
+        private bool prevHalt;
         void Update(){
             checkDeckCount(); // Check & update card back quantity on deck UI
             //update hp and mana
@@ -79,6 +82,10 @@ namespace eldritch{
             }else if(myState.hp <= 0){
                 endGame(false);
             }
+            if(prevHalt && !haltAttack){
+                myAttack();
+            }
+            prevHalt = haltAttack;
         }
 
         IEnumerator initalDraw(){
@@ -184,7 +191,6 @@ namespace eldritch{
                         myState.mana -= played.CardCost;
                         myState.onField.Add(played);
                         myState.inHand.RemoveAt(i);
-                        Debug.Log("Resolving abilities");
                         StartCoroutine(resolveAbilities(played, c));                        
                         return;
                         
@@ -192,7 +198,6 @@ namespace eldritch{
                 }
             }else{
                 Card played = Library.GetCard(cardName);
-                Debug.Log(played);
                 //update manager
                 oppState.onField.Add(played);
                 oppState.mana -= played.CardCost;
@@ -280,14 +285,14 @@ namespace eldritch{
 
         private void AITurn(){
             AIScript.AITurn(this);
-            endOppTurn();
+            //endOppTurn();
         }
 
         #region attack phase
         public List<AttackBlock> attackers = new List<AttackBlock>();
             //add attacker to attack with
             public void AddAttacker(GameObject attacker){
-                if(attacker.GetComponent<Draggable>() == null){
+                if(attacker.GetComponent<DraggableAI>() == null){
                     return;
                 }
                 //check if already in attack list
@@ -307,11 +312,10 @@ namespace eldritch{
                 }
                 at.blocker = null;
                 attackers.Add(at);
-                Debug.Log("# attacking: " + attackers.Count);
             }
             //remove creature to attack with
             public void RemoveAttacker(GameObject attacker){
-                if(attacker.GetComponent<Draggable>() == null){
+                if(attacker.GetComponent<DraggableAI>() == null){
                     return;
                 }
                 for(int i = 0; i < attackers.Count;i++){
@@ -321,13 +325,23 @@ namespace eldritch{
                     }
                 }
             }
+
+            public void ToBlockPhase(){
+                if(myState.onField.Count == 0){
+                    confirmBlockers();
+                    return;
+                }
+                phaseText.text = "BLOCK";
+                currentPhase = Phase.PRE_BLOCK;
+
+            }
             
             private GameObject atb; //placehoder for attacker
             private GameObject blockwith; //placeholder for blocker
             //set placeholder for attacker
             public void SetToBlock(GameObject attacker){
                 if(atb != null){
-                    atb.GetComponent<Draggable>().isBlocking = false;
+                    atb.GetComponent<DraggableAI>().isBlocking = false;
                     atb.GetComponent<Image>().color = Color.red;
                 }
                 this.atb = attacker;
@@ -338,7 +352,7 @@ namespace eldritch{
             //set placeholder for blocker
             public void SetBlocker(GameObject blocker){
                 if(blockwith != null){
-                    blockwith.GetComponent<Draggable>().isBlocking = false;
+                    blockwith.GetComponent<DraggableAI>().isBlocking = false;
                     blockwith.GetComponent<Image>().color = Color.white;
                 }
                 this.blockwith = blocker;
@@ -351,11 +365,11 @@ namespace eldritch{
                 for(int i = 0; i < attackers.Count;i++){
                     if(attackers[i].blocker != null && attackers[i].blocker.GetHashCode().Equals(blocker.GetHashCode())){
                         AttackBlock ab = attackers[i];
-                        attackers[i].blocker.GetComponent<Draggable>().isBlocking = false;
+                        attackers[i].blocker.GetComponent<DraggableAI>().isBlocking = false;
                         attackers[i].blocker.GetComponent<Image>().color = Color.white;
                         ab.blocker = null;
                         attackers[i] = ab;
-                        attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
+                        attackers[i].attacker.GetComponent<DraggableAI>().isBlocking = false;
                         attackers[i].attacker.GetComponent<Image>().color = Color.red;
                         break;
                     }
@@ -366,11 +380,11 @@ namespace eldritch{
                 for(int i = 0; i < attackers.Count;i++){
                     if(attackers[i].attacker.GetHashCode().Equals(attacker.GetHashCode())){
                         AttackBlock ab = attackers[i];
-                        attackers[i].blocker.GetComponent<Draggable>().isBlocking = false;
+                        attackers[i].blocker.GetComponent<DraggableAI>().isBlocking = false;
                         attackers[i].blocker.GetComponent<Image>().color = Color.white;
                         ab.blocker = null;
                         attackers[i] = ab;
-                        attackers[i].attacker.GetComponent<Draggable>().isBlocking = false;
+                        attackers[i].attacker.GetComponent<DraggableAI>().isBlocking = false;
                         attackers[i].attacker.GetComponent<Image>().color = Color.red;
                         break;
                     }
@@ -382,7 +396,7 @@ namespace eldritch{
                 //check if can block
                 if(!DuelFunctions.CanBlock(Library.GetCard(atb.name), Library.GetCard(blockwith.name))){
                     blockwith.GetComponent<Image>().color = Color.white;
-                    blockwith.GetComponent<Draggable>().isBlocking = false;
+                    blockwith.GetComponent<DraggableAI>().isBlocking = false;
                     blockwith = null;
                     return;
                 }
@@ -392,16 +406,14 @@ namespace eldritch{
                         AttackBlock ab = attackers[i];
                         ab.blocker = blockwith;
                         attackers[i] = ab;
-                        Debug.Log("Link made");
                         break;
                     }
                 }
                 atb = null;
                 blockwith = null;
-                Debug.Log("links: " + attackers.Count);
             }
 
-            //format and send blocker string to opponent
+            
             private void confirmBlockers(){
                 
                 currentPhase = Phase.WAITING;
@@ -426,7 +438,8 @@ namespace eldritch{
                 }
                 currentPhase = Phase.WAITING;
                 AIBlock();
-                myAttack();
+                if(!haltAttack)
+                    myAttack();
             }
 
             private void myAttack(){
@@ -460,15 +473,15 @@ namespace eldritch{
 
             public void addOppAttacker(string attacker){
                 for(int i = 0; i < OppField.transform.childCount;i++){
-                    if(OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>() != null && //check child is a card placeholder
-                    !OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking &&
+                    if(OppField.transform.GetChild(i).gameObject.GetComponent<DraggableAI>() != null && //check child is a card placeholder
+                    !OppField.transform.GetChild(i).gameObject.GetComponent<DraggableAI>().isAttacking &&
                     OppField.transform.GetChild(i).gameObject.name.Equals(attacker)){ //check card is not already set to attacker
                         AttackBlock attackBlock; //create blank attacker blocker struct
                         OppField.transform.GetChild(i).gameObject.GetComponent<Image>().color = Color.red;
                         attackBlock.attacker = OppField.transform.GetChild(i).gameObject; //add teh attacker ui object
                         attackBlock.attackCard = Library.GetCard(attacker); //get the attacker card
                         attackBlock.blocker = null;
-                        OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isAttacking = true; //set card to is attacking
+                        OppField.transform.GetChild(i).gameObject.GetComponent<DraggableAI>().isAttacking = true; //set card to is attacking
                         attackers.Add(attackBlock); //add attacker to list
                         break;
                     }
@@ -476,6 +489,7 @@ namespace eldritch{
                 
             }
             public void addOppBlocker(string blocker){
+                Debug.Log("AI blocking: " + blocker);
                 string[] abpair = blocker.Split('-');
                     for(int a = 0; a < attackers.Count;a++){
                         AttackBlock ab = attackers[a];
@@ -483,8 +497,8 @@ namespace eldritch{
                             //find ui card
                             for(int i = 0; i < OppField.transform.childCount;i++){
                                 if(OppField.transform.GetChild(i).gameObject.name.Equals(abpair[1]) &&
-                                !OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isBlocking){
-                                    OppField.transform.GetChild(i).gameObject.GetComponent<Draggable>().isBlocking = true;
+                                !OppField.transform.GetChild(i).gameObject.GetComponent<DraggableAI>().isBlocking){
+                                    OppField.transform.GetChild(i).gameObject.GetComponent<DraggableAI>().isBlocking = true;
                                     OppField.transform.GetChild(i).gameObject.GetComponent<Image>().color = Color.gray;
                                     ab.blocker = OppField.transform.GetChild(i).gameObject;
                                     attackers[a] = ab;
@@ -614,7 +628,8 @@ namespace eldritch{
 
 
         // End opponent's play
-        private void endOppTurn(){
+        public void endOppTurn(){
+            Debug.Log("AI finished");
             resetStates();
             myTurn = true; // Now it's my turn
             currentPhase = Phase.MAIN; //start my turn
@@ -627,15 +642,15 @@ namespace eldritch{
         private void resetStates(){
             //reset opp
             for(int i = 0; i< OppField.transform.childCount;i++){
-                OppField.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
-                OppField.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
+                OppField.transform.GetChild(i).GetComponent<DraggableAI>().isAttacking = false;
+                OppField.transform.GetChild(i).GetComponent<DraggableAI>().isBlocking = false;
                 OppField.transform.GetChild(i).GetComponent<Image>().color = Color.white;
             }
 
             //reset me
             for(int i = 0; i< MyField.transform.childCount;i++){
-                MyField.transform.GetChild(i).GetComponent<Draggable>().isAttacking = false;
-                MyField.transform.GetChild(i).GetComponent<Draggable>().isBlocking = false;
+                MyField.transform.GetChild(i).GetComponent<DraggableAI>().isAttacking = false;
+                MyField.transform.GetChild(i).GetComponent<DraggableAI>().isBlocking = false;
                 MyField.transform.GetChild(i).GetComponent<Image>().color = Color.white;
             }
         }
