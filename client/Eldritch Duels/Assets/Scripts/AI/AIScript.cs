@@ -15,7 +15,7 @@ namespace eldritch{
     public static class AIScript
     {
         public static AIDifficulty Difficulty = AIDifficulty.EASY;
-        private static int AIRandomAdjust = 10;
+        private static int AIRandomAdjust = 10; //higher the value, the less random; recommended range (-50, 50)
 
         #region script stuff
         public static List<Card> GetAILibrary(){
