@@ -13,7 +13,7 @@ namespace eldritch{
 
         public Phase currentPhase = Phase.WAITING;
 
-        private int currentTurn = 1;
+        public int currentTurn = 1;
         private int myTurnsNum = 0;
 
         public Text phaseText = null;
@@ -55,15 +55,24 @@ namespace eldritch{
 
             //init draws
             StartCoroutine(initalDraw());
-            
 
             //chose first player
             if(AIScript.randomBool()){
                 myTurn = true;
+                gameText.text = "FIRST PLAYER";
+                gameText.text = "";
                 currentPhase = Phase.MAIN;
                 phaseText.text = "ATTACK";
+                
+            }else{
+                gameText.text = "SECOND PLAYER";
+                gameText.text = "";
+                AIScript.AITurn(this);
             }
-            StartCoroutine(startText());
+            
+
+            
+            
         }
 
         private bool prevHalt;
@@ -103,6 +112,8 @@ namespace eldritch{
                 myState.inHand.Add(b);
                 handCount++; 
                 yield return new WaitForSeconds(0.5f); 
+
+                
             }
 
             handCount = 1;
@@ -114,18 +125,11 @@ namespace eldritch{
                 handCount++; 
                 yield return new WaitForSeconds(0.5f); 
             }
+
+            
         }
 
-        private IEnumerator startText(){
-            if(myTurn){
-                gameText.text = "FIRST PLAYER";
-            }else{
-                gameText.text = "SECOND PLAYER";
-            }
-
-            yield return new WaitForSeconds(2);
-            gameText.text = "";
-        }
+        
 
         #region game flow
         public void NextPhase(){
@@ -197,10 +201,20 @@ namespace eldritch{
                     }
                 }
             }else{
-                Card played = Library.GetCard(cardName);
+                Card played = null;
                 //update manager
-                oppState.onField.Add(played);
-                oppState.mana -= played.CardCost;
+                for(int i = 0; i < oppState.inHand.Count;i++){
+                    if(oppState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(oppState.inHand[i], oppState)){
+                        played = oppState.inHand[i];
+                        //edit state
+                        oppState.mana -= played.CardCost;
+                        oppState.onField.Add(played);
+                        oppState.inHand.RemoveAt(i);
+                        StartCoroutine(resolveAbilities(played, c));                        
+                        break;
+                        
+                    }
+                }
 
                 //update ui
                 GameObject c2 = (GameObject)Instantiate(CardHolder);
@@ -208,6 +222,8 @@ namespace eldritch{
                 c2.GetComponent<Image>().material = played.CardImage;
                 c2.name = played.CardName;
                 c2.transform.SetParent(OppField.transform, false); // Add card to opp play area
+
+                
                 
                 StartCoroutine(resolveAbilities(played, c2));
             }
@@ -284,6 +300,7 @@ namespace eldritch{
         }
 
         private void AITurn(){
+            
             AIScript.AITurn(this);
             //endOppTurn();
         }
@@ -328,6 +345,9 @@ namespace eldritch{
 
             public void ToBlockPhase(){
                 if(myState.onField.Count == 0){
+                    confirmBlockers();
+                    return;
+                }else if(attackers.Count == 0){
                     confirmBlockers();
                     return;
                 }
@@ -468,6 +488,7 @@ namespace eldritch{
             }
 
             private void AIBlock(){
+                Debug.Log("To AI...");
                 AIScript.AIBlock(this);
             }
 
@@ -608,6 +629,9 @@ namespace eldritch{
             myTurnsNum++;
             //checkDeckCount();
             //ai turn
+            Card b = DuelFunctions.DrawCard(ref oppState);
+            if(b!= null)              
+                oppState.inHand.Add(b);
             AITurn();
         }
 
