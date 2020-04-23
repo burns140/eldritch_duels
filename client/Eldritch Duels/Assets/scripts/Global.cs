@@ -11,6 +11,7 @@ using UnityEngine;
 using eldritch.cards;
 using System.IO;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace eldritch {
 #region SpecialClasses
@@ -233,6 +234,7 @@ namespace eldritch {
         private static string hostIP = "66.253.158.241";
         public static bool hasCustom = false;
         public static Sprite CustomAvatar;
+        public static bool profanityFilter = true;
 
         public static bool DuelMyTurn = false;
         public static int numTurns = 0;
@@ -918,6 +920,17 @@ namespace eldritch {
         public static bool hasCustomAvatar()
         {
             return (avatar < 0 || avatar > 8);
+        }
+
+        public static String filterText(string text)
+        {
+            String[] banned = new string[] { "fuck", "ass", "asshole", "shit" };
+            String result = text;
+            foreach (String b in banned)
+            {
+                result = result.Replace(b, "****");
+            }
+            return result;
         }
         #endregion
 
