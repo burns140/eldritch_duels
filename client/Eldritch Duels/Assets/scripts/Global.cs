@@ -161,6 +161,21 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+    public class sendfeedback
+    {
+        public string feedback;
+        public string token;
+        public string id;
+        public string cmd;
+
+        public sendfeedback(string feedback, string token, string id, string cmd)
+        {
+            this.feedback = feedback;
+            this.token = token;
+            this.id = id;
+            this.cmd = cmd;
+        }
+    }
     #endregion
     public static class Global
     {
