@@ -21,7 +21,15 @@ public class Chat : MonoBehaviour
     public void onMessageGet(string message)
     {
         Debug.Log(message);
-        textbox.text = textbox.text + message + "\n";
+        if (Global.profanityFilter)
+        {
+            String filtered = Global.filterText(message);
+            textbox.text = textbox.text + filtered + "\n";
+        }
+        else
+        {
+            textbox.text = textbox.text + message + "\n";
+        }
     }
 
     public void sendMessage()
