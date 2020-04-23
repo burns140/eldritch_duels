@@ -26,15 +26,36 @@ public class EndDuelScript : MonoBehaviour
         int myCred = baseCredit;
         string who = PlayerPrefs.GetString(WON_PREF_KEY);
         int cred = PlayerPrefs.GetInt(CREDIT_PREF_KEY);
+        string winString = "";
+        int xpAmount;
         if(who == "you"){
             wonText.GetComponent<Text>().text = "YOU WON !!";
-        }
-        else{
+            winString = "addWin";
+            xpAmount = 100;
+        } else {
             wonText.GetComponent<Text>().text = "YOU LOST";
             myCred /=2;
+            winString = "addLoss";
+            xpAmount = 50;
         }
-        //Global.addCredits();
+
+        Request req = new Request(Global.getID(), Global.getToken(), winString);
+        Global.NetworkRequest(req);
+
+        XPRequest xpReq = new XPRequest(Global.getID(), Global.getToken(), "addXP", xpAmount);
+        Global.NetworkRequest(xpReq);
+
+
+        // TODO: SET THIS TO BE A REAL VALUE THAT IS COUNTED DURING THE DUEL
+        int cardsPlayedAmount = 5;
+        CardsPlayedRequest cardReq = new CardsPlayedRequest(Global.getID(), Global.getToken(), "addCardsPlayed", cardsPlayedAmount);
+        Global.NetworkRequest(cardReq);
+
+
+        // Stephen uncommented this so recomment it if need be
+        Global.addCredits(myCred);
         creditsValue.GetComponent<Text>().text = ""+cred;
+
     }
 
     public void goToLobby(){ // go to the lobby scene

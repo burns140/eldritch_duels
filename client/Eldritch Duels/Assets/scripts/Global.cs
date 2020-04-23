@@ -20,6 +20,35 @@ namespace eldritch {
         public const int MIN_DECK_SIZE = 32;
         public const int MAX_CARD_ALLOWED = 4;
     }
+
+    public class Request {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public Request(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class CardsPlayedRequest : Request {
+        public int amount;
+
+        public CardsPlayedRequest(string id, string token, string cmd, int amount) : base(id, token, cmd) {
+            this.amount = amount;
+        }
+    }
+
+    public class XPRequest : Request {
+        public int amount;
+
+        public XPRequest(string id, string token, string cmd, int amount) : base(id, token, cmd) {
+            this.amount = amount;
+        }
+    }
+
     public class getCollection
     {
         public string id;
@@ -176,6 +205,8 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+
+
     #endregion
     public static class Global
     {
