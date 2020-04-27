@@ -14,6 +14,7 @@ const playWeeklies = [20, 30];
 const winMonthlies = [40, 50];
 const cardMonthlies = [800, 1000];
 const playMonthlies = [80, 100];
+const banDefault = 10;
 const LEVEL_XP = 500;
 
 var dailyChallenge = 1;
@@ -49,7 +50,7 @@ const addWin = (data, sock) => {
                     { _id: ObjectID(id) },
                     {
                         $inc: { wins: 1, winsToday: 1, winsThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1, elo: 100 },
-                        $set: { achievements: achievements }
+                        $set: { achievements: achievements, consecSurrenders: 0, matchmakeBan: 0 }
                     }
                 ).then(result => {
                     if (result.matchedCount != 1) {            // No document was modified, so error
@@ -78,6 +79,7 @@ const addWin = (data, sock) => {
 
 const addLoss = (data, sock) => {
     const id = data.id;
+    const surrender = data.surrender;
 
     try {
         MongoClient.get().then(client => {
@@ -100,12 +102,20 @@ const addLoss = (data, sock) => {
                     }
                 }
 
+                var banLength = 0;
+                if (surrender == 1) {
+                    surrender = result.consecSurrenders++;
+                    if (surrender >= 5) {
+                        banLength = Date.now() + banDefault * 60 * 1000 * (surrender - 4);
+                    }
+                }
+
                 /* Find a user with the given id and set the three given values */
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
                         $inc: { losses: 1, lossesToday: 1, lossesThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1, elo: -75 },
-                        $set: { achievements: achievements }
+                        $set: { achievements: achievements, consecSurrenders: surrender, matchmakeBan: banLength }
                     }
                 ).then(result => {
                     if (result.matchedCount != 1) {            // No document was modified, so error

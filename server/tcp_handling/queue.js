@@ -133,4 +133,49 @@ function matchPlayers() {
     });
 }
 
+function checkMatchBan(data, sock) {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').findOne(
+                { _id: ObjectId(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('no user found');
+                }
+
+                if (result.matchmakeBan > 0) {
+                    if (Date.now() > result.matchmakeBan) {
+                        db.collection('users').updateOne(
+                            { _id: ObjectId(id) },
+                            { $set: { matchmakeBan: 0 } }
+                        ).then(result => {
+                            if (result.modifiedCount != 1) {
+                                throw new Error('failed to update ban length');
+                            }
+                            sock.write('can queue')
+                        }).catch(err => {
+                            console.log(err);
+                            sock.write(err.toString());
+                        });
+                    } else {
+                        console.log('matchmakeBan');
+                        sock.write('matchmake ban');
+                    }
+                } else {
+                    sock.write('can queue');
+                    console.log('can queue');
+                }
+            })
+        })
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
+
 exports.enterQueue = enterQueue;
+exports.checkMatchBan = checkMatchBan;

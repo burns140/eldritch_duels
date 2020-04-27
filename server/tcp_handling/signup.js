@@ -120,7 +120,9 @@ const signup = (data, sock) => {
                         elo: 100,
                         dailyChallenge: 0,
                         weeklyChallenge: 0,
-                        monthlyChallenge: 0
+                        monthlyChallenge: 0,
+                        consecSurrenders: 0,
+                        matchmakeBan: 0
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);

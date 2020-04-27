@@ -57,7 +57,7 @@ const login = (data, sock) => {
                             if (Date.now() > result.banLength) {
                                 db.collection('users').updateOne(
                                     { email: email },
-                                    { $set: {banLength: 0 } }
+                                    { $set: { banLength: 0 } }
                                 ).then(result => {
                                     if (result.modifiedCount != 1) {
                                         throw new Error('failed to update ban length');

@@ -177,6 +177,9 @@ function dataHandler(data) {
                 case "addCardsPlayed":
                     MatchEnd.addCardsPlayed(obj, sock);
                     break;
+                case "checkMatchBan":
+                    Queue.checkMatchBan(obj, sock);
+                    break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
                     console.log('Not a valid command');
