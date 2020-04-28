@@ -4,14 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using UnityEngine;
 using eldritch.cards;
 using System.IO;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
 
 namespace eldritch {
 #region SpecialClasses
@@ -159,6 +155,38 @@ namespace eldritch {
             this.id = id;
             this.token = token;
             this.value = value;
+        }
+    }
+    public class FriendChatRequest
+    {
+        public string cmd;
+        public string id;
+        public string token;
+        public string friend;
+
+        public FriendChatRequest(string cmd, string id, string token, string friend)
+        {
+            this.cmd = cmd;
+            this.id = id;
+            this.token = token;
+            this.friend = friend;
+        }
+    }
+    public class sendMessage
+    {
+        public string cmd;
+        public string id;
+        public string token;
+        public string friend;
+        public string message;
+
+        public sendMessage(string cmd, string id, string token, string friend, string message)
+        {
+            this.cmd = cmd;
+            this.id = id;
+            this.token = token;
+            this.friend = friend;
+            this.message = message;
         }
     }
     public class profilepicture
