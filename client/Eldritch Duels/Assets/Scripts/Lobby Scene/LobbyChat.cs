@@ -27,7 +27,7 @@ public class LobbyChat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*TextEntryText = TextEntry.text;
+        TextEntryText = TextEntry.text;
         // Since async doesn't want to work, just check if there is data every frame
         if (Global.client.Available != 0)
         {
@@ -41,13 +41,14 @@ public class LobbyChat : MonoBehaviour
                 {
                     //TODO: PARSE INCOMING MESSAGE
                     //OUTPUT INTO TEXT BOX
+                    //HOOK INTO PROFANITY FILTER
                 }
                 catch (Exception e)
                 {
                     Debug.Log(e);
                 }
             }
-        }*/
+        }
     }
 
     public void populateFriendsList()
