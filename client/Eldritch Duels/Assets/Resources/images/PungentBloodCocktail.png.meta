@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/PungentBloodCocktail.png.meta
+<<<<<<< HEAD
 guid: a3df11d377ef4fa46a074bd7909e4fb9
 =======
 guid: 72eb87da904a35149ab06b6c45b310de
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: a3df11d377ef4fa46a074bd7909e4fb9
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/PungentBloodCocktail.png.meta
+=======
+guid: dd0c472a1736f8146a3171d80b44486c
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

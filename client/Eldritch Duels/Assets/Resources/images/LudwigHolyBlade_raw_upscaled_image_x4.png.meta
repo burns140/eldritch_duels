@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/LudwigHolyBlade_raw_upscaled_image_x4.png.meta
+<<<<<<< HEAD
 guid: e3a5dada8c5197d4d8887e7d5d3ba0e6
 =======
 guid: 4930dbd5a84a65049ac713b7331a1229
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: e3a5dada8c5197d4d8887e7d5d3ba0e6
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/LudwigHolyBlade_raw_upscaled_image_x4.png.meta
+=======
+guid: 27358b4a5ab9e40449baab39a7d3de5b
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

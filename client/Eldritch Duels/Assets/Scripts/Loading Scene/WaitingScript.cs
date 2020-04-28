@@ -8,7 +8,7 @@ using eldritch;
 
 public class WaitingScript : MonoBehaviour
 {
-    public string nextSceneName = "Scenes/DuelScene";
+    public string nextSceneName = "DuelScene";
 
     // Start is called before the first frame update
     void Start()
@@ -48,27 +48,49 @@ public class WaitingScript : MonoBehaviour
             byte[] data = new byte[256];
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            if (responseData.StartsWith("match found"))
+            const string expectedBeginning = "match found: ";
+            if (responseData.StartsWith(expectedBeginning))
             {
                 try
                 {
-                    int newLine = responseData.IndexOf('\n');
-                    Global.enemyUsername = responseData.Substring(responseData.IndexOf(':') + 2, responseData.Length - newLine);
-                    Debug.Log("Enemy user:" + Global.enemyUsername);
+                    string[] lines = responseData.Split('\n');
+                    Debug.Log("resp " + responseData);
+                    if (lines.Length == 3 || lines.Length == 4)
+                    {
+                        Global.enemyUsername = lines[0].Substring(expectedBeginning.Length);
+                        Debug.Log("Enemy user: " + Global.enemyUsername);
 
-                    Global.matchID = responseData.Substring(newLine + 1);
-                    Debug.Log("Match ID: " + Global.matchID);
+                        Global.matchID = lines[1];
+                        Debug.Log("Match ID: " + Global.matchID);
 
-                    SceneManager.LoadScene(nextSceneName);
-                    Global.inQueue = false;
+                        if (lines.Length == 4) {
+                            if (lines[2].Contains("my turn"))
+                                Global.DuelMyTurn = true;
+                            else
+                                Debug.Log("Unknown line: " + lines[2]);
+                        }
+
+                        SceneManager.LoadScene(nextSceneName);
+                        Global.inQueue = false;
+                    }
+                    else
+                        foreach (string s in lines)
+                            Debug.Log(s);
                 }
                 catch (Exception e)
                 {
                     Debug.Log(e);
+                }finally{
+                    SceneManager.LoadScene(nextSceneName);
                 }
             }
-            else
+            else{
                 Debug.Log(responseData);
+                if(responseData.Contains("my turn")){
+                    Global.DuelMyTurn = true;
+                    SceneManager.LoadScene(nextSceneName);
+                }
+            }
         }
     }
 }

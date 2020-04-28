@@ -1,9 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/Mi-GoZombie.png.meta
 <<<<<<< HEAD
 guid: 0ce434ad1ba8be54f8cbda9785f57398
 =======
 guid: 94c53b5db2fa3474fbb845dffd9ee68e
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+=======
+guid: 0ce434ad1ba8be54f8cbda9785f57398
+>>>>>>> achievements:client/Eldritch Duels/Assets/images/Mi-GoZombie.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

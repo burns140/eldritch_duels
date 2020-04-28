@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/BrainOfMensis.png.meta
+<<<<<<< HEAD
 guid: c42b6bdebf9288946a2083d727443673
 =======
 guid: 3687c71c1eff69746a4776fdf2dbd029
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: c42b6bdebf9288946a2083d727443673
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/BrainOfMensis.png.meta
+=======
+guid: 84b413e586e26be489bba9eafa94b58c
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

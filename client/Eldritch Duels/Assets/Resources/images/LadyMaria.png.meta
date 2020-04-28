@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/LadyMaria.png.meta
+<<<<<<< HEAD
 guid: d1233fdfb29be9b4692375759ec68bee
 =======
 guid: c1cc520197090c74fb8a2e2118312b15
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: d1233fdfb29be9b4692375759ec68bee
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/LadyMaria.png.meta
+=======
+guid: 62b0d6e9465546a40b472a6d0bd878f6
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

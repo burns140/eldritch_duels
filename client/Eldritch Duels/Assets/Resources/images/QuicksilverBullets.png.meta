@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/QuicksilverBullets.png.meta
+<<<<<<< HEAD
 guid: 5ccac5a2e446e2046ad189751f5116fc
 =======
 guid: a5cb789fd265fa740869e8cb6808bc85
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: 5ccac5a2e446e2046ad189751f5116fc
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/QuicksilverBullets.png.meta
+=======
+guid: 0eb30738f0241c644b2b08f5dd0e7382
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

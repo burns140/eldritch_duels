@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/BloodStarvedBeast.png.meta
+<<<<<<< HEAD
 guid: 372238074b78de041b743185176cb736
 =======
 guid: 8a8200aa2caa3ff498b1b195703b6a4a
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: 372238074b78de041b743185176cb736
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/BloodStarvedBeast.png.meta
+=======
+guid: d5266ed95d2d14f4d9be1616899363fa
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

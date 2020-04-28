@@ -13,7 +13,7 @@ public class DrawCard : Effect
 
     public override void execute(ref PlayerState ps)
     {
-        DuelFunctions.DrawCard(ref ps);
+        //DuelFunctions.DrawCard(ref ps);
     }
 
 
@@ -24,7 +24,7 @@ public class DrawCard : Effect
 
     public override EffectTarget GetTargetType()
     {
-        return EffectTarget.SELF;
+        return EffectTarget.DRAW;
     }
 
     public override void SetTarget(GameObject target)

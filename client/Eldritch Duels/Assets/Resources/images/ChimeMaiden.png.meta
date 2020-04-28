@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/ChimeMaiden.png.meta
+<<<<<<< HEAD
 guid: 5c09d4b17f207ad488a024c4d71aaefa
 =======
 guid: 5ac1305424d451641bd56c7a427e9342
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: 5c09d4b17f207ad488a024c4d71aaefa
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/ChimeMaiden.png.meta
+=======
+guid: 7a7fbb1163ee2f8459d8ab6b28550c17
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

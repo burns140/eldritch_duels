@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/BloodVial_raw.png.meta
+<<<<<<< HEAD
 guid: f1f11e55b9804434987c606914877428
 =======
 guid: 54d773778770eca45b63e82f929878ce
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: f1f11e55b9804434987c606914877428
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/BloodVial_raw.png.meta
+=======
+guid: da464819f1d90c546ab6aa2e7cc306c1
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/MoonPresence.png.meta
+<<<<<<< HEAD
 guid: 4f8165f8394384945ac8afcc1354ec93
 =======
 guid: d20fa6ddbfe42b14495b6f607766d18e
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: 4f8165f8394384945ac8afcc1354ec93
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/MoonPresence.png.meta
+=======
+guid: 0e9890d3de4f2d14e8413d5498b44f3f
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

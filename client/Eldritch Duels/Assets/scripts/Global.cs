@@ -97,7 +97,6 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
-
     public class EditProfileRequest
     {
         public string cmd;
@@ -117,17 +116,46 @@ namespace eldritch {
             this.username = username;
         }
     }
+    public class CreditRequest
+    {
+        public string cmd;
+        public string id;
+        public string token;
+        public int value;
 
+        public CreditRequest(string cmd, string id, string token, int value)
+        {
+            this.cmd = cmd;
+            this.id = id;
+            this.token = token;
+            this.value = value;
+        }
+    }
     public class profilepicture
     {
-        public byte[] picture;
+        public string pic;
         public string token;
         public string id;
         public string cmd;
 
-        public profilepicture(byte[] picture, string token, string id, string cmd)
+        public profilepicture(string picture, string token, string id, string cmd)
         {
-            this.picture = picture;
+            this.pic = picture;
+            this.token = token;
+            this.id = id;
+            this.cmd = cmd;
+        }
+    }
+    public class getprofilepicture
+    {
+        public string email;
+        public string token;
+        public string id;
+        public string cmd;
+
+        public getprofilepicture(string email, string token, string id, string cmd)
+        {
+            this.email = email;
             this.token = token;
             this.id = id;
             this.cmd = cmd;
@@ -157,6 +185,11 @@ namespace eldritch {
         public static string bio = "";
         public static bool inQueue = false;
         private static string hostIP = "66.253.158.241";
+        public static bool hasCustom = false;
+        public static Sprite CustomAvatar;
+
+        public static bool DuelMyTurn = false;
+        public static int numTurns = 0;
         #endregion
 
 
@@ -188,7 +221,7 @@ namespace eldritch {
             return cards;
 
         }
-        private static List<Card> StringToCardsByName(string toParse)
+        public static List<Card> StringToCardsByName(string toParse)
         {
             List<Card> cards = new List<Card>();
             string[] pairs = toParse.Split(',');
@@ -212,6 +245,29 @@ namespace eldritch {
             }
             return cards;
 
+        }
+
+        public static List<Card>StringToDeckByName(string cards)
+        {
+            List<Card> cardsc = new List<Card>();
+            string[] pairs = cards.Split(',');
+            foreach (string s in pairs)
+            {
+                string[] tuple = s.Split('-');
+
+                string id = tuple[0];
+                int amount = int.Parse(tuple[1]);
+                GameObject g = GameObject.Find("ContentManager");
+                if (g != null)
+                {
+                    Card c = g.GetComponent<ContentLibrary>().GetCard(id);
+                    for(int i = 0; i < amount;i++){
+                        cardsc.Add(c);
+                    }
+                }
+
+            }
+            return cardsc;
         }
         //format of user card string: "id-#,id2-#..."
         public static void InitUserCards(string userCards, int mode)
@@ -244,7 +300,7 @@ namespace eldritch {
                 string json = JsonConvert.SerializeObject(arc);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[10000];
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -271,7 +327,7 @@ namespace eldritch {
                         string json = JsonConvert.SerializeObject(arc);
                         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                         Global.stream.Write(data, 0, data.Length);
-                        data = new Byte[256];
+                        data = new Byte[100000];
                         string responseData = string.Empty;
                         Int32 bytes = Global.stream.Read(data, 0, data.Length);
                         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -294,7 +350,7 @@ namespace eldritch {
                 string json = JsonConvert.SerializeObject(arc);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[10000];
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -303,6 +359,19 @@ namespace eldritch {
             {
                 Debug.Log("error");
             }
+        }
+
+        public static void logout(){
+            string json = "{\"cmd\": \"logout\"}";
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            Global.stream.Write(data, 0, data.Length);
+            data = new Byte[1000000];
+            string responseData = string.Empty;
+            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            Debug.Log(responseData);
+            return ;
+
         }
         //get user collection
         public static string GetCollection()
@@ -313,7 +382,7 @@ namespace eldritch {
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
-                data = new Byte[100000000];
+                data = new Byte[1000000];
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -390,7 +459,7 @@ namespace eldritch {
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[100000];
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -518,7 +587,7 @@ namespace eldritch {
                         string json = JsonConvert.SerializeObject(saved);
                         Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                         Global.stream.Write(data, 0, data.Length);
-                        data = new Byte[256];
+                        data = new Byte[10000000];
                         string responseData = string.Empty;
                         Int32 bytes = Global.stream.Read(data, 0, data.Length);
                         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -547,6 +616,7 @@ namespace eldritch {
                     break;
                 }
             }
+            
             if (toCopy == null)
                 return false;
 
@@ -555,13 +625,14 @@ namespace eldritch {
             {
                 if (cc.c.CopiesOwned < cc.count)
                 {
-                    return false;
+                    Debug.Log(cc.c.CopiesOwned + "owned");
+                    //return false;
                 }
             }
-
+            
             //duplicate to userdecks
-            userDecks.Add(toCopy);
-
+            //userDecks.Add(toCopy);
+            Debug.Log(toCopy.DeckName);
             //sync with server
             try
             {
@@ -569,7 +640,7 @@ namespace eldritch {
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[10000000];
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -604,7 +675,7 @@ namespace eldritch {
                 string json = JsonConvert.SerializeObject(saved);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[10000000];
                 string responseData = string.Empty;
                 Int32 bytes = Global.stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
@@ -621,6 +692,7 @@ namespace eldritch {
         #region root
         public static void InitNewPlayer()
         {
+            return;
             if (userCards.Count == 0)
             {
                 InitUserCards("0-32", 0);
@@ -664,6 +736,11 @@ namespace eldritch {
                 return String.Empty;
             }
         }
+
+        public static string getEmail() {
+            Debug.Log(email);
+            return email;
+        }
         public static void SetUpConnection()
         {
             try
@@ -695,16 +772,106 @@ namespace eldritch {
                 }
             }
         }
-        public static String NetworkRequest(object o)
+        public static String NetworkRequest(object o) // Use this for anything that returns a string
         {
             string json = JsonConvert.SerializeObject(o);
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
+            stream.Write(data, 0, data.Length);
             data = new Byte[256];
             string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
+            Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             return responseData;
+        }
+
+        public static void addCredits(int amount)
+        {
+           
+            try
+            {
+                CreditRequest arc = new CreditRequest("updateCredits", getID(), getToken(), amount);
+                string json = JsonConvert.SerializeObject(arc);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                stream.Write(data, 0, data.Length);
+                data = new Byte[100000];
+                string responseData = string.Empty;
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            }
+            catch (Exception)
+            {
+                Debug.Log("error");
+            }
+        }
+
+        public static int addDuelCredits(bool won, int turns, bool AI)
+        {
+            double multi = 1;
+            if (!won)
+            {
+                multi /= 2;
+            }
+            if (AI)
+            {
+                multi /= 2;
+            }
+            int credits = (int)(((turns * 5)+ 50) * multi);
+            CreditRequest result = new CreditRequest("updateCredits", getID(), getToken(), credits);
+            NetworkRequest(result);
+            return credits;
+        }
+
+        public static Sprite getCustomAvatar()
+        {
+            getprofilepicture cust = new getprofilepicture(getEmail(), getToken(), getID(), "getCustomAvatar");
+            string json = JsonConvert.SerializeObject(cust);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            stream.Write(data, 0, data.Length);
+            data = new Byte[16000000];
+            string responseData = string.Empty;
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Texture2D imagetexture = new Texture2D(100, 100);
+
+            bool success = imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            if (success)
+            {
+                Debug.Log("Image conversion successful");
+            }
+            else
+            {
+                Debug.Log("Image conversion failed");
+            }
+            imagetexture.Apply(true);
+
+            Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
+            return imagesprite;
+        }
+
+        public static Sprite getOtherCustomAvatar(string email)
+        {
+            getprofilepicture cust = new getprofilepicture(email, getToken(), getID(), "getCustomAvatar");
+            string json = JsonConvert.SerializeObject(cust);
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+            stream.Write(data, 0, data.Length);
+            data = new Byte[100000];
+            string responseData = string.Empty;
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            Texture2D imagetexture = new Texture2D(100, 100);
+
+            imagetexture.LoadImage(Convert.FromBase64String(responseData));
+            imagetexture.Apply();
+
+            Sprite imagesprite = Sprite.Create(imagetexture, new Rect(0, 0, imagetexture.width, imagetexture.height), new Vector2(.5f, .5f));
+            return imagesprite;
+        }
+
+        public static bool hasCustomAvatar()
+        {
+            return (avatar < 0 || avatar > 8);
         }
         #endregion
 

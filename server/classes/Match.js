@@ -1,5 +1,3 @@
-
-
 module.exports = class Match {
     init() {
         /** @type {ID[]} */
@@ -27,8 +25,20 @@ module.exports = class Match {
      * @param {Socket} socket
      */
     addPlayer(id, socket) {
+        console.log('adding player to match');
+        console.log(this.ids);
         this.ids.push(id);
         this.sockets.push(socket);
+
+        /* THIS DOES WORK DO NOT FUCKING REMOVE THIS */
+        //SERIOUSLY STOP IT
+        if (this.sockets.length == 1) {
+            this.sockets[0].write("my turn");
+        }
+
+        //ask/discuss on discord before changing anything in this file plz, also matchmaking files too
+        //help us help you, k?
+
         this.closeFuncs[id] = () => {
             this.endMatch(id);
         };
@@ -36,15 +46,16 @@ module.exports = class Match {
         socket.once('close', this.closeFuncs[id]);
 
         this.dataFuncs[id] = data => {
-            if (data == "YOU LOSE") {
+            if (data == "MATCH END") {
                 this.endMatch(data, id);
                 return;
             }
             
             this.forEachPlayer((cid, sock) => {
-                if (cid == id)
+                if (cid == id) {
                     return;
-
+                }
+                
                 sock.write(data);
             });
         }
@@ -65,19 +76,31 @@ module.exports = class Match {
     
     endMatch(data, skipID) {
         this.forEachPlayer((id, sock) => {
-            if (skipID == id)
-                return;
 
-            let fn;
-            if (fn = this.closeFuncs[id])
-                sock.off('close', fn);
+            try {
+                console.log('skipping id');
+                /*if (skipID == id)
+                    return;
+                */
+                console.log('made it past skipid');
+                let fn;
+                if (fn = this.closeFuncs[id])
+                    sock.off('close', fn);
 
-            if (fn = this.dataFuncs[id])
-                sock.off('data', fn);
+                if (fn = this.dataFuncs[id])
+                    sock.off('data', fn);
 
-            sock.write(data);
+                console.log(`writing data: ${data}`);
+                sock.write(data);
 
-            sock.on("data", this.dataHandler);
+                console.log(this.dataHandler);
+                sock.on('data', this.dataHandler);
+                //sock.addListener("data", this.dataHandler);
+            } catch (err) {
+                console.log(err);
+                sock.write(err.toString());
+            }
+            
         });
 
         this.init();

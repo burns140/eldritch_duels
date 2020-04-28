@@ -21,6 +21,8 @@ namespace eldritch.editor
         private CardType cardType = CardType.NULL;
         private int mode = 0;
         private int backMode = 0;
+        private bool hasFly = false;
+        private bool hasStealth;
         private Vector2 scrollPos;
         
 
@@ -48,6 +50,31 @@ namespace eldritch.editor
         {
 
         }
+
+        private void addEffect(Effect e){
+            this.effects.Add(e);
+        }
+
+        private void removeEffect(Effect e){
+            for(int i = 0; i<effects.Count;i++){
+                if(effects[i].GetName().Equals(e.GetName())){
+                    effects.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+        private int countEfect(Effect e){
+            if(effects == null){
+                return 0;
+            }
+            int c = 0;
+            foreach(Effect ei in effects){
+                if(ei.GetName().Equals(e.GetName())){
+                    c++;
+                }
+            }
+            return c;
+        }
         Editor matEdit;
         private void OnGUI()
         {
@@ -58,11 +85,13 @@ namespace eldritch.editor
                 this.cardName = "";
                 this.attack = 0 + "";
                 this.defence = 0 + "";
-                //this.effects = cards[pos].Effects + "";
+                this.effects = new List<Effect>();
                 this.cost = 0 + "";
                 this.rarity = CardRarity.NULL;
                 this.cardMat = null;
                 this.cardType = CardType.NULL;
+                this.hasFly = false;
+                this.hasStealth = false;
                 mode = 1;
             }
             if (GUI.Button(new Rect(70, 5, 50, 15), "Load"))
@@ -93,7 +122,11 @@ namespace eldritch.editor
                             c.SpellRarity = this.rarity;
                             c.CardImage = this.cardMat;
                             c.SpellType = this.cardType;
+                            c.HasFly = this.hasFly;
+                            c.HasStealth = this.hasStealth;
+                            c.resetEffect();
                             foreach(Effect e in effects){
+                                Debug.Log("Adding Ability: " + e.GetName());
                                 c.AddAbility(e);
                             }
                             Library.AddCard(c);
@@ -104,6 +137,7 @@ namespace eldritch.editor
                         }
                         else
                         {
+                            Debug.Log("Card name is: " + cardName);
                             throw new Exception();
                         }
 
@@ -126,14 +160,17 @@ namespace eldritch.editor
                     this.cardName = "";
                     this.attack = 0 + "";
                     this.defence = 0 + "";
-                    //this.effects = cards[pos].Effects + "";
+                    this.effects = new List<Effect>();
                     this.cost = 0 + "";
                     this.rarity = CardRarity.NULL;
                     this.cardMat = null;
                     this.cardType = CardType.NULL;
+                    this.hasFly = false;
+                    this.hasStealth = false;
                     mode = 1;
                     
                 }
+
             }
             GUILayout.EndArea();
             if (mode == 1 || mode == 2)
@@ -172,7 +209,51 @@ namespace eldritch.editor
 
                 GUILayout.EndArea();
 
-                //preview
+                //card effects
+                GUILayout.BeginArea(new Rect(this.position.width/2,10,this.position.width/2-50,this.position.height-100));
+                GUI.Label(new Rect(10,20,100,20), "EFFECTS:");
+                //Deal damage
+                GUI.Label(new Rect(10,50,100,20), ("Deal Damage: " + countEfect(new DealDamage())));
+                if(GUI.Button(new Rect(120,50,20,20), "+")){
+                    addEffect(new DealDamage());
+                }
+                if(GUI.Button(new Rect(150,50,20,20), "-")){
+                    removeEffect(new DealDamage());
+                }
+
+                //Gain health
+                GUI.Label(new Rect(10,80,100,20), ("Gain Health: " + countEfect(new GainHealth())));
+                if(GUI.Button(new Rect(120,80,20,20), "+")){
+                    addEffect(new GainHealth());
+                }
+                if(GUI.Button(new Rect(150,80,20,20), "-")){
+                    removeEffect(new GainHealth());
+                }
+
+                //draw card
+                GUI.Label(new Rect(10,110,100,20), ("Draw Card: " + countEfect(new DrawCard())));
+                if(GUI.Button(new Rect(120,110,20,20), "+")){
+                    addEffect(new DrawCard());
+                }
+                if(GUI.Button(new Rect(150,110,20,20), "-")){
+                    removeEffect(new DrawCard());
+                }
+                GUI.Label(new Rect(10,140,100,20), ("Gain Mana: " + countEfect(new AddMana())));
+                if(GUI.Button(new Rect(120,140,20,20), "+")){
+                    addEffect(new AddMana());
+                }
+                if(GUI.Button(new Rect(150,140,20,20), "-")){
+                    removeEffect(new AddMana());
+                }
+
+                //fly
+                if(GUI.Button(new Rect(10,170,100,20), "Fly: " + hasFly)){
+                    hasFly = !hasFly;
+                }
+                //stealth
+                if(GUI.Button(new Rect(10,200,100,20), "Stealth: " + hasStealth)){
+                    hasStealth = !hasStealth;
+                }
                 
                     
                 GUILayout.EndArea();
@@ -196,11 +277,13 @@ namespace eldritch.editor
                                 this.cardName = cards[pos].CardName;
                                 this.attack = cards[pos].AttackPower + "";
                                 this.defence = cards[pos].DefencePower + "";
-                                //this.effects = cards[pos].Effects + "";
+                                this.effects = cards[pos].Abilities;
                                 this.cost = cards[pos].CardCost + "";
                                 this.rarity = cards[pos].SpellRarity;
                                 this.cardMat = cards[pos].CardImage;
                                 this.cardType = cards[pos].SpellType;
+                                this.hasFly = cards[pos].HasFly;
+                                this.hasStealth = cards[pos].HasStealth;
                                 mode = 2;
 
                             }

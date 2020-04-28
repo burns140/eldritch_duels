@@ -19,7 +19,8 @@ const signup = (data, sock) => {
     const username = data.name;     // username
     const password = data.password; // password
     const hash = bcrypt.hashSync(password, 10);     // Hash password
-    const host = "localhost:7999";
+    //const host = "localhost:7999";
+    const host = "66.253.158.241:7999";
 
     try {
         MongoClient.get().then(client => {
@@ -40,8 +41,6 @@ const signup = (data, sock) => {
 
 
                     var startCollection = {         // The collection they start with
-                        "Test 0": 30,
-                        "Test 1": 30,
                         "Mi_Go": 24,
                         "Mi_Go Worker": 21,
                         "Mi_Go Queen": 6,
@@ -65,8 +64,8 @@ const signup = (data, sock) => {
                     var startDecks = [              // The decks they will start with
                         {
                             deckname: "First Deck",
-                            "Test 0": 20,
-                            "Test 1": 12
+                            "Mi_Go": 20,
+                            "Blood Vial": 12
                         }
                     ];
 
@@ -87,9 +86,15 @@ const signup = (data, sock) => {
                         avatar: 0,                         // int
                         level: 0,                           // int
                         wins: 0,                            // int
+                        winsToday: 0,
+                        winsThisWeek: 0,
+                        winsThisMonth: 0,
                         losses: 0,                          // int
+                        lossesToday: 0,
+                        lossesThisWeek: 0,
+                        lossesThisMonth: 0,
                         recent_games: [],                   // bool[]
-                        currency: 500,                       // int
+                        credits: 100000,                       // int
                         bio: "enter_bio",                   // string
                         verified: false,                     // boolean of whether they verified their account
                         verifyStr: str,                      // string
@@ -101,7 +106,25 @@ const signup = (data, sock) => {
                         reports: [],                        // array of reports I have of { user, time }
                         banLength: 0,                          // length of current tempBan
                         emailToChange: "",                   // Email they are trying to change to
+<<<<<<< HEAD
                         customArt: []
+=======
+                        reported: [],
+                        customArt: "",
+                        totalGames: 0,
+                        gamesToday: 0,
+                        gamesThisWeek: 0,
+                        gamesThisMonth: 0,
+                        cardsPlayedTotal: 0,
+                        cardsPlayedToday: 0,
+                        cardsPlayedThisWeek: 0,
+                        cardsPlayedThisMonth: 0,
+                        xp: 0,
+                        elo: 100,
+                        dailyChallenge: 0,
+                        weeklyChallenge: 0,
+                        monthlyChallenge: 0
+>>>>>>> achievements
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
@@ -146,4 +169,4 @@ const signup = (data, sock) => {
     }
 }
 
-exports.signup = signup;
+exports.signup = signup

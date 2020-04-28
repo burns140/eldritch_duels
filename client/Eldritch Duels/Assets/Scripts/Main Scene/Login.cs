@@ -77,6 +77,11 @@ public class Login : MonoBehaviour
         if (!check.IsMatch(responseData)) { 
             return responseData;
         }
+        Global.email = email;
+        if (String.Equals(responseData, "Incorrect password")) // checking for incorrect password response
+        {
+            return String.Empty;
+        }
         string tempFile = "LoginTemp";
         try //make the temp file
         {
@@ -91,12 +96,22 @@ public class Login : MonoBehaviour
                 StreamWriter streamWriter = File.AppendText(tempFile);
                 streamWriter.WriteLine(loginstuff[0]); // token
                 streamWriter.WriteLine(loginstuff[1]); // ID
-                streamWriter.Flush();
+                //streamWriter.Flush();
                 streamWriter.Close();
                 Global.avatar = (loginstuff[2] == null || loginstuff[2] == "")? 0 : Int32.Parse(loginstuff[2]);
                 Global.username = loginstuff[3];
                 Global.bio = loginstuff[4];
                 Global.email = email;
+                if (Global.hasCustomAvatar())
+                {
+                    Debug.Log("Custom avatar detected");
+                    Global.CustomAvatar = Global.getCustomAvatar();
+                    Global.hasCustom = true;
+                }
+                else
+                {
+                    Debug.Log("No custom avatar");
+                }
                 return tempFile;
             }
             catch (Exception e)
@@ -124,13 +139,15 @@ public class Login : MonoBehaviour
             ErrorPanel.gameObject.SetActive(true);
             ErrorText.text = "Not verified, can't login";
             ErrorText.gameObject.SetActive(true);
+            return;
         }
-        else if (String.Equals("This account has been temporarily banned", result))
+        else if (result.Contains("This account is temporarily banned"))
         {
             Debug.Log("Your account is tempbanned");
             ErrorPanel.gameObject.SetActive(true);
             ErrorText.text = "This account has been temporarily banned";
             ErrorText.gameObject.SetActive(true);
+            return;
         }
         else if (String.Equals("This account has been permanently banned", result))
         {
@@ -138,6 +155,14 @@ public class Login : MonoBehaviour
             ErrorPanel.gameObject.SetActive(true);
             ErrorText.text = "This account has been permanently banned";
             ErrorText.gameObject.SetActive(true);
+            return;
+        }
+        else if (result.Contains("Account with that email doesn't exist")) {
+            Debug.Log("No account with that email exists");
+            ErrorPanel.gameObject.SetActive(true);
+            ErrorText.text = "No email with this account";
+            ErrorText.gameObject.SetActive(true);
+            return;
         }
         else if (result.Length > 0) // Sets temp file with token and ID if login is successful, as well as global variables
         {

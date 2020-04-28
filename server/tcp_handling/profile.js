@@ -5,6 +5,9 @@ const generator = require('generate-password');
 const myEmail = 'eldritch.duels@gmail.com';
 const dbconfig = require('../dbconfig.json');
 const nodemailer = require('nodemailer');
+const Binary = require('mongodb').Binary;
+
+
 const TEMP_BAN_MARKS = [1, 3, 5, 10, 12] 
 const TEMP_BAN_LENGTHS_MINS = [1, 10, 300, 1440, -1];
 
@@ -302,13 +305,13 @@ const viewProfile = (data, sock) => {
                 console.log('profile found successfully');
             }).catch(err => {
                 console.log(err);
-                sock.write(err);
+                sock.write(err.toString());
                 return;
             });
         });
     } catch (err) {
         console.log(err);
-        sock.write(err);
+        sock.write(err).toString();
     }
 }
 
@@ -320,94 +323,201 @@ const viewProfile = (data, sock) => {
 const reportPlayer = (data, sock) => {
     var theirEmail = data.theirEmail;
     var myEmail = data.myEmail;
-    var errString = 'failed to report player';
-
-    MongoClient.get().then(client => {
-        const db = client.db('eldritch_data');
-
-        var report = {
-            user: myEmail,
-            date: Date.now()
-        }
-
-        console.log(report);
-
-        /* Add this new report to their reports array */
-        db.collection('users').updateOne(
-            { email: theirEmail },
-            { $push: { reports: report } }
-        ).then(result => {
-            if (result.modifiedCount != 1) {
-                throw new Error(`couldn't find user with that email OR user already reported by you`);
+    
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+    
+            var report = {
+                user: myEmail,
+                date: Date.now()
             }
-
-            /* Add this user to my reported array */
+    
+            console.log(report);
+    
+            /* Add this new report to their reports array */
             db.collection('users').updateOne(
-                { email: myEmail },
-                { $push: { reported: theirEmail } }
+                { email: theirEmail },
+                { $push: { reports: report } }
             ).then(result => {
                 if (result.modifiedCount != 1) {
-                    throw new Error(`couldn't add them to my reported`);
+                    throw new Error(`couldn't find user with that email OR user already reported by you`);
                 }
-
-                /* Find the user who has been reported to see if they should be banned */
-                db.collection('users').findOne(
-                    { email: theirEmail }
+    
+                /* Add this user to my reported array */
+                db.collection('users').updateOne(
+                    { email: myEmail },
+                    { $push: { reported: theirEmail } }
                 ).then(result => {
-                    if (result == null) {
-                        throw new Error(`couldn't find user with that email`);
+                    if (result.modifiedCount != 1) {
+                        throw new Error(`couldn't add them to my reported`);
                     }
-
-                    var reports = result.reports;
-
-                    for (var i = 0; i < TEMP_BAN_MARKS.length; i++) {
-                        if (TEMP_BAN_MARKS[i] == reports.length) {
-                            
-                            /* The user should be temp banned. Update their banLength field */
-                            db.collection('users').updateOne(
-                                { email: theirEmail },
-                                { $set: { banLength: Date.now() + TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
-                                //{ $set: { banLength: TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
-                            ).then(result => {
-                                if (result.modifiedCount != 1) {
-                                    throw new Error(`could not update ban field`);
-                                }
-                                console.log('temp ban added successfully');
-                            }).catch(err => {
-                                console.log(err);
-                                sock.write(err);
-                                return;
-                            });
-                            break;
-
+    
+                    /* Find the user who has been reported to see if they should be banned */
+                    db.collection('users').findOne(
+                        { email: theirEmail }
+                    ).then(result => {
+                        if (result == null) {
+                            throw new Error(`couldn't find user with that email`);
                         }
-                    }
-
-                    console.log('user reported successfullly');
-                    sock.write('user reported successfully');
+    
+                        var reports = result.reports;
+    
+                        for (var i = 0; i < TEMP_BAN_MARKS.length; i++) {
+                            if (TEMP_BAN_MARKS[i] == reports.length) {
+                                
+                                /* The user should be temp banned. Update their banLength field */
+                                db.collection('users').updateOne(
+                                    { email: theirEmail },
+                                    { $set: { banLength: Date.now() + TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
+                                    //{ $set: { banLength: TEMP_BAN_LENGTHS_MINS[i] * 60 * 1000 } }
+                                ).then(result => {
+                                    if (result.modifiedCount != 1) {
+                                        throw new Error(`could not update ban field`);
+                                    }
+                                    console.log('temp ban added successfully');
+                                }).catch(err => {
+                                    console.log(err);
+                                    sock.write(err);
+                                    return;
+                                });
+                                break;
+    
+                            }
+                        }
+    
+                        console.log('user reported successfullly');
+                        sock.write('user reported successfully');
+                    }).catch(err => {
+                        console.log(err);
+                        sock.write(err);
+                        return;
+                    });
                 }).catch(err => {
                     console.log(err);
-                    sock.write(err);
+                    sock.write(err.toString());
                     return;
                 });
             }).catch(err => {
                 console.log(err);
-                sock.write(err.toString());
+                sock.write(err);
+            });
+    
+                
+        });
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+    
+}
+
+const getMyReportedPlayers = (data, sock) => {
+    const id = data.id;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            /* Get the other user's avatar, bio, and username */
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('couldn\'t find user');
+                }
+
+                console.log('getting my reported users');
+                if (result.reported.toString() == "") {
+                    sock.write("noreportedusers");
+                } else {
+                    sock.write(result.reported.toString()); 
+                }
+                return;
+            }).catch(err => {
+                console.log(err);
+                sock.write(err);
                 return;
             });
-        }).catch(err => {
-            console.log(err);
-            sock.write(err);
         });
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
+}
 
-            
-    });
+const setCustomAvatar = (data, sock) => {
+    const id = data.id;
+    const pic = data.pic;
+
+    var insertdata = Binary(pic);
+
+    console.log(insertdata);
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').updateOne(
+                { _id: ObjectID(id) },
+                { $set: { customArt: insertdata, avatar: -1 } }
+            ).then(result => {
+                if (result.matchedCount != 1) {
+                    throw new Error('no user modified');
+                }
+                sock.write('Custom avatar uploaded');
+                console.log('custom avatar uploaded')
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        sock.write(err.toString());
+        console.log(err);
+    }
+}
+
+const getCustomAvatar = (data, sock) => {
+    const email = data.email;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').findOne(
+                { email: email },
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('no user found');
+                }
+                console.log(result.customArt);
+                //sock.write(result.customArt);
+                console.log(result.customArt.length());
+                sock.write(result.customArt.read(0, result.customArt.length()));
+                //sock.write(result.customArt);
+                console.log('returned custom art');
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        sock.write(err.toString());
+        console.log(err);
+    }
 }
 
 exports.reportPlayer = reportPlayer;
+exports.getMyReportedPlayers = getMyReportedPlayers;
 exports.deleteAccount = deleteAccount;
 exports.editProfile = editProfile;
 exports.changePassword = changePassword;
 exports.changeEmail = changeEmail;
 exports.viewProfile = viewProfile;
+<<<<<<< HEAD
 exports.uploadProfilePicture = uploadProfilePicture;
+=======
+exports.setCustomAvatar = setCustomAvatar;
+exports.getCustomAvatar = getCustomAvatar;
+>>>>>>> achievements

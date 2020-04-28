@@ -16,9 +16,15 @@ public class LoadGameSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY); // Get the resolution from PLAYER PREFS
+        
+        float musicVolume = PlayerPrefs.GetFloat(MUSIC_PREF_KEY, 1); // Get the music volume from PLAYER PREFS
+        AudioListener.volume = musicVolume; // Set music volume to saved volume
+        Debug.Log("Saved Volume: "+musicVolume);
+        
+        
+        string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY, "1920x1080"); // Get the resolution from PLAYER PREFS
        
-        window = PlayerPrefs.GetString(WINDOW_PREF_KEY); // Get the windowed mode from PLAYER PREFS
+        window = PlayerPrefs.GetString(WINDOW_PREF_KEY, "fullScreen"); // Get the windowed mode from PLAYER PREFS
 
         int musicVolume = PlayerPrefs.GetInt(MUSIC_PREF_KEY); // Get the music volume from PLAYER PREFS
         AudioListener.volume = musicVolume; // Set music volume to saved volume

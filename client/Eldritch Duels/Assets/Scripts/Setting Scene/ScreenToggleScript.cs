@@ -14,8 +14,8 @@ public class ScreenToggleScript : MonoBehaviour
 
 	void Start(){
 		
-		string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY); // Get the saved resolution from PLAYER PREFS
-        window = PlayerPrefs.GetString(WINDOW_PREF_KEY); // Get the saved windowed mode form PLAYER PREFS
+		string res = PlayerPrefs.GetString(RESOLUTION_PREF_KEY, "1920x1080"); // Get the saved resolution from PLAYER PREFS
+        window = PlayerPrefs.GetString(WINDOW_PREF_KEY, "fullScreen"); // Get the saved windowed mode form PLAYER PREFS
 		Debug.Log("I'm at ScreenToggle :"+window);
 
 		var dropdown = dropdownInstance.GetComponent<Dropdown>(); // Get instance of the resolution dropdown from UI;

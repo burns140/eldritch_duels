@@ -8,6 +8,6 @@ public class CancelButtonScript : MonoBehaviour
 {
     // Handle Cancel button click
     public void onSubmit(){
-        SceneManager.LoadScene(1); // Don't save settings and go back to Lobby
+        SceneManager.LoadScene("Lobby"); // Don't save settings and go back to Lobby
     }
 }

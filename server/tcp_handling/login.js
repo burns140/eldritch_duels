@@ -19,6 +19,7 @@ const login = (data, sock) => {
                 email: email
             }).then(result => {
                 if (!result) {
+                    console.log('no account with that email');
                     sock.write('Account with that email doesn\'t exist');     // No result
                     return;
                 } else {
@@ -79,8 +80,6 @@ const login = (data, sock) => {
                             return; 
                         }
                         
-                        sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
-                        console.log('login successful; token returned');
 
                         var playList = server.getPlayList();        // Get list of all ids currently connected
 
@@ -88,13 +87,16 @@ const login = (data, sock) => {
                         if (playList.isLoggedIn(idString)) {
                             var prevSocket = playList.getSocketByKey(idString);
                             if (prevSocket != sock) {
+                                    sock.write("a user is already logged into this account");
+                                    console.log("user already logged in with this account");
+                                    return;
                                 try {
-                                    prevSocket.end('Another device has logged in with this account');
-                                    console.log('forcing socket to close');
+                                    //prevSocket.end('Another device has logged in with this account');
+                                    //console.log('forcing socket to close');
                                 } catch (err) {
-                                    console.log(err);
+                                    //console.log(err);
                                 }
-                                playList.removePlayer(idString);
+                                //playList.removePlayer(idString);
                             }
                         }
 
@@ -102,6 +104,12 @@ const login = (data, sock) => {
                            close the connection later */
                         playList.addPlayer(idString, sock);
                         console.log(playList);
+
+                        
+                        sock.write(`${token}:${idString}:${result.avatar}:${result.username}:${result.bio}`); // Write token and profile info back
+                        console.log('login successful; token returned');
+
+                        
                         
                         
                         /* If password array length is greater than 1, the user had requested a temporary password.

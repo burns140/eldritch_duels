@@ -1,9 +1,17 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/NightmareApostle.png.meta
+<<<<<<< HEAD
 guid: 603c26a3d05069d40b3c3e9ddb73e79d
 =======
 guid: f9ec8e1161522a947adef7bbc0992d6a
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+========
+guid: 603c26a3d05069d40b3c3e9ddb73e79d
+>>>>>>>> achievements:client/Eldritch Duels/Assets/images/NightmareApostle.png.meta
+=======
+guid: a4005591e31d70f42a37feecbb871e4b
+>>>>>>> achievements
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

@@ -20,6 +20,7 @@ namespace eldritch.editor {
             win.titleContent.text = "Recipe Editor";
         }
         private Vector2 scrollPos = Vector2.zero;
+        private float scrollBar = 0;
         public RecipeCreator()
         {
             this.minSize = new Vector2(700, 200);
@@ -27,22 +28,12 @@ namespace eldritch.editor {
 
         private void OnGUI()
         {
+
             List<CraftingRecipe> recipes = Library.GetAllRecipes();
+            
             //get scroll inputs
-            if (Input.mouseScrollDelta.y > .05f)
-            {
-                scrollPos += new Vector2(0, .05f);
-                if(scrollPos.y > (60 * recipes.Count - this.position.height))
-                {
-                    scrollPos = new Vector2(0, 60 * recipes.Count - this.position.height);
-                }
-            }
-            if (Input.mouseScrollDelta.y < -.05f)
-            {
-                scrollPos += new Vector2(0, -.05f);                
-            }
-            if (scrollPos.y < 0)
-                scrollPos = Vector2.zero;
+            scrollBar = GUI.VerticalSlider(new Rect(this.position.width/2 + 10, 10,15,this.position.height-100),scrollBar,0, -(10 + (recipes.Count * 60) - this.position.height + 100));
+            scrollPos = new Vector2(0,scrollBar);
 
 
             //add recipe list
@@ -77,18 +68,18 @@ namespace eldritch.editor {
 
             //show all recipes
             GUILayout.BeginArea(new Rect(0,0,this.position.width/2, this.position.height-50));
-            GUI.BeginScrollView(new Rect(0, 0, this.position.width / 2, this.position.height - 50), scrollPos, new Rect(0, 0, this.position.width / 2, this.position.height - 50));
+            //scrollPos = GUI.BeginScrollView(new Rect(0, 0-scrollPos.y, this.position.width / 2, this.position.height - 50), scrollPos, new Rect(0, 0, this.position.width / 2, this.position.height - 50));
             
             for(int i = 0; i < recipes.Count; i++)
             {
                 int pos = i;
-                GUI.Label(new Rect(10 , 10 + (60 * i), 50, 20), recipes[i].BaseCard);
-                GUI.Label(new Rect(70 , 10 + (60 * i), 20, 20), " + ");
-                GUI.Label(new Rect(90 , 10 + (60 * i), 50, 20), recipes[i].FodderCard);
-                GUI.Label(new Rect(150 , 10 + (60 * i), 20, 20), " = ");
-                GUI.Label(new Rect(170 , 10 + (60 * i), 50, 20), recipes[i].ResultCard);
-                GUI.Label(new Rect(150 , 30 + (60 * i), 100, 20), "Cost: " + recipes[i].CraftCost);
-                if(GUI.Button(new Rect(230, 10 + (60 * i), 100, 15), "REMOVE"))
+                GUI.Label(new Rect(10 , 10 + (60 * i) + scrollPos.y, 50, 20), recipes[i].BaseCard);
+                GUI.Label(new Rect(70 , 10 + (60 * i)+ scrollPos.y, 20, 20), " + ");
+                GUI.Label(new Rect(90 , 10 + (60 * i)+ scrollPos.y, 50, 20), recipes[i].FodderCard);
+                GUI.Label(new Rect(150 , 10 + (60 * i)+ scrollPos.y, 20, 20), " = ");
+                GUI.Label(new Rect(170 , 10 + (60 * i)+ scrollPos.y, 50, 20), recipes[i].ResultCard);
+                GUI.Label(new Rect(150 , 30 + (60 * i)+ scrollPos.y, 100, 20), "Cost: " + recipes[i].CraftCost);
+                if(GUI.Button(new Rect(230, 10 + (60 * i)+ scrollPos.y, 100, 15), "REMOVE"))
                 {
                     Library.RemoveRecipe(recipes[pos]);
                     EditorUtility.SetDirty(this);
@@ -96,7 +87,7 @@ namespace eldritch.editor {
                     PrefabUtility.ApplyPrefabInstance(GameObject.Find("ContentManager"), InteractionMode.AutomatedAction);
                 }
             }
-            GUI.EndScrollView();
+            //GUI.EndScrollView();
             GUILayout.EndArea();
         }
     }

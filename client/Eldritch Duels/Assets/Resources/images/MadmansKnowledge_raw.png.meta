@@ -1,9 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/images/MadmansKnowledge_raw.png.meta
 <<<<<<< HEAD
 guid: 4ae531d5a20dcac4a82f9a25109a325f
 =======
 guid: 00cabb2a57e3a7447952525150560047
 >>>>>>> 2099ffe9a4dea375c582cd973b4711efe2b49dc3
+=======
+guid: 4ae531d5a20dcac4a82f9a25109a325f
+>>>>>>> achievements:client/Eldritch Duels/Assets/images/MadmansKnowledge_raw.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

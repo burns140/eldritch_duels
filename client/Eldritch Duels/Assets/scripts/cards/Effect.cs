@@ -18,6 +18,7 @@ namespace eldritch.cards
         SELF,
         OPPONENT,
         CARD,
+        DRAW,
         NULL
     }
     public abstract class Effect

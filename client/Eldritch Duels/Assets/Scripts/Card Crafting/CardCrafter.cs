@@ -88,14 +88,15 @@ namespace eldritch.cards
                 BaseCard.material = baseCardSRC.CardImage;
             if(fodderCardSRC != null)
                 FodderCard.material = fodderCardSRC.CardImage;
-
+            ResultCard.material = null;
             if (baseCardSRC != null && fodderCardSRC != null)
             {
                 Debug.Log("Showing recipe");
                 CraftingRecipe cr = Library.PreviewCraft(baseCardSRC.CardName, fodderCardSRC.CardName);
                 if (!cr.Equals(CraftingRecipe.Empty))
                 {
-                    CraftCost.text = "COST: " + cr.CraftCost + "";
+
+                    //CraftCost.text = "COST: " + cr.CraftCost + "";
                     resultCardSRC = Library.GetCard(cr.ResultCard);
                     if (resultCardSRC != null)
                     {
@@ -115,20 +116,26 @@ namespace eldritch.cards
         {
             //get the cards usable for crafting
             craftable = new List<CardContainer>();
+            Debug.Log(Global.userCards.Count + " user cards");
             foreach (Card c in Global.userCards)
             {
                 
                 int mod = ((baseCardSRC != null && baseCardSRC.CardName.Equals(c.CardName)) || (fodderCardSRC != null && fodderCardSRC.CardName.Equals(c.CardName))) ? 1 : 0;
+                int inDeck = 0;
+                bool addable = true;
                 foreach (Deck d in Global.userDecks)
                 {
-                    int inDeck = d.AmountInDeck(c.CardName);
-                    if (inDeck < (c.CopiesOwned - mod))
+                    inDeck = d.AmountInDeck(c.CardName);
+                    if (inDeck >= (c.CopiesOwned - mod))
                     {
-                        CardContainer newCC;
-                        newCC.c = c;
-                        newCC.count = c.CopiesOwned - inDeck - mod;
-                        craftable.Add(newCC);
+                        addable = false;
                     }
+                }
+                if(addable){
+                    CardContainer newCC;
+                    newCC.c = c;
+                    newCC.count = c.CopiesOwned - inDeck - mod;
+                    craftable.Add(newCC);
                 }
             }
             maxPage = craftable.Count / 24;

@@ -116,20 +116,47 @@ namespace eldritch.cards
         public List<Effect> effects = new List<Effect>();
         [SerializeField]
         public List<Effect> Abilities{
-            get {return this.effects;}
-            set {this.effects = value;}
+            get {setEffects(); return this.effects;}
         }
+        public List<string> effectnames = new List<string>();
 
 
         public void AddAbility(Effect ability){
-            this.effects.Add(ability);
+            this.effectnames.Add(ability.GetName());
+        }
+        public void resetEffect(){
+            this.effectnames = new List<string>();
         }
 
         public void RemoveAbility(string abilityName){
-            for(int i = 0; i < effects.Count;i++){
-                if(effects[i].GetName().Equals(abilityName)){
-                    effects.RemoveAt(i);
+            
+            for(int i = 0; i < effectnames.Count;i++){
+                if(effectnames[i].Equals(abilityName)){
+                    effectnames.RemoveAt(i);
                     return;
+                }
+            }
+        }
+
+        private void setEffects(){
+            effects = new List<Effect>();
+            if(effectnames == null){
+                effectnames = new List<string>();
+            }
+            foreach(string s in effectnames){
+                switch (s){
+                    case "Damage Opp":
+                        effects.Add(new DealDamage());
+                        break;
+                    case "Draw card":
+                        effects.Add(new DrawCard());
+                        break;
+                    case "Gain health":
+                        effects.Add(new GainHealth());
+                        break;
+                    case "Add mana":
+                        effects.Add(new AddMana());
+                        break;
                 }
             }
         }

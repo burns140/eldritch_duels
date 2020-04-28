@@ -102,7 +102,7 @@ function matchPlayers() {
                 let users = results.map(u => u.username);
 
                 // create a Match object
-                let match = new Match();
+                let match = new Match(dataHandler);
 
                 // get sockets
                 /** @type {import("net").Socket[]}  */
@@ -110,7 +110,7 @@ function matchPlayers() {
 
                 for (let i = 0; i < matches.length; i++) {
                     // add player to match
-                    match.addPlayer(match[i], connections[i]);
+                    match.addPlayer(matches[i], connections[i]);
 
                     // player cannot be removed after they are matched
                     connections[i].removeListener('close', connections[i]._temp_remove);
@@ -122,8 +122,11 @@ function matchPlayers() {
 
                 // notify the waiting users
                 let matchID = `${users[0]} vs ${users[1]}`;
-                connections[0].write(`match found: ${users[1]}\n${matchID}`);
-                connections[1].write(`match found: ${users[0]}\n${matchID}`);
+                connections[0].write(`match found: ${users[1]}\n${matchID}\n`);
+                connections[1].write(`match found: ${users[0]}\n${matchID}\n`);
+
+                
+
                 return true;
             });
         }).catch(e => console.log(e));

@@ -44,149 +44,309 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cards:
-  - cardName: Test 0
-    id: 0
-    owned: 0
-    cost: 10
-    power: 10
-    defence: 100
-    type: 0
-    rartiy: 2
-    cardImage: {fileID: 2100000, guid: 133104de352359e46a810bdc61a8b63c, type: 2}
-    canFly: 0
-    isStealth: 0
-  - cardName: Test 1
-    id: 1
-    owned: 0
-    cost: 5
-    power: 0
-    defence: 0
-    type: 1
-    rartiy: 0
-    cardImage: {fileID: 2100000, guid: f20086bfd2f31ca439c04c0de7fa079b, type: 2}
-    canFly: 0
-    isStealth: 0
   - cardName: Mi_Go
     id: 2
     owned: 0
     cost: 1
-    power: 100
-    defence: 200
+    power: 1
+    defence: 1
     type: 0
     rartiy: 0
     cardImage: {fileID: 2100000, guid: 99edd61525224714ba3d49b6809db468, type: 2}
     canFly: 0
     isStealth: 0
+    isDefender: 0
+    effectnames: []
   - cardName: Mi_Go Worker
     id: 3
     owned: 0
-    cost: 2
-    power: 200
-    defence: 200
+    cost: 3
+    power: 2
+    defence: 2
     type: 0
     rartiy: 1
     cardImage: {fileID: 2100000, guid: d034a58a58385f6478397508f5ec3b90, type: 2}
-    canFly: 0
+    canFly: 1
     isStealth: 0
+    isDefender: 0
+    effectnames: []
   - cardName: Mi_Go Queen
     id: 4
-    owned: 0
-    cost: 5
-    power: 500
-    defence: 500
-    type: 0
-    rartiy: 2
-    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
-    canFly: 0
-    isStealth: 0
-  - cardName: Beast Patient
-    id: 5
     owned: 0
     cost: 5
     power: 5
     defence: 5
     type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 05535c3ee75974a4e974cb60cec17c57, type: 2}
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
+    effectnames: []
+  - cardName: Beast Patient
+    id: 5
+    owned: 0
+    cost: 3
+    power: 5
+    defence: 3
+    type: 0
     rartiy: 0
     cardImage: {fileID: 2100000, guid: 2a1a4e245c0ef1a40a68e65549068961, type: 2}
     canFly: 0
     isStealth: 0
-  - cardName: Blood_Starved Beast
+    isDefender: 0
+    effectnames: []
+  - cardName: Blood Starved Beast
     id: 6
     owned: 0
-    cost: 13
+    cost: 8
     power: 13
-    defence: 13
+    defence: 6
     type: 0
     rartiy: 2
     cardImage: {fileID: 2100000, guid: f6ef397774c8b6843ac1d7345ef17970, type: 2}
     canFly: 0
     isStealth: 0
-  - cardName: Brain of Mensis
+    isDefender: 0
+    effectnames: []
+  - cardName: Blood Vial
     id: 7
     owned: 0
-    cost: 7
-    power: 7
-    defence: 7
-    type: 0
+    cost: 4
+    power: 0
+    defence: 0
+    type: 1
     rartiy: 1
-    cardImage: {fileID: 2100000, guid: d3960105a387e0a418430780181bef97, type: 2}
+    cardImage: {fileID: 2100000, guid: a5e0d54e4b03fff41a2191d927917cf0, type: 2}
     canFly: 0
     isStealth: 0
-  - cardName: Chime Maiden
+    isDefender: 0
+    effectnames:
+    - Damage Opp
+    - Damage Opp
+  - cardName: Brain of Mensis
     id: 8
     owned: 0
     cost: 6
-    power: 6
-    defence: 6
+    power: 7
+    defence: 2
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: d3960105a387e0a418430780181bef97, type: 2}
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
+    effectnames: []
+  - cardName: Chime Maiden
+    id: 9
+    owned: 0
+    cost: 2
+    power: 1
+    defence: 1
     type: 0
     rartiy: 1
     cardImage: {fileID: 2100000, guid: a62b5b2a94e62ef459234a80883d812f, type: 2}
     canFly: 0
-    isStealth: 0
-  - cardName: Lady Maria
-    id: 9
+    isStealth: 1
+    isDefender: 0
+    effectnames: []
+  - cardName: Great One's Wisdom
+    id: 10
     owned: 0
-    cost: 17
-    power: 17
-    defence: 17
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 11ee1fa28edb73147b15eea57320a9ce, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Add mana
+    - Add mana
+    - Draw card
+  - cardName: Lady Maria
+    id: 11
+    owned: 0
+    cost: 8
+    power: 5
+    defence: 5
     type: 0
     rartiy: 2
     cardImage: {fileID: 2100000, guid: ec410aa89a045724dbb1327609d949bd, type: 2}
     canFly: 0
     isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Draw card
+    - Add mana
   - cardName: Ludwig Holy Blade
-    id: 10
+    id: 12
     owned: 0
-    cost: 15
-    power: 15
-    defence: 15
+    cost: 9
+    power: 5
+    defence: 5
     type: 0
     rartiy: 2
     cardImage: {fileID: 2100000, guid: 9f2f89249f7d11a40bbcb28154a12dce, type: 2}
     canFly: 0
     isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Damage Opp
+    - Add mana
+  - cardName: Madman's Knowledge
+    id: 13
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: 408aa7da2c773cc4f96955d2d652f2c8, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Add mana
+  - cardName: Mi_Go Zombie
+    id: 14
+    owned: 0
+    cost: 1
+    power: 1
+    defence: 2
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: ef351172578be484d9be29833b167a16, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames: []
+  - cardName: Moon Presence
+    id: 15
+    owned: 0
+    cost: 7
+    power: 5
+    defence: 5
+    type: 0
+    rartiy: 2
+    cardImage: {fileID: 2100000, guid: 1478ac8bfeb637f4eb769be1681313eb, type: 2}
+    canFly: 1
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Add mana
+  - cardName: Nightmare Apostle
+    id: 16
+    owned: 0
+    cost: 2
+    power: 2
+    defence: 2
+    type: 0
+    rartiy: 0
+    cardImage: {fileID: 2100000, guid: dc8fb1252c939c44fa3e53a88c2398e4, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames: []
+  - cardName: Pungent Blood Cocktail
+    id: 17
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: 54cca2d5a4d3e5f4988139a3b4fdffc6, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Gain health
+  - cardName: Quicksilver Bullets
+    id: 18
+    owned: 0
+    cost: 0
+    power: 0
+    defence: 0
+    type: 1
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: ccfd0152b1ded42419bda1f75416a506, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Damage Opp
+    - Damage Opp
+  - cardName: Snatcher
+    id: 19
+    owned: 0
+    cost: 3
+    power: 1
+    defence: 2
+    type: 0
+    rartiy: 1
+    cardImage: {fileID: 2100000, guid: ae58ebea047f2424c8bd9a3bceb33cf4, type: 2}
+    canFly: 0
+    isStealth: 0
+    isDefender: 0
+    effectnames:
+    - Damage Opp
   recipes:
-  - BaseCard: Test 1
-    FodderCard: Test 1
-    CraftCost: 100
-    ResultCard: Mi_Go
-  - BaseCard: Test 0
-    FodderCard: Test 0
-    CraftCost: 50
-    ResultCard: Test 1
-  - BaseCard: Test 0
-    FodderCard: Test 1
-    CraftCost: 100
-    ResultCard: Mi_Go
   - BaseCard: Mi_Go
-    FodderCard: Mi_Go
-    CraftCost: 500
+    FodderCard: Beast Patient
+    CraftCost: 0
+    ResultCard: Blood Vial
+  - BaseCard: Mi_Go Zombie
+    FodderCard: Mi_Go Zombie
+    CraftCost: 0
+    ResultCard: Brain of Mensis
+  - BaseCard: Nightmare Apostle
+    FodderCard: Beast Patient
+    CraftCost: 0
+    ResultCard: Chime Maiden
+  - BaseCard: Nightmare Apostle
+    FodderCard: Blood Vial
+    CraftCost: 0
+    ResultCard: Madman's Knowledge
+  - BaseCard: Mi_Go
+    FodderCard: Mi_Go Zombie
+    CraftCost: 0
     ResultCard: Mi_Go Worker
-  - BaseCard: Mi_Go Worker
-    FodderCard: Mi_Go Worker
-    CraftCost: 50000
+  - BaseCard: Nightmare Apostle
+    FodderCard: Nightmare Apostle
+    CraftCost: 0
+    ResultCard: Pungent Blood Cocktail
+  - BaseCard: Mi_Go
+    FodderCard: Quicksilver Bullets
+    CraftCost: 0
+    ResultCard: Snatcher
+  - BaseCard: Brain of Mensis
+    FodderCard: Blood Vial
+    CraftCost: 0
+    ResultCard: Blood Starved Beast
+  - BaseCard: Madman's Knowledge
+    FodderCard: Madman's Knowledge
+    CraftCost: 0
+    ResultCard: Great One's Wisdom
+  - BaseCard: Chime Maiden
+    FodderCard: Madman's Knowledge
+    CraftCost: 0
+    ResultCard: Lady Maria
+  - BaseCard: Brain of Mensis
+    FodderCard: Quicksilver Bullets
+    CraftCost: 0
+    ResultCard: Ludwig Holy Blade
+  - BaseCard: Mig_Go Worker
+    FodderCard: Mig_Go Worker
+    CraftCost: 0
     ResultCard: Mi_Go Queen
-  - BaseCard: Test 1
-    FodderCard: Mi_Go
-    CraftCost: 1000
-    ResultCard: Mi_Go Worker
+  - BaseCard: Mi_Go Queen
+    FodderCard: Madman's Knowledge
+    CraftCost: 0
+    ResultCard: Moon Presence
+  - BaseCard: Pungent Blood Cocktail
+    FodderCard: Pungent Blood Cocktail
+    CraftCost: 0
+    ResultCard: Quicksilver Bullets

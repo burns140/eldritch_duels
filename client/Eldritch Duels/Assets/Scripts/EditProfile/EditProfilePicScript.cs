@@ -18,6 +18,8 @@ public class EditProfilePicScript : MonoBehaviour
 {
     public Dropdown dropdown; // Picture Dropdown on the UI
     public Sprite[] pictures; // List of available pictures
+    public Image errorimage; // Image for error message
+    public Text errortext; // Text on error message
     public InputField screenNameInput; // Screenname field on the UI
     public InputField bioInput; // Bio field on the UI
     public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" }; // for checking picture files
@@ -25,6 +27,9 @@ public class EditProfilePicScript : MonoBehaviour
     private string bio; // save new bio to this string
     private string screenname; // save new screenname to this string
     private int picnum=0; // default profile pic is the first option
+    private int temppicnum=0; // to change value on ui
+
+    private const string EMAIL_PREF_KEY = "email"; // EMAIL PREF KEY to store user email
 
     // Start is called before the first frame update
     void Start()
@@ -38,11 +43,21 @@ public class EditProfilePicScript : MonoBehaviour
 
     public void onSave(){
         Debug.Log("Clicked on Save Profile");
-        bio = bioInput.text; // save new bio
+        string testbio = bioInput.GetComponent<InputField>().text; // Get user input text
+        string testusername = screenNameInput.GetComponent<InputField>().text; // Get user input text
+        if(!String.IsNullOrWhiteSpace(testbio)){
+            bio = testbio;
+            Global.bio = bio; // update on global
+        }
+        if(!String.IsNullOrWhiteSpace(testusername)){
+            screenname = testusername;
+            Global.username = screenname; // update on global
+        }
         Debug.Log("This is the new bio: "+bio);
-        screenname = screenNameInput.text; // save new screenname
-        Debug.Log("This is the new screenname: "+screenname);
-
+        Debug.Log("This is the new screenname: "+screenname);  
+        picnum = temppicnum;
+        Global.avatar = picnum;
+        Debug.Log("This is the new profilepicnum: "+picnum);  
         // Sending request to server to update bio, screen name, & profile pic
         EditProfileRequest req = new EditProfileRequest("editProfile", Global.getID(), Global.getToken(), bio, picnum, screenname);
         string json = JsonConvert.SerializeObject(req);
@@ -55,6 +70,8 @@ public class EditProfilePicScript : MonoBehaviour
         Int32 bytes = Global.stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
+        PlayerPrefs.SetString(EMAIL_PREF_KEY,Global.email); // Get the user email from PLAYER PREFS;
+        SceneManager.LoadScene("ProfileScene"); // Don't save profile changes and go back to Lobby
     }
 
     private void dropdownSetup(){
@@ -66,40 +83,50 @@ public class EditProfilePicScript : MonoBehaviour
             picItems.Add(picOption); 
         }
 
-        dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
+        if (Global.hasCustom)
+        {
+            Sprite uploaded = Global.getCustomAvatar();
+            var customavatar = new Dropdown.OptionData("Uploaded", uploaded);
+            picItems.Add(customavatar);
+        }
 
-        //TODO: ADD USER UPLOADED PROFILE PICTURE
+        dropdown.AddOptions(picItems); // Adding all available picture to the Dropdown UI
     }
 
     public void handlePicName(int val){
-        picnum = val; // Get selected picture index from the dropdown
-        Debug.Log("Selected Profile Pic option: "+picnum.ToString());
+        temppicnum = val; // Get selected picture index from the dropdown
+        Debug.Log("Selected Profile Pic option: "+temppicnum.ToString());
     }
 
     private void displayPic(){
-
         int originalPic = Global.avatar; // Get original picnum from global variable
-
+        picnum = Global.avatar; // in case it's cancelled
+        Debug.Log("displayPic: Global.avatar value is "+Global.avatar);
         var dropdownInstance = dropdown.GetComponent<Dropdown>();
-        dropdownInstance.value = originalPic; // Select original picture option on the UI
-
-
+        if (Global.hasCustom)
+        {
+            dropdownInstance.value = 9;
+        }
+        else
+        {
+            dropdownInstance.value = originalPic; // Select original picture option on the UI
+        }
     }
 
     private void displayBio(){
 
         string originalBio = Global.bio; // Get original bio from global variable
-
-        var bioInstance = bioInput.GetComponent<InputField>();
-        bioInstance.text = originalBio; // Display original bio on the UI
+        bio = Global.bio; // in case it's cancelled
+        Debug.Log("displayBio: Global.bio value is "+Global.bio);
+        bioInput.GetComponent<InputField>().placeholder.GetComponent<Text>().text = originalBio; // Display original bio on the UI
     }
 
     private void displayScreenName(){
 
         string originalScreenname = Global.username; // Get original screenname from global variable
-
-        var screennameInstance = screenNameInput.GetComponent<InputField>();
-        screennameInstance.text = originalScreenname; // Display original screenname on the UI
+        screenname = Global.username; // in case it's cancelled
+        Debug.Log("displaScreenName: Global.username value is "+Global.username);
+        screenNameInput.GetComponent<InputField>().placeholder.GetComponent<Text>().text = originalScreenname; // Display original screenname on the UI
     }
 
     public void openBrowser()
@@ -123,24 +150,56 @@ public class EditProfilePicScript : MonoBehaviour
 
                 byte[] imagebytes = File.ReadAllBytes(path);
 
-                profilepicture pfp = new profilepicture(imagebytes, Global.getToken(), Global.getID(), "uploadProfilePicture");
+                Debug.Log("Image converted");
+
+                if (imagebytes.Length > 20000)
+                {
+                    Debug.Log("Image is too large!");
+                    errortext.text = "Image must be less than 20 KB.";
+                    errorimage.gameObject.SetActive(true);
+                    return;
+                }
+
+                string bytetostring = Convert.ToBase64String(imagebytes);
+
+                Debug.Log("Image converted to string");
+
+                profilepicture pfp = new profilepicture(bytetostring, Global.getToken(), Global.getID(), "setCustomAvatar");
 
                 string json = JsonConvert.SerializeObject(pfp);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 NetworkStream stream = Global.client.GetStream();
 
+                Debug.Log("Request made, attempting to write");
+
                 stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+
+                Debug.Log("Write done");
+                data = new Byte[1000];
                 string responseData = string.Empty;
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-                dropdownSetup();
+                Debug.Log("Response received");
+                if (String.Equals(responseData, "Custom avatar uploaded"))
+                {
+                    Global.hasCustom = true;
+                    Global.CustomAvatar = Global.getCustomAvatar();
+                    dropdownSetup();
+                    displayPic();
+                }
+                else
+                {
+                    errorimage.gameObject.SetActive(true);
+                    errortext.text = "There was an error with the file upload.";
+                }
             }
             else
             {
                 //MAKE ERROR MESSAGE
+                errortext.text = "Invalid file selected.";
+                errorimage.gameObject.SetActive(true);
                 Debug.Log("Invalid file!");
             }
         }

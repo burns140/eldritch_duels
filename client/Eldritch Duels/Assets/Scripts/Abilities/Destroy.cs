@@ -8,7 +8,11 @@ public class Destroy : Effect
     
     public override void execute(ref Card target)
     {
+<<<<<<< HEAD
         //DuelFunctions.destroyMinion(target);
+=======
+        //DuelFunctions.destroyMinion((GameObject) target);
+>>>>>>> achievements
     }
 
     public override void execute(ref PlayerState ps)
