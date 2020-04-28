@@ -13,7 +13,9 @@ const MatchEnd = require('./tcp_handling/matchEnd.js')
 const AllPlayerList = require('./classes/AllPlayerList.js');
 var playList = new AllPlayerList();
 const Queue = require('./tcp_handling/queue.js');
-const Leaderboard = require('./tcp_handling/leaderboard.js')
+const Leaderboard = require('./tcp_handling/leaderboard.js');
+const UpdateElo = require('./tcp_handling/updateElo');
+
 const noTokenNeeded = ["signup", "login", "tempPass", "logout"];
 const MongoClient = require('./mongo_connection');
 
@@ -28,6 +30,7 @@ var curWeeklies = [];       // ids of current weekly challenges
 function dataHandler(data) {
     const sock = this;
     try {
+        const str = data.toString();
         const obj = JSON.parse(data);               // Turn data into a JSON object		
         console.log(obj);
         if (noTokenNeeded.includes(obj.cmd) || Verify.verify(obj.token, sock)) {        // Check that either no token is needed or the token is valid
@@ -164,6 +167,9 @@ function dataHandler(data) {
                     break;
                 case "getLeaderboard":
                     Leaderboard.fetchLeaderboardData(obj, sock);
+                    break;
+                case "updateElo":
+                    UpdateElo(obj, sock);
                     break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');

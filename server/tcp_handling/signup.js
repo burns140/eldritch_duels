@@ -88,9 +88,15 @@ const signup = (data, sock) => {
                         wins: 0,                            // int
                         winsToday: 0,
                         winsThisWeek: 0,
+                        aiWins: 0,
+                        competetiveWins: 0,
+                        casualWins: 0,
                         losses: 0,                          // int
                         lossesToday: 0,
                         lossesThisWeek: 0,
+                        aiLosses: 0,
+                        competetiveLoses: 0,
+                        casualLoses: 0,
                         recent_games: [],                   // bool[]
                         credits: 100000,                       // int
                         bio: "enter_bio",                   // string
@@ -113,7 +119,7 @@ const signup = (data, sock) => {
                         cardsPlayedToday: 0,
                         cardsPlayedThisWeek: 0,
                         xp: 0,
-                        elo: 100,
+                        elo: 1000,
                         dailyChallenge: 0,
                         weeklyChallenge: 0
                     }).then(result => {

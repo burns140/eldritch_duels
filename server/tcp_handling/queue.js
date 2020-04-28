@@ -4,7 +4,11 @@ const MongoClient = require('../mongo_connection');
 const ObjectId = require('mongodb').ObjectId;
 const PlayerQueue = require('../classes/PlayerQueue');
 
-var queue = new PlayerQueue();
+/** for casual matches */
+const casualQueue = new PlayerQueue();
+
+/** for competetive matches */
+const competetiveQueue = new PlayerQueue();
 
 /** 
  *  id => socket
@@ -30,7 +34,11 @@ let timeBetweenAutoMatch = 1000;
 //   this is so that when players with sufficiently different elos join
 //   there will be time for players with similar elos to join
 /** @type {NodeJS.Timeout} */
+let competetiveMatchPlayersInterval;
+
+/** @type {NodeJS.Timeout} */
 let matchPlayersInterval;
+
 
 /**
  * sets up values for this project
@@ -42,7 +50,23 @@ exports.init = function (dh, ms) {
     timeBetweenAutoMatch = ms || timeBetweenAutoMatch;
 
     clearTimeout(matchPlayersInterval);
-    matchPlayersInterval = setTimeout(matchPlayers, timeBetweenAutoMatch);
+    clearTimeout(competetiveMatchPlayersInterval);
+    matchPlayersInterval = setTimeout(matchPlayers, timeBetweenAutoMatch, casualQueue);
+    competetiveMatchPlayersInterval = setTimeout(matchPlayers, timeBetweenAutoMatch, competetiveQueue);
+}
+
+async function getElo(obj) {
+    if (obj.competetive) {
+        try {
+            const client = await MongoClient.get();
+            const result = await client.db('eldritch_data').collection('users').findOne({ _id: ObjectId(obj.id) });
+            return result.elo;
+        } catch (e) {
+            console.log("Could not get elo");
+            throw e;
+        }
+    } else
+        return 1000;
 }
 
 /**
@@ -50,16 +74,21 @@ exports.init = function (dh, ms) {
  * @param {any} obj
  * @param {import('net').Socket} sock
  */
-function enterQueue(obj, sock) {
-    let id = obj.id;
-    if (!queue.addPlayer(obj.id, 1000)) {
+async function enterQueue(obj, sock) {
+    const id = obj.id;
+
+    const queue = obj.competetive ? competetiveQueue : casualQueue;
+
+    const elo = await getElo(obj);
+
+    if (!queue.addPlayer(obj.id, elo)) {
         sock.write('already queued');
         return;
     }
 
     // store socket with id as key
     clientConnections[id] = sock;
-    console.log(`${id} queued`);
+    console.log(`${id} queued (${obj.competetive ? "competetive" : "casual"})`);
     sock.write('added to queue');
 
     let removePlayer = function() {
@@ -71,14 +100,19 @@ function enterQueue(obj, sock) {
     sock.once('close', removePlayer);
     sock._temp_remove = removePlayer;
 
-    matchPlayers();
+    matchPlayers(obj.competetive);
 }
 
-/** finds a match between two players */
-function matchPlayers() {
+/**
+ * finds a match between two players
+ * @param {boolean} competetive
+ * */
+function matchPlayers(competetive) {
+    const queue = competetive ? competetiveQueue : casualQueue;
+
     queue.matchPlayers().then(matches => {
         if (queue.size >= 2)
-            setTimeout(matchPlayers, timeBetweenAutoMatch);
+            setTimeout(matchPlayers, timeBetweenAutoMatch, competetive);
 
         if (matches.length == 0)
             return;
@@ -100,9 +134,10 @@ function matchPlayers() {
 
                 // get usernames
                 let users = results.map(u => u.username);
+                let elos = competetive ? results.map(u => u.elo) : null;
 
                 // create a Match object
-                let match = new Match(dataHandler);
+                let match = new Match(dataHandler, competetive);
 
                 // get sockets
                 /** @type {import("net").Socket[]}  */
@@ -122,12 +157,11 @@ function matchPlayers() {
 
                 // notify the waiting users
                 let matchID = `${users[0]} vs ${users[1]}`;
-                connections[0].write(`match found: ${users[1]}\n${matchID}\n`);
-                connections[1].write(`match found: ${users[0]}\n${matchID}\n`);
+                console.log(`${competetive ? 'competetive' : 'casual'} match found: ${matchID}`);
+                connections[0].write(`\nmatch found: ${users[1]}\nMatchID: ${matchID}\n${competetive ? `elo: ${elos[1]}` : ''}\n`);
+                connections[1].write(`\nmatch found: ${users[0]}\nMatchID: ${matchID}\n${competetive ? `elo: ${elos[0]}` : ''}\n`);
 
-                
-
-                return true;
+                setTimeout(matchPlayers, timeBetweenAutoMatch, competetive);
             });
         }).catch(e => console.log(e));
     });
