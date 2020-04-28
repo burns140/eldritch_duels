@@ -137,11 +137,7 @@ public class DuelScript : MonoBehaviour
         readStreamAsync();
     }
 
-<<<<<<< HEAD
-    public async Task readStreamAsync() {
-=======
     public async void readStreamAsync() {
->>>>>>> achievements
         while (true) {
             Debug.Log("ready to receive");
             Byte[] data = new byte[128];
@@ -159,16 +155,11 @@ public class DuelScript : MonoBehaviour
             data = cropped;
 
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
-<<<<<<< HEAD
-            DuelRequest dreq = (DuelRequest) JsonConvert.DeserializeObject(trimmed);
-            playOppCard(dreq);
-=======
             Debug.Log($"Trimmed: {trimmed}");
             if (trimmed.Contains("MATCH END")) {
                 break;
             }
             receivedDataFromOpp(trimmed);
->>>>>>> achievements
         }
 
     }
@@ -682,23 +673,6 @@ public class DuelScript : MonoBehaviour
         sendDataToOpp(data);
     }
 
-<<<<<<< HEAD
-    private void playOppCard(DuelRequest req) {
-        Card toPlay = Library.GetCard(req.cardName);
-        if (toPlay.SpellType != CardType.SPELL) {
-            OpponentState.onField.Add(toPlay);
-        }
-        GameObject c = (GameObject)Instantiate(card);
-        c.GetComponent<Image>().sprite = null;
-        c.GetComponent<Image>().material = toPlay.CardImage;
-        Card targetCard = null;
-        if (req.targetName != null) {
-            string[] split = req.targetName.Split('-');
-            if (String.Equals(split[0], "mine")) {
-                //targetCard = (Card) oppPlayAreaPanel[Int32.Parse(split[1])];
-            } else {
-                //targetCard = (Card) myPlayAreaPanel[Int32.Parse(split[1])];
-=======
     //format and sent attacker to opponent
     private void confirmAttackers(){
         if(attackers.Count == 0){
@@ -714,30 +688,12 @@ public class DuelScript : MonoBehaviour
                 first = false;
             }else{
                 data = data + "," + ab.attacker.name;
->>>>>>> achievements
             }
         }
         currentPhase = Phase.WAITING;
         sendDataToOpp(data);
     }
 
-<<<<<<< HEAD
-
-    private void ResolveAbilities(Card played, bool iPlayed, DuelRequest selected, Card targetCard){
-        foreach(Effect e in played.Abilities){
-            switch(e.GetTargetType()){
-                case EffectTarget.OPPONENT:
-                    e.execute(ref OpponentState);
-                    break;
-                case EffectTarget.SELF:
-                    e.execute(ref MyState);
-                    break;
-                case EffectTarget.CARD:
-                    if (targetCard != null) {
-                        e.execute(ref targetCard);
-                    } else {
-                        e.execute(ref played);
-=======
     private IEnumerator resolveAbilities(Card card, GameObject c){
         if(card.Abilities != null){
             if(isMyTurn){ //resolve for me
@@ -748,7 +704,6 @@ public class DuelScript : MonoBehaviour
                         e.execute(ref oppState);
                     }else if(e.GetTargetType() == EffectTarget.DRAW){
                         drawCard();
->>>>>>> achievements
                     }
                 }
             }else{ //resolve for opponent
@@ -916,10 +871,6 @@ public class DuelScript : MonoBehaviour
         
     }
 
-<<<<<<< HEAD
-        if (attack >= defense) {
-            //DuelFunctions.destroyMinion(defender);
-=======
     public void AddOppBlockers(string blockers){
         if(blockers.Equals("")){
             Debug.Log("Entering end turn");
@@ -928,7 +879,6 @@ public class DuelScript : MonoBehaviour
             currentPhase = Phase.END;
             myAttack();
             return;
->>>>>>> achievements
         }
         string[] blocker = blockers.Split(',');
         foreach(string b in blocker){

@@ -73,7 +73,7 @@ const getOneAchievement = (data, sock) => {
                 sock.write(`name-${result.name};desc-${result.description}`);
             }).catch(err => {
                 console.log(err);
-                sock.write(err.toString());
+                sock.write('no achievement with that id');
             });
         });
     } catch (err) {

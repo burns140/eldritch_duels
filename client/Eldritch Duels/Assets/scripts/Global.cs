@@ -161,6 +161,27 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+
+    public class Request {
+        public string id;
+        public string token;
+        public string cmd;
+
+        public Request(string id, string token, string cmd) {
+            this.id = id;
+            this.token = token;
+            this.cmd = cmd;
+        }
+    }
+
+    public class AchievementRequest : Request {
+        public string type;
+
+        public AchievementRequest(string id, string token, string cmd, string type) : base(id, token, cmd) {
+            this.type = type;
+        }
+    }
+
     #endregion
     public static class Global
     {

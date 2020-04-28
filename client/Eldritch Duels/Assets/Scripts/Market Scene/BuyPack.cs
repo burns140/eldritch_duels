@@ -1,40 +1,3 @@
-<<<<<<< HEAD
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-
-public class BuyPack : MonoBehaviour
-{
-    public GameObject succeedPanel;
-    public GameObject failedPanel;
-    public Text moneyText;
-
-
-    public void buy() 
-    {
-        // TODO: check if money is enough to buy the pack
-
-        bool succeed = true;
-
-        if (succeed)
-            succeedPanel.SetActive(true);
-        else
-            failedPanel.SetActive(true);
-
-        // TODO: make sure you update new money value to the server
- 
-    }
-
-    // update money text field
-    void Update()
-    {
-        // constantly change money value
-        // TODO: update money from server
-        moneyText.text = "500";
-    }
-}
-=======
 ﻿using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -175,4 +138,3 @@ public class BuyPack : MonoBehaviour
     //TODO: send pack request, verify credit amount, receive cards in comma delimited list, send request to add card for each card, show cards on UI
 
 }
->>>>>>> achievements

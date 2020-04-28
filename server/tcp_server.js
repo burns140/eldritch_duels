@@ -77,17 +77,10 @@ function dataHandler(data) {
                 case "resendVerify":                // resend verification email
                     Email.resendVerification(obj, sock);
                     break;
-<<<<<<< HEAD
-                case "shareDeck":                   // Share deck with another user
-                    Decks.shareDeck(obj, sock);
-                    break;
-                case "copySharedDeck":              // Copy a shared deck to my decks, allowing me to edit
-=======
                 case "shareDeck":                  // Share deck with another user
                     Decks.shareDeck(obj, sock);
                     break;
                 case "copySharedDeck":             // Copy a shared deck to my decks, allowing me to edit
->>>>>>> achievements
                     Decks.copySharedDeck(obj, sock);
                     break;
                 case "logout":                     // Logout
