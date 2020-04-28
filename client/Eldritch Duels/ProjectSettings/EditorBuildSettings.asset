@@ -59,4 +59,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EndDuel.unity
     guid: 91d1e4f5671ed47249122481cf6b2e19
+  - enabled: 1
+    path: Assets/Scenes/AIDuelScene.unity
+    guid: c5a07d7c043af416e91476be47995c90
   m_configObjects: {}

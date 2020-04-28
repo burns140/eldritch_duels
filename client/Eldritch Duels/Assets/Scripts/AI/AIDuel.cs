@@ -299,6 +299,11 @@ namespace eldritch{
             }
         }
 
+        public void RecallClick(){
+            if(myTurn && currentPhase == Phase.MAIN)
+            this.currentPhase = Phase.RECALL;
+        }
+
         private void AITurn(){
             
             AIScript.AITurn(this);
