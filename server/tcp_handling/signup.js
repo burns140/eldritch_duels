@@ -111,6 +111,7 @@ const signup = (data, sock) => {
                         totalGames: 0,
                         gamesToday: 0,
                         gamesThisWeek: 0,
+<<<<<<< HEAD
                         gamesThisMonth: 0,
                         cardsPlayedTotal: 0,
                         cardsPlayedToday: 0,
@@ -121,6 +122,15 @@ const signup = (data, sock) => {
                         dailyChallenge: 0,
                         weeklyChallenge: 0,
                         monthlyChallenge: 0
+=======
+                        cardsPlayedTotal: 0,
+                        cardsPlayedToday: 0,
+                        cardsPlayedThisWeek: 0,
+                        xp: 0,
+                        elo: 100,
+                        dailyChallenge: 0,
+                        weeklyChallenge: 0
+>>>>>>> leaderboard_ui
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);

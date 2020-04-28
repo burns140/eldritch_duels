@@ -143,6 +143,7 @@ const addCardsPlayed = (data, sock) => {
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
 
+            /* Find a user with the given id and set the three given values */
             db.collection('users').findOne(
                 { _id: ObjectID(id) }
             ).then(result => {
@@ -226,7 +227,7 @@ const addXP = (data, sock) => {
 
                 var dailyCompleted = result.dailyChallenge;
                 if (dailyCompleted == 0) {
-                    dailyCompleted = checkDailyChallenge(result);
+                    dailyCompleted = checkDailyChallenge(checkChallengeObj);
                 }
 
                 var weeklyCompleted = result.weeklyChallenge;
