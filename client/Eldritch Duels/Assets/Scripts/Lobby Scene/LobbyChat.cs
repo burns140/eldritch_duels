@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Newtonsoft.Json;
 using eldritch;
 using UnityEngine.UI;
 
@@ -60,11 +59,6 @@ public class LobbyChat : MonoBehaviour
         List<string> friendsList = new List<string>();
 
         friendsList = responseData.Split(',').ToList();
-
-        /*friendsList.Add("test1asdfasdf");
-        friendsList.Add("test2asdfasdf");
-        friendsList.Add("test3");
-        friendsList.Add("test4");*/
 
         foreach (string value in friendsList)
         {
