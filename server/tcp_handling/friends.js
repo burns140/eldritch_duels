@@ -387,6 +387,7 @@ const sendMessage = (data, sock) => {
                 if (result == null) {
                     throw new Error('user not found');
                 }
+                console.log(tcp.getList());
                 if (players.isLoggedIn(result._id.toString()))
                 {
                     console.log("sending message");
