@@ -95,8 +95,8 @@ const signup = (data, sock) => {
                         lossesToday: 0,
                         lossesThisWeek: 0,
                         aiLosses: 0,
-                        competetiveLoses: 0,
-                        casualLoses: 0,
+                        competetiveLosses: 0,
+                        casualLosses: 0,
                         recent_games: [],                   // bool[]
                         credits: 100000,                       // int
                         bio: "enter_bio",                   // string

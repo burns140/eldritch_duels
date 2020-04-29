@@ -15,6 +15,7 @@ var playList = new AllPlayerList();
 const Queue = require('./tcp_handling/queue.js');
 const Leaderboard = require('./tcp_handling/leaderboard.js');
 const UpdateElo = require('./tcp_handling/updateElo');
+const Stats = require('./tcp_handling/stats');
 
 const noTokenNeeded = ["signup", "login", "tempPass", "logout"];
 const MongoClient = require('./mongo_connection');
@@ -171,6 +172,13 @@ function dataHandler(data) {
                 case "updateElo":
                     UpdateElo(obj, sock);
                     break;
+                case 'incrementStat':
+                    Stats.incrementStat(obj, sock);
+                    break;
+                case 'getStats':
+                    Stats.getStats(obj, sock);
+                    break;
+
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
                     console.log('Not a valid command');
