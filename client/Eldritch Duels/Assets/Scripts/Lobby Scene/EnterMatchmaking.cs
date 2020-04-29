@@ -24,6 +24,7 @@ public class EnterMatchmaking : MonoBehaviour
 {
 
     public UnityEngine.UI.Button enter;
+    public GameObject ErrorPanel;
     // Start is called before the first frame update
     public void Start()
     {
@@ -32,25 +33,34 @@ public class EnterMatchmaking : MonoBehaviour
 
     public void clicked()
     {
-        if (!Global.inQueue) // checks if already in queue somehow
+        getCollection checkban = new getCollection("checkMatchBan", Global.getID(), Global.getToken());
+        string response = Global.NetworkRequest(checkban);
+        if (response.Equals("matchmake ban"))
         {
-            // sends serve request to put user in matchmaking queue
-            match user = new match("enterQueue", Global.getID(), Global.getToken(), Global.matchType == MatchType.COMPETETIVE);
-            string json = JsonConvert.SerializeObject(user);
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
-            Global.stream.Write(data, 0, data.Length);
-            data = new Byte[256];
-
-            string responseData = string.Empty;
-            Int32 bytes = Global.stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            if (String.Equals(responseData, "added to queue"))
+            ErrorPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            if (!Global.inQueue) // checks if already in queue somehow
             {
-                Global.inQueue = true;
-                SceneManager.LoadScene(8);
+                // sends serve request to put user in matchmaking queue
+                match user = new match("enterQueue", Global.getID(), Global.getToken(), Global.matchType == MatchType.COMPETETIVE);
+                string json = JsonConvert.SerializeObject(user);
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
+                Global.stream.Write(data, 0, data.Length);
+                data = new Byte[256];
+
+                string responseData = string.Empty;
+                Int32 bytes = Global.stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                if (String.Equals(responseData, "added to queue"))
+                {
+                    Global.inQueue = true;
+                    SceneManager.LoadScene(8);
+                }
+                else
+                    Debug.Log(responseData);
             }
-            else
-                Debug.Log(responseData);
         }
     }
 
