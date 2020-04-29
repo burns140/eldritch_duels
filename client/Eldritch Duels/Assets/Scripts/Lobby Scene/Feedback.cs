@@ -13,7 +13,7 @@ public class Feedback : MonoBehaviour
     void Start()
     {
         sendFeedbackButton.onClick.AddListener(sendFeedback);
-        getCollection devcheck = new getCollection("isDeveloper", Global.getID(), Global.getToken());
+        /*getCollection devcheck = new getCollection("isDeveloper", Global.getID(), Global.getToken());
         string res = Global.NetworkRequest(devcheck);
         if (res.Equals("true"))
         {
@@ -22,7 +22,7 @@ public class Feedback : MonoBehaviour
         if (isDev)
         {
             userFeedback = getFeedback();
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -33,14 +33,14 @@ public class Feedback : MonoBehaviour
 
     public void sendFeedback()
     {
-        sendfeedback fb = new sendfeedback(feedbackline, Global.getToken(), Global.getID(), "sendFeedback");
+        sendfeedback fb = new sendfeedback(feedbackline, Global.getEmail(), Global.getToken(), Global.getID(), "sendFeedback");
         string result = Global.NetworkRequest(fb);
         Debug.Log(result);
     }
 
-    public string getFeedback()
+    /*public string getFeedback()
     {
         getCollection getreq = new getCollection("getFeedback", Global.getID(), Global.getToken());
         return Global.NetworkRequest(getreq);
-    }
+    }*/
 }

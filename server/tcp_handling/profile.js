@@ -480,6 +480,35 @@ const getCustomAvatar = (data, sock) => {
     }
 }
 
+const submitFeedback = (data, sock) => {
+    const email = data.email;
+    const feedback = data.feedback;
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').findOne(
+                { email: email },
+                { $addToSet: { feedback: feedback } }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('no user found');
+                }
+                console.log('wrote feedback');
+                sock.write('feedback accepted');
+                
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+    } catch (err) {
+        sock.write(err.toString());
+        console.log(err);
+    }
+}
+
 exports.reportPlayer = reportPlayer;
 exports.getMyReportedPlayers = getMyReportedPlayers;
 exports.deleteAccount = deleteAccount;
@@ -489,3 +518,4 @@ exports.changeEmail = changeEmail;
 exports.viewProfile = viewProfile;
 exports.setCustomAvatar = setCustomAvatar;
 exports.getCustomAvatar = getCustomAvatar;
+exports.submitFeedback = submitFeedback;

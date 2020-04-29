@@ -123,6 +123,9 @@ function dataHandler(data) {
                 case "reportPlayer":                // Report a player
                     Profile.reportPlayer(obj, sock);
                     break;
+                case "sendFeedback":                // Send feedback
+                    Profile.submitFeedback(obj, sock);
+                    break;
                 case "getAllFriends":               // Get a user's friends list
                     Friends.getAllFriends(obj, sock);
                     break;

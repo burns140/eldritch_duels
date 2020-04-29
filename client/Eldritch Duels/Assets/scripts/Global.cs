@@ -238,13 +238,15 @@ namespace eldritch {
         public string token;
         public string id;
         public string cmd;
+        public string email;
 
-        public sendfeedback(string feedback, string token, string id, string cmd)
+        public sendfeedback(string feedback, string email, string token, string id, string cmd)
         {
             this.feedback = feedback;
             this.token = token;
             this.id = id;
             this.cmd = cmd;
+            this.email = email;
         }
     }
 
