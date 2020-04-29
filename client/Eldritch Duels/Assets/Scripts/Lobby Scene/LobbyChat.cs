@@ -38,9 +38,16 @@ public class LobbyChat : MonoBehaviour
             {
                 try
                 {
-                    //TODO: PARSE INCOMING MESSAGE
-                    //OUTPUT INTO TEXT BOX
-                    //HOOK INTO PROFANITY FILTER
+                    string[] parsed = responseData.Split(':');
+                    string prework = parsed[1];
+                    string[] broken = prework.Split('|');
+                    string result = broken[0] + ": ";
+                    string actual = broken[1];
+                    if (Global.profanityFilter)
+                    {
+                        actual = Global.filterText(actual);
+                    }
+                    chatText.text += result + actual;
                 }
                 catch (Exception e)
                 {
@@ -80,8 +87,8 @@ public class LobbyChat : MonoBehaviour
     {
         Debug.Log(friend + " was selected");
         currentChat = friend;
-        FriendChatRequest getChatLogs = new FriendChatRequest("getChatHistory", Global.getID(), Global.getToken(), friend);
-        string responsedata = Global.NetworkRequest(getChatLogs);
+        /*FriendChatRequest getChatLogs = new FriendChatRequest("getChatHistory", Global.getID(), Global.getToken(), friend);
+        string responsedata = Global.NetworkRequest(getChatLogs);*/
         //TODO: PARSE RESPONSE STRING INTO CHAT LOGS
         //CONSIDER DELIMITING MESSAGES WITH |
         //OUTPUT INTO AN ARRAY, THEN PUT ARRAY INTO CHAT TEXT
@@ -89,11 +96,21 @@ public class LobbyChat : MonoBehaviour
 
     public void sendMessage()
     {
-        if (!currentChat.Equals("-1"))
+        sendMessage getChatLogs = new sendMessage("sendMessage", Global.getEmail(), Global.getID(), Global.getToken(), "aphantomdolphin@gmail.com", TextEntryText);
+        string responsedata = Global.NetworkRequest(getChatLogs);
+        if (responsedata.Equals("notloggedin"))
         {
-            sendMessage getChatLogs = new sendMessage("sendMessage", Global.getID(), Global.getToken(), currentChat, TextEntryText);
-            string responsedata = Global.NetworkRequest(getChatLogs);
+            chatText.text += "That user is not logged in." + "\n";
+        }
+        else
+        {
             chatText.text += Global.username + ": " + TextEntryText + "\n";
         }
+        /*if (!currentChat.Equals("-1"))
+        {
+            sendMessage getChatLogs = new sendMessage("sendMessage", Global.getEmail(), Global.getID(), Global.getToken(), currentChat, TextEntryText);
+            string responsedata = Global.NetworkRequest(getChatLogs);
+            chatText.text += Global.username + ": " + TextEntryText + "\n";
+        }*/
     }
 }

@@ -126,6 +126,9 @@ function dataHandler(data) {
                 case "getAllUsernames":             // Get all usernames that exist
                     Friends.getAllUsernames(obj, sock);
                     break;
+                case "sendMessage":
+                    Friends.sendMessage(obj, sock);
+                    break;
                 case "openPack":                    // Open a pack
                     Collection.openPack(obj, sock);
                     break;

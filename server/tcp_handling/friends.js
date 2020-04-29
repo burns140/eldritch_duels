@@ -1,5 +1,6 @@
 const MongoClient = require('../mongo_connection');
 const ObjectID = require('mongodb').ObjectID;
+const tcp = require('../tcp_server.js');
 
 /**
  * Send a friend request to a user. Add emails to users' sentFriendRequests and friendRequests arrays
@@ -368,6 +369,46 @@ const getFriendRequestsSent = (data, sock) => {
     }
 }
 
+const sendMessage = (data, sock) => {
+    const myEmail = data.myEmail;
+    const theirEmail = data.friend;
+    const message = data.message;
+    const errString = 'failed to send message';
+    const id = data.id;
+
+    try {
+        var players = tcp.getPlayList();
+
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+            db.collection('users').findOne(
+                { email: theirEmail }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('user not found');
+                }
+                if (players.isLoggedIn(result._id.toString()))
+                {
+                    console.log("sending message");
+                    players.getSocketByKey(result._id.toString()).write(myEmail + "|" + message);
+                    sock.write("message sent");
+                }
+                else
+                {
+                    console.log("player not logged in");
+                    sock.write("notloggedin");
+                }
+            })
+
+            
+        });
+
+    } catch (err) {
+        console.log(err);
+        sock.write(err);
+    }
+}
+
 exports.getAllUsernames = getAllUsernames;
 exports.sendFriendRequest = sendFriendRequest;
 exports.acceptFriendRequest = acceptFriendRequest;
@@ -376,3 +417,4 @@ exports.removeFriend = removeFriend;
 exports.getAllFriends = getAllFriends;
 exports.getFriendRequests = getFriendRequests;
 exports.getFriendRequestsSent = getFriendRequestsSent;
+exports.sendMessage = sendMessage;
