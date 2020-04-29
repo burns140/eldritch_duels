@@ -2235,6 +2235,9 @@ MonoBehaviour:
   cardBack3: {fileID: 301504761}
   cardBack4: {fileID: 30292783}
   haltAttack: 0
+  logPanel: {fileID: 1320754057}
+  logPanelHolder: {fileID: 723301056}
+  buttonPrefab: {fileID: 1536552865}
   attackers: []
 --- !u!1 &654505639
 GameObject:
