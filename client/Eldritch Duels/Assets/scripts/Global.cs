@@ -30,6 +30,14 @@ namespace eldritch {
         }
     }
 
+    public class AchievementRequest : Request {
+        public string type;
+
+        public AchievementRequest(string id, string token, string cmd, string type) : base(id, token, cmd) {
+            this.type = type;
+        }
+    }
+
     public class CardsPlayedRequest : Request {
         public int amount;
 

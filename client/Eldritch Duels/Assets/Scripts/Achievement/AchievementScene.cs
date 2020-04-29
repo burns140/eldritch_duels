@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AchievementScene : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class AchievementScene : MonoBehaviour
 
     List<Achievement> earned = new List<Achievement>();
     List<Achievement> all = new List<Achievement>();
+    string[] earnedNumArray;
 
     public GameObject AchievementPanel_1;
     public GameObject AchievementPanel_2;
@@ -46,6 +48,7 @@ public class AchievementScene : MonoBehaviour
         string res = Global.NetworkRequest(req);
 
         string[] vals = res.Split(','); // Array of numerical values that represent the index of that achievement in the total list of achievements
+        earnedNumArray = vals;
 
         for (int i = 0; i < vals.Length; i++)
         {
@@ -62,39 +65,54 @@ public class AchievementScene : MonoBehaviour
     {
         string res = "";
         int i = 0;
-        while (!res.Contains("no achievement with that id"))
+        while (true)
         {
             Request req = new Request(i.ToString(), Global.getToken(), "getOneAchievement");
             res = Global.NetworkRequest(req);
 
+            if (res.Contains("no achievement with that id")) {
+                break;
+            }
+
             string[] format = res.Split(';');
             Achievement temp = new Achievement(format[0], format[1]);
             all.Add(temp);
+            i++;
         }
+        i = 0;
     }
 
     // only 4 achievement panel in the scene
     // use name as index
     public void setASchievementFromList_UI(List<Achievement> list, bool isLocked)
     {
+        int j = 0;
         foreach (Achievement earnedAch in list)
         {
-            if (earnedAch.name.Equals("1"))
+            /*if (earnedAch.name.Equals("1"))
                 setAchievementUI(AchievementPanel_1, earnedAch, isLocked);
             else if (earnedAch.name.Equals("2"))
                 setAchievementUI(AchievementPanel_2, earnedAch, isLocked);
             else if (earnedAch.name.Equals("3"))
                 setAchievementUI(AchievementPanel_3, earnedAch, isLocked);
             else if (earnedAch.name.Equals("4"))
-                setAchievementUI(AchievementPanel_4, earnedAch, isLocked);
+                setAchievementUI(AchievementPanel_4, earnedAch, isLocked);*/
+
+
+            if (earnedAch.name.Equals(all[1].name))
+                setAchievementUI(AchievementPanel_1, earnedAch, false);
+            else if (earnedAch.name.Equals(all[2].name))
+                setAchievementUI(AchievementPanel_2, earnedAch, false);
+
         }
+
     }
     
     // set each individual achievement
     public void setAchievementUI(GameObject AchievementPanel, Achievement earnedAch, bool isLocked)
     {
         desc = AchievementPanel.transform.GetChild(0).gameObject;
-        desc.GetComponent<Text>().text = earnedAch.desc;    // set description
+        desc.GetComponent<Text>().text = earnedAch.desc.Split('-')[1];    // set description
         locked = AchievementPanel.transform.GetChild(1).gameObject;
         locked.SetActive(isLocked);                         // enable "Locked" if this achievement is Slocked
     }

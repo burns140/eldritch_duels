@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GotoAcheivement : MonoBehaviour
+public class GotoAchievement : MonoBehaviour
 {
-    public void MovetoMarket()
+    public void MoveToAchievement()
     {
         SceneManager.LoadScene("Achievement");
     }
