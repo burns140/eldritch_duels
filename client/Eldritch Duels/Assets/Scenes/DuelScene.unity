@@ -1370,14 +1370,11 @@ RectTransform:
   - {fileID: 158696397}
   - {fileID: 795730819}
   - {fileID: 1580957881}
-<<<<<<< HEAD
   - {fileID: 262011737}
-=======
   - {fileID: 1480940934}
   - {fileID: 656195889}
   - {fileID: 200242652}
   - {fileID: 723301057}
->>>>>>> origin/AI
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2403,13 +2400,9 @@ MonoBehaviour:
     oppField: []
     library: []
   chatScript: {fileID: 932829364}
-<<<<<<< HEAD
-  cardsoundsScript: {fileID: 262011738}
-=======
   logPanel: {fileID: 1320754057}
   logPanelHolder: {fileID: 723301056}
   buttonPrefab: {fileID: 1536552865}
->>>>>>> origin/AI
   attackers: []
 --- !u!1 &654505639
 GameObject:
