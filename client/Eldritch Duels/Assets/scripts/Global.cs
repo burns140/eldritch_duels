@@ -189,15 +189,17 @@ namespace eldritch {
         public string id;
         public string token;
         public string friend;
+        public string email;
         public string message;
 
-        public sendMessage(string cmd, string id, string token, string friend, string message)
+        public sendMessage(string cmd, string email, string id, string token, string friend, string message)
         {
             this.cmd = cmd;
             this.id = id;
             this.token = token;
             this.friend = friend;
             this.message = message;
+            this.email = email;
         }
     }
     public class profilepicture
@@ -252,7 +254,6 @@ namespace eldritch {
         COMPETETIVE,
         AI
     }
-
 
     #endregion
     public static class Global

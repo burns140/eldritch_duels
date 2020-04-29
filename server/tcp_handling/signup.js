@@ -128,7 +128,8 @@ const signup = (data, sock) => {
                         weeklyChallenge: 0,
                         monthlyChallenge: 0,
                         consecSurrenders: 0,
-                        matchmakeBan: 0
+                        matchmakeBan: 0,
+                        chats: []
                     }).then(result => {
                         console.log(`User with email ${email} and id ${result.insertedId} successfully created`);
                         sock.write(`User successfully created with id ${result.insertedId}. You must verify your email before you can play`);
