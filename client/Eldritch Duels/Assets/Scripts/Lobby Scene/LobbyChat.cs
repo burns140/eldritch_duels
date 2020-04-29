@@ -15,6 +15,7 @@ public class LobbyChat : MonoBehaviour
     public string TextEntryText;
     public string currentChat = "-1";
     public Button sendText;
+    public List<Tuple<string,string>> chatlogs = new List<Tuple<string, string>>();
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +48,23 @@ public class LobbyChat : MonoBehaviour
                     {
                         actual = Global.filterText(actual);
                     }
-                    chatText.text += result + actual;
+                    if (currentChat.Equals(broken[0]))
+                    {
+                        chatText.text += result + actual;
+                    }
+                    else
+                    {
+                        foreach (Tuple<string, string> t in chatlogs)
+                        {
+                            if (t.Item1.Equals(broken[0]))
+                            {
+                                string temp = t.Item2 + actual;
+                                chatlogs.Remove(t);
+                                chatlogs.Add(new Tuple<string, string>(broken[0], temp));
+                                break;
+                            }
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -69,6 +86,8 @@ public class LobbyChat : MonoBehaviour
 
         foreach (string value in friendsList)
         {
+            chatlogs.Add(new Tuple<string, string>(value, ""));
+
             Debug.Log("Attempting to add " + value + " to friends list");
             if (value == "nofriends")
             {
@@ -85,8 +104,26 @@ public class LobbyChat : MonoBehaviour
 
     public void friendSelected(string friend)
     {
+        foreach (Tuple<string, string> t in chatlogs)
+        {
+            if (t.Item1.Equals(currentChat))
+            {
+                chatlogs.Remove(t);
+                chatlogs.Add(new Tuple<string, string>(friend, chatText.text));
+                break;
+            }
+        }
         Debug.Log(friend + " was selected");
         currentChat = friend;
+
+        foreach (Tuple<string, string> t in chatlogs)
+        {
+            if (t.Item1.Equals(friend))
+            {
+                chatText.text = t.Item2;
+            }
+        }
+
         /*FriendChatRequest getChatLogs = new FriendChatRequest("getChatHistory", Global.getID(), Global.getToken(), friend);
         string responsedata = Global.NetworkRequest(getChatLogs);*/
         //TODO: PARSE RESPONSE STRING INTO CHAT LOGS
