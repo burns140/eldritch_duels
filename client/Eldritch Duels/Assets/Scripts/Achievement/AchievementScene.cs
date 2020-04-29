@@ -79,40 +79,31 @@ public class AchievementScene : MonoBehaviour
             all.Add(temp);
             i++;
         }
-        i = 0;
+        
     }
 
     // only 4 achievement panel in the scene
     // use name as index
     public void setASchievementFromList_UI(List<Achievement> list, bool isLocked)
     {
-        int j = 0;
         foreach (Achievement earnedAch in list)
         {
-            /*if (earnedAch.name.Equals("1"))
+            if (earnedAch.name.Equals("1"))
                 setAchievementUI(AchievementPanel_1, earnedAch, isLocked);
             else if (earnedAch.name.Equals("2"))
                 setAchievementUI(AchievementPanel_2, earnedAch, isLocked);
             else if (earnedAch.name.Equals("3"))
                 setAchievementUI(AchievementPanel_3, earnedAch, isLocked);
             else if (earnedAch.name.Equals("4"))
-                setAchievementUI(AchievementPanel_4, earnedAch, isLocked);*/
-
-
-            if (earnedAch.name.Equals(all[1].name))
-                setAchievementUI(AchievementPanel_1, earnedAch, false);
-            else if (earnedAch.name.Equals(all[2].name))
-                setAchievementUI(AchievementPanel_2, earnedAch, false);
-
+                setAchievementUI(AchievementPanel_4, earnedAch, isLocked);
         }
-
     }
     
     // set each individual achievement
     public void setAchievementUI(GameObject AchievementPanel, Achievement earnedAch, bool isLocked)
     {
         desc = AchievementPanel.transform.GetChild(0).gameObject;
-        desc.GetComponent<Text>().text = earnedAch.desc.Split('-')[1];    // set description
+        desc.GetComponent<Text>().text = earnedAch.desc;    // set description
         locked = AchievementPanel.transform.GetChild(1).gameObject;
         locked.SetActive(isLocked);                         // enable "Locked" if this achievement is Slocked
     }
