@@ -96,21 +96,19 @@ public class LobbyChat : MonoBehaviour
 
     public void sendMessage()
     {
-        sendMessage getChatLogs = new sendMessage("sendMessage", Global.getEmail(), Global.getID(), Global.getToken(), "aphantomdolphin@gmail.com", TextEntryText);
-        string responsedata = Global.NetworkRequest(getChatLogs);
-        if (responsedata.Equals("notloggedin"))
+
+        if (!currentChat.Equals("-1"))
         {
-            chatText.text += "That user is not logged in." + "\n";
+            sendMessage mess = new sendMessage("sendMessage", Global.getEmail(), Global.getID(), Global.getToken(), currentChat, TextEntryText);
+            string responsedata = Global.NetworkRequest(mess);
+            if (responsedata.Equals("notloggedin"))
+            {
+                chatText.text += "That user is not logged in." + "\n";
+            }
+            else
+            {
+                chatText.text += Global.username + ": " + TextEntryText + "\n";
+            }
         }
-        else
-        {
-            chatText.text += Global.username + ": " + TextEntryText + "\n";
-        }
-        /*if (!currentChat.Equals("-1"))
-        {
-            sendMessage getChatLogs = new sendMessage("sendMessage", Global.getEmail(), Global.getID(), Global.getToken(), currentChat, TextEntryText);
-            string responsedata = Global.NetworkRequest(getChatLogs);
-            chatText.text += Global.username + ": " + TextEntryText + "\n";
-        }*/
     }
 }
