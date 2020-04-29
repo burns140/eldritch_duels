@@ -33,7 +33,7 @@ public class Feedback : MonoBehaviour
 
     public void sendFeedback()
     {
-        sendfeedback fb = new sendfeedback(feedbackline, Global.getToken(), Global.getID(), "sendFeedback");
+        sendfeedback fb = new sendfeedback(feedbackline, Global.getEmail(), Global.getToken(), Global.getID(), "sendFeedback");
         string result = Global.NetworkRequest(fb);
         Debug.Log(result);
     }
