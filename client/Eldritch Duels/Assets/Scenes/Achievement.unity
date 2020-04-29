@@ -842,6 +842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b53eea7a4535ffa488e1d87fa2c526b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AchievementList: {fileID: 1963244336}
   AchievementPanel_1: {fileID: 1234209411}
   AchievementPanel_2: {fileID: 1430763677}
   AchievementPanel_3: {fileID: 208099017}

@@ -20,14 +20,25 @@ public class AchievementScene : MonoBehaviour
         }
     }
 
+    public class AchievementRefer
+    {
+        public string name; 
+        public Transform t;    // reference to a achievement
+        public AchievementRefer(string name, Transform t)
+        {
+            this.name = name;
+            this.t = t;
+        }
+    }
+
     List<Achievement> earned = new List<Achievement>();
     List<Achievement> all = new List<Achievement>();
+    List<AchievementRefer> referList = new List<AchievementRefer>();
+
     string[] earnedNumArray;
 
-    public GameObject AchievementPanel_1;
-    public GameObject AchievementPanel_2;
-    public GameObject AchievementPanel_3;
-    public GameObject AchievementPanel_4;
+    public GameObject AchievementList;  // Achievement panel list
+
 
     private GameObject desc;
     private GameObject locked;
@@ -38,8 +49,9 @@ public class AchievementScene : MonoBehaviour
     {
         setAllAchievements();
         setAchievementsEarned();
-        setASchievementFromList_UI(all, false);    // update all achievements
-        setASchievementFromList_UI(earned, true); // update unlocked achievements
+
+        updateAllAchievement();
+        updateEarnedAchievement();
     }
 
     void setAchievementsEarned()
@@ -82,40 +94,46 @@ public class AchievementScene : MonoBehaviour
         i = 0;
     }
 
-    // only 4 achievement panel in the scene
-    // use name as index
-    public void setASchievementFromList_UI(List<Achievement> list, bool isLocked)
+
+
+    public void updateAllAchievement() 
     {
-        int j = 0;
-        foreach (Achievement earnedAch in list)
+        int i = 0;
+        foreach (Achievement allAch in all)
         {
-            /*if (earnedAch.name.Equals("1"))
-                setAchievementUI(AchievementPanel_1, earnedAch, isLocked);
-            else if (earnedAch.name.Equals("2"))
-                setAchievementUI(AchievementPanel_2, earnedAch, isLocked);
-            else if (earnedAch.name.Equals("3"))
-                setAchievementUI(AchievementPanel_3, earnedAch, isLocked);
-            else if (earnedAch.name.Equals("4"))
-                setAchievementUI(AchievementPanel_4, earnedAch, isLocked);*/
+            Transform t = AchievementList.transform.GetChild(i++);
+            referList.Add(new AchievementRefer(allAch.name, t));
 
+            //desc
+            desc = t.GetChild(0).gameObject;
+            desc.GetComponent<Text>().text = allAch.desc;
 
-            if (earnedAch.name.Equals(all[1].name))
-                setAchievementUI(AchievementPanel_1, earnedAch, false);
-            else if (earnedAch.name.Equals(all[2].name))
-                setAchievementUI(AchievementPanel_2, earnedAch, false);
-
+            // locked
+            locked = t.GetChild(1).gameObject;
+            locked.SetActive(true); // assume every achievement is locked
         }
+    }
 
-    }
-    
-    // set each individual achievement
-    public void setAchievementUI(GameObject AchievementPanel, Achievement earnedAch, bool isLocked)
+
+    public void updateEarnedAchievement() 
     {
-        desc = AchievementPanel.transform.GetChild(0).gameObject;
-        desc.GetComponent<Text>().text = earnedAch.desc.Split('-')[1];    // set description
-        locked = AchievementPanel.transform.GetChild(1).gameObject;
-        locked.SetActive(isLocked);                         // enable "Locked" if this achievement is Slocked
+        foreach (Achievement earnAch in earned)
+        {
+            foreach (AchievementRefer refer in referList) 
+            {
+                if (refer.name.Equals(earnAch.name))
+                {
+                    Transform t = refer.t;
+                    locked = t.GetChild(1).gameObject;
+                    locked.SetActive(false); // unlock
+                }
+            }
+        }
     }
+
+
+
+
 
     // Update is called once per frame
     void Update()
