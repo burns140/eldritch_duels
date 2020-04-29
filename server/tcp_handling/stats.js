@@ -19,6 +19,9 @@ async function incrementStat(data, sock) {
             { $inc: updateOperator }
         );
 
+        if (!status.result.ok)
+            console.log("Problem updating " + data.type);
+
         sock.write(status.result.ok ? "OK" : "ERROR");
     } catch (e) {
         console.log(e);
