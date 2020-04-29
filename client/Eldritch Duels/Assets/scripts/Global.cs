@@ -790,14 +790,14 @@ namespace eldritch {
         public static void InitNewPlayer()
         {
             return;
-            if (userCards.Count == 0)
+            /*if (userCards.Count == 0)
             {
                 InitUserCards("0-32", 0);
             }
             if (userDecks.Count == 0)
             {
                 InitUserDecks(new string[] { "First Deck,0-32" });
-            }
+            }*/
         }
         public static string getToken()
         {
