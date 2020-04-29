@@ -390,7 +390,7 @@ const sendMessage = (data, sock) => {
                 if (players.isLoggedIn(result._id.toString()))
                 {
                     console.log("sending message");
-                    players.getSocketByKey(result._id.toString()).write(myEmail + "|" + message);
+                    players.getSocketByKey(result._id.toString()).write('message:' + myEmail + "|" + message);
                     sock.write("message sent");
                 }
                 else
