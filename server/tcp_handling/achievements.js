@@ -27,7 +27,11 @@ const getAchievements = (data, sock) => {
                 });
                 console.log(achievements);
                 if (type != "objects") {
-                    sock.write(achievements.toString());
+                    if (achievements.length == 0) {
+                        sock.write('no achievements');
+                    } else {
+                        sock.write(achievements.toString());
+                    }
                     return;
                 } else {
                     db.collection('achievements').find(

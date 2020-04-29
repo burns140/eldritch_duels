@@ -54,10 +54,10 @@ public class AchievementScene : MonoBehaviour
         {
             Request req2 = new Request(vals[i], Global.getToken(), "getOneAchievement");
             string res2 = Global.NetworkRequest(req2);
-
             string[] format = res2.Split(';');  // Array with format [name, description] of each achievement that matched a value queried above.
             Achievement temp = new Achievement(format[0], format[1]);
             earned.Add(temp);
+            i++;
         }
     }
 
