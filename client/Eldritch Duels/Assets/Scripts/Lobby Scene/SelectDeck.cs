@@ -12,6 +12,7 @@ public class SelectDeck : MonoBehaviour
     private int page = 0;
     private int maxpage = 0;
     public GameObject DeckPanel;
+    public GameObject AIDeckPanel;
     public Button ConfirmButton;
 
     void Start(){
@@ -78,10 +79,14 @@ public class SelectDeck : MonoBehaviour
         int pos = 7*page;
         for(int i = 0; i < 7; i++){
             DeckPanel.transform.GetChild(i).gameObject.SetActive(false);
+            AIDeckPanel.transform.GetChild(i).gameObject.SetActive(false);
             if(pos < Global.userDecks.Count){
                 DeckPanel.transform.GetChild(i).gameObject.name = Global.userDecks[pos].DeckName;
                 DeckPanel.transform.GetChild(i).gameObject.GetComponent<DeckHolder>().Deck = Global.userDecks[pos];
                 DeckPanel.transform.GetChild(i).gameObject.SetActive(true);
+                AIDeckPanel.transform.GetChild(i).gameObject.name = Global.userDecks[pos].DeckName;
+                AIDeckPanel.transform.GetChild(i).gameObject.GetComponent<DeckHolder>().Deck = Global.userDecks[pos];
+                AIDeckPanel.transform.GetChild(i).gameObject.SetActive(true);
             }
 
             pos++;

@@ -103,6 +103,11 @@ public class DuelScript : MonoBehaviour
     public Chat chatScript = null;
 
     public CardSounds cardsoundsScript;
+    private List<string> logWithoutDetail = new List<string>(); // Log to store moves without details
+    private List<string> logWithDetail = new List<string>(); // Log to store moves with details
+    public GameObject logPanel;
+    public GameObject logPanelHolder;
+    public GameObject buttonPrefab;
     #endregion
 
     #region Awake
@@ -428,6 +433,9 @@ public class DuelScript : MonoBehaviour
             c.name = b.CardName;
             c.transform.SetParent(handAreaPanel.transform, false); // Add card to my play area
             handList.Add(c); // Add card to my play list
+            logWithoutDetail.Add("YOU drew "+c.name);
+            logWithDetail.Add("YOU drew "+c.name);
+            loadLog();
         }
     }
 
@@ -450,12 +458,16 @@ public class DuelScript : MonoBehaviour
                 myState.mana -= played.CardCost;
                 myState.onField.Add(played);
                 myState.inHand.RemoveAt(i);
+                logWithoutDetail.Add("YOU played "+cardName);
+                logWithDetail.Add("YOU played "+cardName+" by using "+played.CardCost+" mana");
+                loadLog();
                 Debug.Log("Resolving abilities");
                 StartCoroutine(resolveAbilities(played, c));
 
                 //sync with opp
                 string data = "play:" + cardName;
                 sendDataToOpp(data);
+                
                 return true;
                 
             }
@@ -489,10 +501,12 @@ public class DuelScript : MonoBehaviour
             }
             hasRecalled = true;
             recallButton.gameObject.GetComponent<Image>().color = Color.red;
+            logWithoutDetail.Add("YOU recalled "+cardName);
+            logWithDetail.Add("YOU recalled "+cardName);
+            loadLog();
             //sync with opp
             string data = "recall:" + cardName;
             sendDataToOpp(data);
-
             return true;
         }
             return false;
@@ -515,7 +529,9 @@ public class DuelScript : MonoBehaviour
         c.name = played.CardName;
         c.transform.SetParent(oppPlayAreaPanel.transform, false); // Add card to opp play area
         oppPlayList.Add(c); // Add card to opp play list
-
+        logWithoutDetail.Add("OPP played "+cardName);
+        logWithDetail.Add("OPP played "+cardName+ " by using "+played.CardCost+" mana");
+        loadLog();
         StartCoroutine(resolveAbilities(played, c));
         
     }
@@ -540,6 +556,9 @@ public class DuelScript : MonoBehaviour
                 break;
             }
         }
+        logWithoutDetail.Add("OPP recalled "+cardName);
+        logWithDetail.Add("OPP recalled "+cardName);
+        loadLog();
         sendDataToOpp("wAITING");
     }
     
@@ -670,14 +689,25 @@ public class DuelScript : MonoBehaviour
     private void confirmBlockers(){
         string data = "block:";
         bool first = true;
+        string saveBlockedLog="";
+        bool blocked = false;
         foreach(AttackBlock ab in attackers){
             if(first && ab.blocker != null){
                 data = data + ab.attacker.name + "-" + ab.blocker.name;
                 first = false;
-
+                saveBlockedLog = saveBlockedLog + "," + ab.attacker.name + "with" + ab.blocker.name;
+                blocked = true;
             }else if(ab.blocker != null){
                 data = data + "," + ab.attacker.name + "-" + ab.blocker.name;
+                saveBlockedLog = saveBlockedLog + "," + ab.attacker.name + "with" + ab.blocker.name;
+                blocked = true;
             }
+            
+        }
+        if(blocked){
+            logWithoutDetail.Add("YOU blocked");
+            logWithDetail.Add("YOU blocked attacks"+saveBlockedLog);
+            loadLog();
         }
         currentPhase = Phase.WAITING;
         sendDataToOpp(data);
@@ -692,6 +722,8 @@ public class DuelScript : MonoBehaviour
         }
         string data = "attack:";
         bool first = true;
+        string saveAttackLog = "";
+        logWithoutDetail.Add("YOU attacked");
         foreach(AttackBlock ab in attackers){
             if(first){
                 data = data + ab.attacker.name;
@@ -699,7 +731,10 @@ public class DuelScript : MonoBehaviour
             }else{
                 data = data + "," + ab.attacker.name;
             }
+            saveAttackLog = saveAttackLog + "," + ab.attacker.name;
         }
+        logWithDetail.Add("YOU attacked with cards"+saveAttackLog);
+        loadLog();
         currentPhase = Phase.WAITING;
         sendDataToOpp(data);
     }
@@ -798,6 +833,9 @@ public class DuelScript : MonoBehaviour
                 oppState.onField.RemoveAt(i);
                 //TODO death animation
                 Destroy(card);
+                logWithoutDetail.Add("OPP card "+card.name+" is destroyed");
+                logWithDetail.Add("OPP card "+card.name+" is destroyed");
+                loadLog();
                 return;
             }
         }
@@ -809,6 +847,9 @@ public class DuelScript : MonoBehaviour
                 myState.onField.RemoveAt(i);
                 //TODO death animation
                 Destroy(card);
+                logWithoutDetail.Add("YOUR card "+card.name+" is destroyed");
+                logWithDetail.Add("YOUR card "+card.name+" is destroyed");
+                loadLog();
                 return;
             }
         }
@@ -953,14 +994,18 @@ public class DuelScript : MonoBehaviour
     private void updateOppHealth(int hit){
         oppState.hp -= hit; // Decrease attack from HP
         oppHPImage.fillAmount = oppState.hp/MAX_HEALTH; // Update opponent's HP on UI
-
+        logWithoutDetail.Add("YOU successfully hit OPP");
+        logWithDetail.Add("OPP's health decreased by "+hit+" OPP's health is now "+oppState.hp);
+        loadLog();
     }
 
     // After opponent's card attacks me
     private void updateMyHealth(int hit){
-         // @TODO get attack value from server (@KEVIN M)
         myState.hp -= hit; // Decrease attack from HP
         myHPImage.fillAmount = myState.hp/MAX_HEALTH; // Update my HP on UI
+        logWithoutDetail.Add("YOU were hit");
+        logWithDetail.Add("YOUR health decreased by "+hit+" YOUR health is now "+myState.hp);
+        loadLog();
     }
 
     private void setOppHealth(int health){
@@ -1083,4 +1128,44 @@ public class DuelScript : MonoBehaviour
         SceneManager.LoadScene("EndDuel");
     }
     #endregion
+
+    public void showLogPanel(){
+        if(logPanelHolder.activeSelf){
+            logPanelHolder.SetActive(false);
+            gameText.text="";
+        }
+        else{
+            loadLog();
+            logPanelHolder.SetActive(true); 
+        }
+    }
+    public void loadLog(){
+        Button[] gameObjects = logPanel.GetComponentsInChildren<Button>(); // Get previous search results
+        foreach(Button o in gameObjects){ 
+            Destroy(o.gameObject); // Destroy all previous search results
+        }
+        for(int i=0; i<logWithoutDetail.Count; i++){
+            GameObject logTextObject = (GameObject)Instantiate(buttonPrefab);
+            logTextObject.GetComponentInChildren<Text>().text = logWithoutDetail[i];
+            logTextObject.SetActive(true);
+            logTextObject.transform.SetParent(logPanel.transform, false); // Add logs to log panel
+            logTextObject.name = ""+i;
+        }
+        /*for(int j=0; j<10; j++){
+            GameObject logTextObject = (GameObject)Instantiate(buttonPrefab);
+            logTextObject.GetComponentInChildren<Text>().text = "test value";
+            logTextObject.SetActive(true);
+            logTextObject.transform.SetParent(logPanel.transform, false); // Add logs to log panel
+            logTextObject.name = ""+j;
+            logWithDetail.Add("test value with details");
+        }*/
+    }
+
+    public void logClicked(Button btn){
+        Debug.Log("BUTTON NAME: "+btn.name);
+        Debug.Log("BUTTON TEXT: "+btn.GetComponentInChildren<Text>().text);
+        int detailPos = Int32.Parse(btn.name);
+        Debug.Log("DETAIL LOG: "+logWithDetail[detailPos]);
+        gameText.text = logWithDetail[detailPos];
+    }
 }

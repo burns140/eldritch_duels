@@ -257,102 +257,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 59767869}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &59767871
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 59767870}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1001 &137196626
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -494,7 +398,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 647516715}
+      objectReference: {fileID: 647516716}
     - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -630,7 +534,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 647516715}
+      - m_Target: {fileID: 647516716}
         m_MethodName: Surrender
         m_Mode: 1
         m_Arguments:
@@ -1370,14 +1274,10 @@ RectTransform:
   - {fileID: 158696397}
   - {fileID: 795730819}
   - {fileID: 1580957881}
-<<<<<<< HEAD
-  - {fileID: 262011737}
-=======
   - {fileID: 1480940934}
   - {fileID: 656195889}
   - {fileID: 200242652}
   - {fileID: 723301057}
->>>>>>> origin/AI
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1459,53 +1359,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 256056869}
   m_CullTransparentMesh: 0
---- !u!1 &262011736
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 262011737}
-  - component: {fileID: 262011738}
-  m_Layer: 0
-  m_Name: CardSoundsObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &262011737
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 262011736}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 101.058105, y: -35.824127, z: -536.2542}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 240180587}
-  m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &262011738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 262011736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4340af5ffbd354f888f943d990c7774e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClipPlayedCard: {fileID: 8300000, guid: 50bced646acb54755951c3a925c386a1, type: 3}
-  audioClipAttackCard: {fileID: 8300000, guid: f19d6ad4801dc4fbbbbfc3168cbececc, type: 3}
-  audioClipDestroyCard: {fileID: 8300000, guid: 4f5f28c4d12db4ff2bb43e04ffa9f44c,
-    type: 3}
 --- !u!1 &301504761 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1614070041608913428, guid: 76d1c7d2e5c9f4a99b78e5b1dbebc97d,
@@ -1756,7 +1609,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536725770}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8483fbee5975478d818d84aa3494b76, type: 3}
   m_Name: 
@@ -1793,102 +1646,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!82 &536725774
-AudioSource:
+--- !u!114 &536725774
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536725770}
   m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7198bb9b69c66b44dbee59906c7d6a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duelScript: {fileID: 0}
+  parentToReturnTo: {fileID: 0}
+  placeholderParent: {fileID: 0}
+  placeholder: {fileID: 0}
+  startArea: {fileID: 0}
+  isAttacking: 0
+  isBlocking: 0
+  battleResolved: 0
 --- !u!114 &536725776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1932,7 +1709,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 536725771}
+      - m_Target: {fileID: 536725774}
         m_MethodName: toggleAttack
         m_Mode: 1
         m_Arguments:
@@ -2284,7 +2061,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 647516715}
+      objectReference: {fileID: 647516716}
     - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -2313,6 +2090,7 @@ GameObject:
   m_Component:
   - component: {fileID: 647516714}
   - component: {fileID: 647516715}
+  - component: {fileID: 647516716}
   m_Layer: 5
   m_Name: DuelScriptObject
   m_TagString: Untagged
@@ -2346,7 +2124,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647516713}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e7443f0bfa5d4132aa23833e4a20fe1, type: 3}
   m_Name: 
@@ -2403,13 +2181,63 @@ MonoBehaviour:
     oppField: []
     library: []
   chatScript: {fileID: 932829364}
-<<<<<<< HEAD
-  cardsoundsScript: {fileID: 262011738}
-=======
   logPanel: {fileID: 1320754057}
   logPanelHolder: {fileID: 723301056}
   buttonPrefab: {fileID: 1536552865}
->>>>>>> origin/AI
+  attackers: []
+--- !u!114 &647516716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647516713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8465d0403fce1054fa23363810247c59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myState:
+    mana: 0
+    hp: 0
+    corruption: 0
+    inHand: []
+    onField: []
+    oppField: []
+    library: []
+  oppState:
+    mana: 0
+    hp: 0
+    corruption: 0
+    inHand: []
+    onField: []
+    oppField: []
+    library: []
+  currentPhase: 4
+  currentTurn: 1
+  phaseText: {fileID: 1700945825}
+  CardHolder: {fileID: 536725770}
+  MyHand: {fileID: 674374116}
+  MyField: {fileID: 1444714782}
+  OppField: {fileID: 1373104430}
+  myTurn: 0
+  hasRecalled: 0
+  gameText: {fileID: 666749130}
+  myManaText: {fileID: 830856390}
+  oppManaText: {fileID: 568519722}
+  myHPText: {fileID: 1166810263}
+  oppHPText: {fileID: 149604944}
+  myHPImage: {fileID: 1900704357}
+  oppHPImage: {fileID: 1467211226}
+  recallButton: {fileID: 1943811222}
+  cardBack1: {fileID: 1104460380}
+  cardBack2: {fileID: 1086301414}
+  cardBack3: {fileID: 301504761}
+  cardBack4: {fileID: 30292783}
+  haltAttack: 0
+  logPanel: {fileID: 1320754057}
+  logPanelHolder: {fileID: 723301056}
+  buttonPrefab: {fileID: 1536552865}
   attackers: []
 --- !u!1 &654505639
 GameObject:
@@ -2853,7 +2681,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 674374116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7657c717d258b46cc8fbf194703301d1, type: 3}
+  m_Script: {fileID: 11500000, guid: a5925dfb7c647d64bbff1c49cd9c301e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &709842146
@@ -4980,7 +4808,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1444714782}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7657c717d258b46cc8fbf194703301d1, type: 3}
+  m_Script: {fileID: 11500000, guid: a5925dfb7c647d64bbff1c49cd9c301e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1467211224
@@ -6587,7 +6415,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 647516715}
+      objectReference: {fileID: 647516716}
     - target: {fileID: 3174471581083827621, guid: 2c59d9f5390f9426ca606d39881d0088,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
