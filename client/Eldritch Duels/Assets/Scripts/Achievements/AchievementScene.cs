@@ -20,12 +20,22 @@ public class AchievementScene : MonoBehaviour
     List<Achievement> earned = new List<Achievement>();
     List<Achievement> all = new List<Achievement>();
 
+    public GameObject AchievementPanel_1;
+    public GameObject AchievementPanel_2;
+    public GameObject AchievementPanel_3;
+    public GameObject AchievementPanel_4;
+
+    public GameObject desc;
+    public GameObject locked;
+
 
     // Start is called before the first frame update
     void Start()
     {
         setAllAchievements();
         setAchievementsEarned();
+        setASchievementFromList_UI(earned);
+        setASchievementFromList_UI(all);
     }
 
     void setAchievementsEarned() {
@@ -55,6 +65,30 @@ public class AchievementScene : MonoBehaviour
             Achievement temp = new Achievement(format[0], format[1]);
             all.Add(temp);
         }
+    }
+
+
+    public void setASchievementFromList_UI(List<Achievement> list)
+    {
+        foreach (Achievement earnedAch in list)
+        {
+            if (earnedAch.name.Equals("1"))
+                setAchievementUI(AchievementPanel_1, earnedAch);
+            else if (earnedAch.name.Equals("2"))
+                setAchievementUI(AchievementPanel_2, earnedAch);
+            else if (earnedAch.name.Equals("3"))
+                setAchievementUI(AchievementPanel_3, earnedAch);
+            else if (earnedAch.name.Equals("4"))
+                setAchievementUI(AchievementPanel_4, earnedAch);
+        }
+    }
+
+    public void setAchievementUI(GameObject AchievementPanel, Achievement earnedAch)
+    {
+        desc = AchievementPanel.transform.GetChild(0).gameObject;
+        desc.GetComponent<Text>().text = earnedAch.desc;
+        locked = AchievementPanel.transform.GetChild(1).gameObject;
+        locked.SetActive(false);
     }
 
     // Update is called once per frame
