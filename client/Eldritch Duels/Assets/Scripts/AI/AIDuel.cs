@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using eldritch.cards;
+using System;
 
 namespace eldritch{
     public class AIDuel : MonoBehaviour
@@ -481,7 +482,7 @@ namespace eldritch{
                 string data = "attack:";
                 bool first = true;
                 string saveAttackLog = "";
-                ogWithoutDetail.Add("YOU attacked");
+                logWithoutDetail.Add("YOU attacked");
                 foreach(AttackBlock ab in attackers){
                     if(first){
                         data = data + ab.attacker.name;
