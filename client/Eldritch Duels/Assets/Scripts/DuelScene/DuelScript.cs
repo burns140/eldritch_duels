@@ -107,7 +107,23 @@ public class DuelScript : MonoBehaviour
 
     #region Awake
     // Awake is called when the script instance is being loaded.
-    void Start(){
+    void Start() {
+        /**
+         * this is used for game statistics, one of the user stories.
+         * If this is preventing you from progressing, there was a bad merge.
+         * Don't comment it out. Fix it:
+         * 
+         * The easiest way to use it is in the Lobby Scene:
+         * on the buttons to enter a match, add a onClicked event
+         * Game Object: MatchTypeScript, which is an empty game object with a script called Set Match Type
+         * SetMatchType.setMatchType[TYPE](), where [TYPE] is one of { AI, Competetive, Casual }.
+        */
+        if (Global.matchType == MatchType.UNSET)
+        {
+            Debug.Log("Match Type is unset.");
+            Application.Quit();
+        }
+
         //getInfo();
         setUpDeck(); // Set up card list from deck being used
         //setUpProfilePics(); // Set up profile pics for both users

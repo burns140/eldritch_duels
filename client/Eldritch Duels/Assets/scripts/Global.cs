@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using eldritch.cards;
 using System.IO;
@@ -234,6 +237,21 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+    
+    public class AchievementRequest : Request {
+        public string type;
+
+        public AchievementRequest(string id, string token, string cmd, string type) : base(id, token, cmd) {
+            this.type = type;
+        }
+    }
+
+    public enum MatchType {
+        UNSET,
+        CASUAL,
+        COMPETETIVE,
+        AI
+    }
 
 
     #endregion
@@ -245,6 +263,8 @@ namespace eldritch {
         public static string username = "";
         public static string email = "";
         public static string enemyUsername = null;
+        public static MatchType matchType = MatchType.UNSET;
+        public static int enemyElo = -1;
         public static string matchID = null;
         public static int userID = 0;
         public static List<Card> userCards = new List<Card>();

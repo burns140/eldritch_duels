@@ -65,4 +65,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Achievement.unity
     guid: c5f986365e847904693a11b3b1bb69a0
+  - enabled: 1
+    path: Assets/Scenes/Stats.unity
+    guid: b98bb51d0ae57a54e8ce75103846db87
   m_configObjects: {}
