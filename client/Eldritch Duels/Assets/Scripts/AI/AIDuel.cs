@@ -41,6 +41,11 @@ namespace eldritch{
         public GameObject cardBack3;
         public GameObject cardBack4;
         public bool haltAttack = false;
+        private List<string> logWithoutDetail = new List<string>(); // Log to store moves without details
+        private List<string> logWithDetail = new List<string>(); // Log to store moves with details
+        public GameObject logPanel;
+        public GameObject logPanelHolder;
+        public GameObject buttonPrefab;
 
         void Start(){
             //init myState
@@ -163,7 +168,9 @@ namespace eldritch{
                 c.GetComponent<Image>().material = b.CardImage;
                 c.name = b.CardName;
                 c.transform.SetParent(MyHand.transform, false); // Add card to my play area
-                
+                logWithoutDetail.Add("YOU drew "+c.name);
+                logWithDetail.Add("YOU drew "+c.name);
+                loadLog();
             }
         }
 
@@ -195,6 +202,9 @@ namespace eldritch{
                         myState.mana -= played.CardCost;
                         myState.onField.Add(played);
                         myState.inHand.RemoveAt(i);
+                        logWithoutDetail.Add("YOU played "+cardName);
+                        logWithDetail.Add("YOU played "+cardName+" by using "+played.CardCost+" mana");
+                        loadLog();
                         StartCoroutine(resolveAbilities(played, c));                        
                         return;
                         
@@ -279,6 +289,9 @@ namespace eldritch{
                     }
                     hasRecalled = true;
                     recallButton.gameObject.GetComponent<Image>().color = Color.red;                    
+                    logWithoutDetail.Add("YOU recalled "+cardName);
+                    logWithDetail.Add("YOU recalled "+cardName);
+                    loadLog();
                 }
                    
             }else{
@@ -425,14 +438,22 @@ namespace eldritch{
                     blockwith = null;
                     return;
                 }
-
+                string saveBlockedLog="";
+                bool blocked = false;
                 for(int i = 0; i < attackers.Count;i++){
                     if(attackers[i].attacker.GetHashCode().Equals(atb.GetHashCode())){
                         AttackBlock ab = attackers[i];
                         ab.blocker = blockwith;
                         attackers[i] = ab;
+                        saveBlockedLog = saveBlockedLog + "," + ab.attacker.name + "with" + ab.blocker.name;
+                        blocked = true;
                         break;
                     }
+                }
+                if(blocked){
+                    logWithoutDetail.Add("YOU blocked");
+                    logWithDetail.Add("YOU blocked attacks"+saveBlockedLog);
+                    loadLog();
                 }
                 atb = null;
                 blockwith = null;
@@ -453,6 +474,8 @@ namespace eldritch{
                 }
                 string data = "attack:";
                 bool first = true;
+                string saveAttackLog = "";
+                ogWithoutDetail.Add("YOU attacked");
                 foreach(AttackBlock ab in attackers){
                     if(first){
                         data = data + ab.attacker.name;
@@ -460,7 +483,10 @@ namespace eldritch{
                     }else{
                         data = data + "," + ab.attacker.name;
                     }
+                    saveAttackLog = saveAttackLog + "," + ab.attacker.name;
                 }
+                logWithDetail.Add("YOU attacked with cards"+saveAttackLog);
+                loadLog();
                 currentPhase = Phase.WAITING;
                 AIBlock();
                 if(!haltAttack)
@@ -565,6 +591,9 @@ namespace eldritch{
                         myState.onField.RemoveAt(i);
                         //TODO death animation
                         Destroy(card);
+                        logWithoutDetail.Add("YOUR card "+card.name+" is destroyed");
+                        logWithDetail.Add("YOUR card "+card.name+" is destroyed");
+                        loadLog();
                         return;
                     }
                 }
@@ -576,6 +605,9 @@ namespace eldritch{
                         oppState.onField.RemoveAt(i);
                         //TODO death animation
                         Destroy(card);
+                        logWithoutDetail.Add("OPP card "+card.name+" is destroyed");
+                        logWithDetail.Add("OPP card "+card.name+" is destroyed");
+                        loadLog();
                         return;
                     }
                 }
@@ -584,13 +616,18 @@ namespace eldritch{
             private void updateOppHealth(int hit){
                 oppState.hp -= hit; // Decrease attack from HP
                 oppHPImage.fillAmount = oppState.hp/DuelFunctions.START_HEALTH; // Update opponent's HP on UI
-
+                logWithoutDetail.Add("YOU successfully hit OPP");
+                logWithDetail.Add("OPP's health decreased by "+hit+" OPP's health is now "+oppState.hp);
+                loadLog();
             }
 
             private void updateMyHealth(int hit){
                 // @TODO get attack value from server (@KEVIN M)
                 myState.hp -= hit; // Decrease attack from HP
                 myHPImage.fillAmount = myState.hp/DuelFunctions.START_HEALTH; // Update my HP on UI
+                logWithoutDetail.Add("YOU were hit");
+                logWithDetail.Add("YOUR health decreased by "+hit+" YOUR health is now "+myState.hp);
+                loadLog();
             }
 
             private void setOppHealth(int health){
@@ -719,5 +756,45 @@ namespace eldritch{
                 SceneManager.LoadScene("EndDuel");
             }
         #endregion
+
+        public void showLogPanel(){
+            if(logPanelHolder.activeSelf){
+                logPanelHolder.SetActive(false);
+                gameText.text="";
+            }
+            else{
+                loadLog();
+                logPanelHolder.SetActive(true); 
+            }
+        }
+        public void loadLog(){
+            Button[] gameObjects = logPanel.GetComponentsInChildren<Button>(); // Get previous search results
+            foreach(Button o in gameObjects){ 
+                Destroy(o.gameObject); // Destroy all previous search results
+            }
+            for(int i=0; i<logWithoutDetail.Count; i++){
+                GameObject logTextObject = (GameObject)Instantiate(buttonPrefab);
+                logTextObject.GetComponentInChildren<Text>().text = logWithoutDetail[i];
+                logTextObject.SetActive(true);
+                logTextObject.transform.SetParent(logPanel.transform, false); // Add logs to log panel
+                logTextObject.name = ""+i;
+            }
+            /*for(int j=0; j<10; j++){
+                GameObject logTextObject = (GameObject)Instantiate(buttonPrefab);
+                logTextObject.GetComponentInChildren<Text>().text = "test value";
+                logTextObject.SetActive(true);
+                logTextObject.transform.SetParent(logPanel.transform, false); // Add logs to log panel
+                logTextObject.name = ""+j;
+                logWithDetail.Add("test value with details");
+            }*/
+        }
+
+        public void logClicked(Button btn){
+            Debug.Log("BUTTON NAME: "+btn.name);
+            Debug.Log("BUTTON TEXT: "+btn.GetComponentInChildren<Text>().text);
+            int detailPos = Int32.Parse(btn.name);
+            Debug.Log("DETAIL LOG: "+logWithDetail[detailPos]);
+            gameText.text = logWithDetail[detailPos];
+        }
     }
 }

@@ -688,8 +688,8 @@ public class DuelScript : MonoBehaviour
         if(blocked){
             logWithoutDetail.Add("YOU blocked");
             logWithDetail.Add("YOU blocked attacks"+saveBlockedLog);
+            loadLog();
         }
-        loadLog();
         currentPhase = Phase.WAITING;
         sendDataToOpp(data);
     }
