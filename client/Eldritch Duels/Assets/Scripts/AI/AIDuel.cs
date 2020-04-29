@@ -220,6 +220,9 @@ namespace eldritch{
                         oppState.mana -= played.CardCost;
                         oppState.onField.Add(played);
                         oppState.inHand.RemoveAt(i);
+                        logWithoutDetail.Add("AI played "+cardName);
+                        logWithDetail.Add("AI played "+cardName+ " by using "+played.CardCost+" mana");
+                        loadLog();
                         StartCoroutine(resolveAbilities(played, c));                        
                         break;
                         
@@ -299,6 +302,9 @@ namespace eldritch{
                 for(int i = 0; i < oppState.onField.Count;i++){
                     if(oppState.onField[i].CardName.Equals(cardName)){
                         oppState.onField.RemoveAt(i);
+                        logWithoutDetail.Add("AI recalled "+cardName);
+                        logWithDetail.Add("AI recalled "+cardName);
+                        loadLog();
                         break;
                     }
                 }
@@ -605,8 +611,8 @@ namespace eldritch{
                         oppState.onField.RemoveAt(i);
                         //TODO death animation
                         Destroy(card);
-                        logWithoutDetail.Add("OPP card "+card.name+" is destroyed");
-                        logWithDetail.Add("OPP card "+card.name+" is destroyed");
+                        logWithoutDetail.Add("AI card "+card.name+" is destroyed");
+                        logWithDetail.Add("AI card "+card.name+" is destroyed");
                         loadLog();
                         return;
                     }
@@ -616,8 +622,8 @@ namespace eldritch{
             private void updateOppHealth(int hit){
                 oppState.hp -= hit; // Decrease attack from HP
                 oppHPImage.fillAmount = oppState.hp/DuelFunctions.START_HEALTH; // Update opponent's HP on UI
-                logWithoutDetail.Add("YOU successfully hit OPP");
-                logWithDetail.Add("OPP's health decreased by "+hit+" OPP's health is now "+oppState.hp);
+                logWithoutDetail.Add("YOU successfully hit AI");
+                logWithDetail.Add("AI's health decreased by "+hit+" AI's health is now "+oppState.hp);
                 loadLog();
             }
 
