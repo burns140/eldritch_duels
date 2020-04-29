@@ -48,49 +48,71 @@ public class WaitingScript : MonoBehaviour
             byte[] data = new byte[256];
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            const string expectedBeginning = "match found: ";
-            if (responseData.StartsWith(expectedBeginning))
+
+            try
             {
-                try
+                string[] lines = responseData.Split('\n');
+                foreach (string line in lines)
                 {
-                    string[] lines = responseData.Split('\n');
-                    Debug.Log("resp " + responseData);
-                    if (lines.Length == 3 || lines.Length == 4)
-                    {
-                        Global.enemyUsername = lines[0].Substring(expectedBeginning.Length);
-                        Debug.Log("Enemy user: " + Global.enemyUsername);
+                    if (line.Length == 0)
+                        continue;
 
-                        Global.matchID = lines[1];
-                        Debug.Log("Match ID: " + Global.matchID);
-
-                        if (lines.Length == 4) {
-                            if (lines[2].Contains("my turn"))
-                                Global.DuelMyTurn = true;
-                            else
-                                Debug.Log("Unknown line: " + lines[2]);
+                    int colonIndex = line.IndexOf(':');
+                    if (colonIndex == -1)
+                        if(line.Contains("my turn")) {
+                            Global.DuelMyTurn = true;
+                            Debug.Log("Going first");
+                            continue;
+                        } else {
+                            Debug.Log("Unknown line: " + line);
+                            continue;
                         }
 
-                        SceneManager.LoadScene(nextSceneName);
-                        Global.inQueue = false;
+                    string cmd = line.Substring(0, colonIndex);
+                    string result = line.Substring(colonIndex + 2);
+
+                    Debug.Log(cmd + ": " + result);
+
+                    switch (cmd) {
+                        case "MatchID":
+                            Global.matchID = result;
+                            break;
+
+                        case "match found":
+                            Global.enemyUsername = result;
+                            break;
+
+                        case "elo":
+                            Global.enemyElo = Int32.Parse(result);
+                            break;
+
+                        default:
+                            Debug.Log("Unknown command: " + cmd);
+                            Debug.Log("From line:" + line);
+                            break;
                     }
-                    else
-                        foreach (string s in lines)
-                            Debug.Log(s);
                 }
-                catch (Exception e)
-                {
-                    Debug.Log(e);
-                }finally{
+                
+                if (Global.matchID != null) {
                     SceneManager.LoadScene(nextSceneName);
+                    Global.inQueue = false;
                 }
             }
+            catch (Exception e)
+            {
+                Debug.Log(responseData);
+                Debug.Log(e);
+            }finally{
+                SceneManager.LoadScene(nextSceneName);
+            }
+            /*
             else{
                 Debug.Log(responseData);
                 if(responseData.Contains("my turn")){
                     Global.DuelMyTurn = true;
                     SceneManager.LoadScene(nextSceneName);
                 }
-            }
+            }*/
         }
     }
 }

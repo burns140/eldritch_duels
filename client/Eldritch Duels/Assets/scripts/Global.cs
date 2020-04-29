@@ -161,6 +161,13 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
+
+    public enum MatchType {
+        UNSET,
+        CASUAL,
+        COMPETETIVE,
+        AI
+    }
     #endregion
     public static class Global
     {
@@ -170,6 +177,8 @@ namespace eldritch {
         public static string username = "";
         public static string email = "";
         public static string enemyUsername = null;
+        public static MatchType matchType = MatchType.UNSET;
+        public static int enemyElo = -1;
         public static string matchID = null;
         public static int userID = 0;
         public static List<Card> userCards = new List<Card>();
