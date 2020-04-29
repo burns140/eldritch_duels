@@ -13,8 +13,14 @@ module.exports = class Match {
         this.dataFuncs = {};
     }
 
-    constructor(dataHandler) {
+    /**
+     * 
+     * @param {any} dataHandler
+     * @param {boolean} competetive
+     */
+    constructor(dataHandler, competetive) {
         this.dataHandler = dataHandler;
+        this.competetive = competetive;
 
         this.init();
     }
