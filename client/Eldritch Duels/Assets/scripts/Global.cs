@@ -247,14 +247,6 @@ namespace eldritch {
             this.cmd = cmd;
         }
     }
-    
-    public class AchievementRequest : Request {
-        public string type;
-
-        public AchievementRequest(string id, string token, string cmd, string type) : base(id, token, cmd) {
-            this.type = type;
-        }
-    }
 
     public enum MatchType {
         UNSET,
@@ -262,17 +254,6 @@ namespace eldritch {
         COMPETETIVE,
         AI
     }
-
-    public class AchievementRequest : Request
-    {
-        public string type;
-
-        public AchievementRequest(string id, string token, string cmd, string type) : base(id, token, cmd)
-        {
-            this.type = type;
-        }
-    }
-
 
     #endregion
     public static class Global
