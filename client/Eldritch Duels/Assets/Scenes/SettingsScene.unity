@@ -2000,7 +2000,7 @@ MonoBehaviour:
   applyButton: {fileID: 297174231}
   isFullScreen: {fileID: 75562306}
   isWindowed: {fileID: 1564150749}
-  ProfanityFilter: {fileID: 0}
+  ProfanityFilter: {fileID: 1809460941}
 --- !u!1 &968922461
 GameObject:
   m_ObjectHideFlags: 0
