@@ -8,15 +8,18 @@ public class ApplySettingsScript : MonoBehaviour
 {
     private const string RESOLUTION_PREF_KEY = "resolution"; // PLAYER PREF KEY to store resolution settings
     private const string WINDOW_PREF_KEY = "window"; // PLAYER PREF KEY to store window mode settings
+    private const string PROFANITY_PREF_KEY = "profanity";
 
     public Button applyButton; // Get the apply button from UI
     public Toggle isFullScreen; // Get the full screen toggle from UI
     public Toggle isWindowed; // Get the windowed toggle from UI
+    public Toggle ProfanityFilter; // Get the profanity filter toggle from UI
     // public Toggle isWindowedBorderless; // No longer implementing this in the game
     private int width = 1920; // Default resolution width
     private int height = 1080; // Default resolution height
     private string reskey = "1920x1080"; // Default PLAYER PREF KEY resolution value
     private string windowkey = "fullScreen"; // Default PLAYER PREF KEY window mode value
+    private string profanitykey = "true"; // Default PLAYER PREF KEY profanity filter value
     
     // Get the resolution selected from the dropdown on the UI
     public void handleRes(int val){
@@ -58,6 +61,14 @@ public class ApplySettingsScript : MonoBehaviour
             windowkey = "fullScreen";
             callFullScreen();
         }
+        if(ProfanityFilter.isOn)
+        {
+            profanitykey = "true";
+        }
+        else
+        {
+            profanitykey = "false";
+        }
     }
 
     void callWindowed(){
@@ -80,6 +91,7 @@ public class ApplySettingsScript : MonoBehaviour
         ActiveToggle();
         PlayerPrefs.SetString(RESOLUTION_PREF_KEY,reskey); // Save the new resolution to PLAYER PREF KEY
         PlayerPrefs.SetString(WINDOW_PREF_KEY,windowkey); // Save the new windowed mode to PLAYER PREF KEY
+        PlayerPrefs.SetString(PROFANITY_PREF_KEY, profanitykey);
         Debug.Log(Screen.fullScreen);
         Debug.Log(Screen.currentResolution);
         SceneManager.LoadScene("Lobby");
