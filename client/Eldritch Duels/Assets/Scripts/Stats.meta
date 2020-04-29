@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:client/Eldritch Duels/Assets/Resources/Cards.meta
 guid: 3a23a9b2ce1145746b25e365e16f9033
-=======
-guid: 832096f02b215bb4b8eda31b0b39c5f0
->>>>>>> 79a27bf5978b645dd20eda7de7943e91f4b5333e:client/Eldritch Duels/Assets/Scripts/Stats.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
