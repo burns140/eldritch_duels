@@ -27,10 +27,10 @@ public class AchievementScene : MonoBehaviour
     public GameObject AchievementPanel_3;
     public GameObject AchievementPanel_4;
 
-    public GameObject desc;
-    public GameObject locked;
+    private GameObject desc;
+    private GameObject locked;
 
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -104,5 +104,7 @@ public class AchievementScene : MonoBehaviour
     {
 
     }
+
+    
 }
 
