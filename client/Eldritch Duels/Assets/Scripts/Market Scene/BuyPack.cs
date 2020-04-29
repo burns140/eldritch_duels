@@ -1,13 +1,7 @@
-﻿using System.Collections;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Newtonsoft.Json;
-using System.Net.Sockets;
-using System.IO;
 using eldritch;
-using eldritch.cards;
 
 public class BuyPack : MonoBehaviour
 {

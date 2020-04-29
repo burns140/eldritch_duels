@@ -11,13 +11,15 @@ public class LoadGameSettings : MonoBehaviour
     private int width = 1920; // Default resoultion width
     private int height = 1080; // Default resolution height
     private string window = "fullScreen"; // Default screen mode
+    public GameObject bgmusic;
 
     // Start is called before the first frame update
     void Start()
     {
         
-        float musicVolume = PlayerPrefs.GetFloat(MUSIC_PREF_KEY, 1); // Get the music volume from PLAYER PREFS
-        AudioListener.volume = musicVolume; // Set music volume to saved volume
+        float musicVolume = PlayerPrefs.GetFloat(MUSIC_PREF_KEY, 0.3f); // Get the music volume from PLAYER PREFS
+        //AudioListener.volume = musicVolume; // Set music volume to saved volume
+        bgmusic.GetComponent<AudioSource>().volume = musicVolume;
         Debug.Log("Saved Volume: "+musicVolume);
         
         
