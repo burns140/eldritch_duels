@@ -15,7 +15,7 @@ public class LobbyChat : MonoBehaviour
     public string TextEntryText;
     public string currentChat = "-1";
     public Button sendText;
-    public List<Tuple<string,string>> chatlogs = new List<Tuple<string, string>>();
+    public List<ChatLog> chatlogs = new List<ChatLog>();
 
     // Start is called before the first frame update
     void Start()
@@ -34,10 +34,10 @@ public class LobbyChat : MonoBehaviour
             byte[] data = new byte[256];
             Int32 bytes = Global.stream.Read(data, 0, data.Length);
             string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            const string expectedBeginning = "message: ";
+            const string expectedBeginning = "message:";
+            Debug.Log("Received Message: " + responseData);
             if (responseData.StartsWith(expectedBeginning))
             {
-                Debug.Log("Received Message: " + responseData);
                 try
                 {
                     string[] parsed = responseData.Split(':');
@@ -51,19 +51,14 @@ public class LobbyChat : MonoBehaviour
                     }
                     if (currentChat.Equals(broken[0]))
                     {
-                        chatText.text += result + actual;
+                        chatText.text += result + actual + "\n";
                     }
-                    else
+                    foreach (ChatLog t in chatlogs)
                     {
-                        foreach (Tuple<string, string> t in chatlogs)
+                        if (t.getUser().Equals(broken[0]))
                         {
-                            if (t.Item1.Equals(broken[0]))
-                            {
-                                string temp = t.Item2 + actual;
-                                chatlogs.Remove(t);
-                                chatlogs.Add(new Tuple<string, string>(broken[0], temp));
-                                break;
-                            }
+                            t.addMessage(result + actual + "\n");
+                            break;
                         }
                     }
                 }
@@ -87,7 +82,7 @@ public class LobbyChat : MonoBehaviour
 
         foreach (string value in friendsList)
         {
-            chatlogs.Add(new Tuple<string, string>(value, ""));
+            chatlogs.Add(new ChatLog(value));
 
             Debug.Log("Attempting to add " + value + " to friends list");
             if (value == "nofriends")
@@ -105,23 +100,14 @@ public class LobbyChat : MonoBehaviour
 
     public void friendSelected(string friend)
     {
-        foreach (Tuple<string, string> t in chatlogs)
-        {
-            if (t.Item1.Equals(currentChat))
-            {
-                chatlogs.Remove(t);
-                chatlogs.Add(new Tuple<string, string>(friend, chatText.text));
-                break;
-            }
-        }
         Debug.Log(friend + " was selected");
         currentChat = friend;
 
-        foreach (Tuple<string, string> t in chatlogs)
+        foreach (ChatLog t in chatlogs)
         {
-            if (t.Item1.Equals(friend))
+            if (t.getUser().Equals(friend))
             {
-                chatText.text = t.Item2;
+                chatText.text = t.getLogs();
             }
         }
 
@@ -146,7 +132,41 @@ public class LobbyChat : MonoBehaviour
             else
             {
                 chatText.text += Global.username + ": " + TextEntryText + "\n";
+                foreach (ChatLog t in chatlogs)
+                {
+                    if (t.getUser().Equals(currentChat))
+                    {
+                        t.addMessage(Global.username + ": " + TextEntryText + "\n");
+                    }
+                }
             }
         }
+    }
+}
+
+public class ChatLog
+{
+    string user;
+    string logs;
+    public ChatLog(string user)
+    {
+        this.user = user;
+        logs = "";
+    }
+    public void updateLog(string log)
+    {
+        logs = log;
+    }
+    public string getLogs()
+    {
+        return logs;
+    }
+    public string getUser()
+    {
+        return user;
+    }
+    public void addMessage(string m)
+    {
+        logs += m;
     }
 }
