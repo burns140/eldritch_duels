@@ -47,6 +47,7 @@ namespace eldritch{
         public GameObject logPanel;
         public GameObject logPanelHolder;
         public GameObject buttonPrefab;
+        public CardSounds cardsoundsScript;
 
         void Start(){
             //init myState
@@ -196,6 +197,7 @@ namespace eldritch{
                 if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
                     return;
                 }
+                cardsoundsScript.cardPlayedSound(c);
                 for(int i = 0; i < myState.inHand.Count;i++){
                     if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){
                         Card played = myState.inHand[i];
@@ -507,6 +509,7 @@ namespace eldritch{
                         ab.blocker.GetComponent<Image>().color = Color.white;
                     ab.attacker.GetComponent<Image>().color = Color.white;
                     if(ab.blocker == null && ab.attackCard != null){
+                        cardsoundsScript.cardAttackSound(ab.attackCard);
                         updateOppHealth(ab.attackCard.AttackPower);
                     }else if(ab.attackCard != null){
                         Card blocker = Library.GetCard(ab.blocker.name);
@@ -575,6 +578,7 @@ namespace eldritch{
                     if(ab.blocker != null)
                         ab.blocker.GetComponent<Image>().color = Color.white;
                     if(ab.blocker == null){
+                        cardsoundsScript.cardAttackSound(ab.attackCard);
                         updateMyHealth(ab.attackCard.AttackPower);
                     }else{
                         Card blocker = Library.GetCard(ab.blocker.name);
@@ -597,6 +601,7 @@ namespace eldritch{
                     if(myState.onField[i].CardName.Equals(card.name)){
                         myState.onField.RemoveAt(i);
                         //TODO death animation
+                        cardsoundsScript.cardDestroySound(card);
                         Destroy(card);
                         logWithoutDetail.Add("YOUR card "+card.name+" is destroyed");
                         logWithDetail.Add("YOUR card "+card.name+" is destroyed");
@@ -611,6 +616,7 @@ namespace eldritch{
                     if(oppState.onField[i].CardName.Equals(card.name)){
                         oppState.onField.RemoveAt(i);
                         //TODO death animation
+                        cardsoundsScript.cardDestroySound(card);
                         Destroy(card);
                         logWithoutDetail.Add("AI card "+card.name+" is destroyed");
                         logWithDetail.Add("AI card "+card.name+" is destroyed");
