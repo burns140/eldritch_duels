@@ -106,7 +106,7 @@ public class AchievementScene : MonoBehaviour
 
             //desc
             desc = t.GetChild(0).gameObject;
-            desc.GetComponent<Text>().text = allAch.desc;
+            desc.GetComponent<Text>().text = allAch.desc.Split('-')[1];
 
             // locked
             locked = t.GetChild(1).gameObject;
