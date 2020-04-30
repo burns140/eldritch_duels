@@ -450,6 +450,9 @@ public class DuelScript : MonoBehaviour
         if(myState.onField.Count >= DuelFunctions.MAX_FIELD){
             return false;
         }
+        Debug.Log("playing card");
+        Global.cardsPlayedThisGame++;
+        Debug.Log(Global.cardsPlayedThisGame);
         cardsoundsScript.cardPlayedSound(c);
         for(int i = 0; i < myState.inHand.Count;i++){
             if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){

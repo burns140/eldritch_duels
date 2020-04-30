@@ -27,7 +27,7 @@ public class SetMatchType : MonoBehaviour
 
     public void setMatchTypeCompetetive()
     {
-        setMatchType(MatchType.COMPETETIVE);
+        setMatchType(MatchType.COMPETITIVE);
     }
 
     public void setMatchTypeCasual()

@@ -44,7 +44,7 @@ public class EnterMatchmaking : MonoBehaviour
             if (!Global.inQueue) // checks if already in queue somehow
             {
                 // sends serve request to put user in matchmaking queue
-                match user = new match("enterQueue", Global.getID(), Global.getToken(), Global.matchType == MatchType.COMPETETIVE);
+                match user = new match("enterQueue", Global.getID(), Global.getToken(), Global.matchType == MatchType.COMPETITIVE);
                 string json = JsonConvert.SerializeObject(user);
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(json);
                 Global.stream.Write(data, 0, data.Length);

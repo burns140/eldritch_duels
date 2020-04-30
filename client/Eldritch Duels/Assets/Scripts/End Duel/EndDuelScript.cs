@@ -84,9 +84,9 @@ public class EndDuelScript : MonoBehaviour
 
 
         // TODO: SET THIS TO BE A REAL VALUE THAT IS COUNTED DURING THE DUEL
-        int cardsPlayedAmount = 5;
-        CardsPlayedRequest cardReq = new CardsPlayedRequest(Global.getID(), Global.getToken(), "addCardsPlayed", cardsPlayedAmount);
+        CardsPlayedRequest cardReq = new CardsPlayedRequest(Global.getID(), Global.getToken(), "addCardsPlayed", Global.cardsPlayedThisGame);
         Global.NetworkRequest(cardReq);
+        Global.cardsPlayedThisGame = 0;
 
 
         // Stephen uncommented this so recomment it if need be
@@ -94,24 +94,23 @@ public class EndDuelScript : MonoBehaviour
         creditsValue.GetComponent<Text>().text = ""+cred;
         
         // Elo update
-        string json;
-        Byte[] data;
-        Int32 bytes;
         string resp;
 
-        if (Global.matchType == MatchType.COMPETETIVE) {
+        if (Global.matchType == MatchType.COMPETITIVE) {
             UpdateElo eloReq = new UpdateElo(Global.enemyElo);
             if (who == "you")
                 eloReq.win();
             else
                 eloReq.lose();
 
-            json = JsonConvert.SerializeObject(eloReq);
+            /*json = JsonConvert.SerializeObject(eloReq);
             data = System.Text.Encoding.ASCII.GetBytes(json);
             Global.stream.Write(data, 0, data.Length);
 
             bytes = Global.stream.Read(data, 0, data.Length);
-            resp = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            resp = System.Text.Encoding.ASCII.GetString(data, 0, bytes);*/
+
+            resp = Global.NetworkRequest(eloReq);
 
             eloText.GetComponent<Text>().text = resp;
         }
@@ -128,7 +127,7 @@ public class EndDuelScript : MonoBehaviour
                 statsReq = new UpdateStats("casual" + vicStatus);
                 break;
 
-            case MatchType.COMPETETIVE:
+            case MatchType.COMPETITIVE:
                 statsReq = new UpdateStats("competetive" + vicStatus);
                 break;
 
@@ -138,13 +137,14 @@ public class EndDuelScript : MonoBehaviour
                 Application.Quit();
                 break;
         }
-
-        json = JsonConvert.SerializeObject(statsReq);
+        Debug.Log(statsReq);
+        resp = Global.NetworkRequest(statsReq);
+        /*json = JsonConvert.SerializeObject(statsReq);
         data = System.Text.Encoding.ASCII.GetBytes(json);
         Global.stream.Write(data, 0, data.Length);
 
         bytes = Global.stream.Read(data, 0, data.Length);
-        resp = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+        resp = System.Text.Encoding.ASCII.GetString(data, 0, bytes);*/
 
         if (resp != "done")
             Debug.Log("Update stats response: " + resp);

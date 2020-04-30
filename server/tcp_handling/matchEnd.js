@@ -17,7 +17,7 @@ const playMonthlies = [80, 100];
 const banDefault = 10;
 const LEVEL_XP = 500;
 
-var dailyChallenge = 1;
+var dailyChallenge = 4;
 var weeklyChallenge = 0;
 var monthlyChallenge = 0;
 
@@ -49,7 +49,7 @@ const addWin = (data, sock) => {
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
-                        $inc: { wins: 1, winsToday: 1, winsThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1, elo: 100 },
+                        $inc: { wins: 1, winsToday: 1, winsThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1 },
                         $set: { achievements: achievements, consecSurrenders: 0, matchmakeBan: 0 }
                     }
                 ).then(result => {
@@ -114,7 +114,7 @@ const addLoss = (data, sock) => {
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
-                        $inc: { losses: 1, lossesToday: 1, lossesThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1, elo: -75 },
+                        $inc: { losses: 1, lossesToday: 1, lossesThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1 },
                         $set: { achievements: achievements, consecSurrenders: surrender, matchmakeBan: banLength }
                     }
                 ).then(result => {
@@ -237,7 +237,7 @@ const addXP = (data, sock) => {
 
                 var dailyCompleted = result.dailyChallenge;
                 if (dailyCompleted == 0) {
-                    dailyCompleted = checkDailyChallenge(checkChallengeObj);
+                    dailyCompleted = checkDailyChallenge(result);
                 }
 
                 var weeklyCompleted = result.weeklyChallenge;

@@ -200,6 +200,7 @@ namespace eldritch{
                     return;
                 }
                 cardsoundsScript.cardPlayedSound(c);
+                Global.cardsPlayedThisGame++;
                 for(int i = 0; i < myState.inHand.Count;i++){
                     if(myState.inHand[i].CardName.Equals(cardName) && DuelFunctions.CanCast(myState.inHand[i], myState)){
                         Card played = myState.inHand[i];
