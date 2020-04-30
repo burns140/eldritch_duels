@@ -553,13 +553,13 @@ async function logFeedbackToFile(feedback, user, time) {
         logFeedbackLock = false;
     }
 }
-
+/*
 const ObjectId = require("mongodb").ObjectId;
 logFeedbackToFile("test1", { username: "test1", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
 logFeedbackToFile("test2", { username: "test2", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
 logFeedbackToFile("test3", { username: "test3", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
 
-setTimeout(logFeedbackToFile, 1000, "test unlock", { username: "after", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
+setTimeout(logFeedbackToFile, 1000, "test unlock", { username: "after", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());*/
 
 exports.reportPlayer = reportPlayer;
 exports.getMyReportedPlayers = getMyReportedPlayers;
