@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChallengeLoadScript : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class ChallengeLoadScript : MonoBehaviour
         string daily = "Daily: " + names[0];
         string weekly = "Weekly: " + names[1];
         string monthly = "Monthly: " + names[2];
+
     }
 
     // Update is called once per frame
