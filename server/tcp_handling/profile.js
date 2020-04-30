@@ -497,7 +497,6 @@ const submitFeedback = (data, sock) => {
                     { $push: { feedback: feedback } }
                 ),
                 collection.findOne( {email: email } )
-                
             ]).then(results => {
                 const updateResult = results[0];
                 const user = results[1];
