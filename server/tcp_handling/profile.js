@@ -489,19 +489,29 @@ const submitFeedback = (data, sock) => {
     try {
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
+            const collection = db.collection('users');
             
-            db.collection('users').findOne(
-                { email: email },
-                { $addToSet: { feedback: feedback } }
-            ).then(result => {
-                if (result == null) {
-                    throw new Error('no user found');
+            Promise.all([
+                collection.updateOne(
+                    { email: email },
+                    { $push: { feedback: feedback } }
+                ),
+                collection.findOne( {email: email } )
+                
+            ]).then(results => {
+                const updateResult = results[0];
+                const user = results[1];
+
+                if (updateResult.result.ok != 1) {
+                    throw new Error('could not update');
                 }
+
                 console.log('wrote feedback');
                 sock.write('feedback accepted');
 
                 // for user story 72
-                logFeedbackToFile(feedback, result, new Date());
+                logFeedbackToFile(feedback, user, new Date());
+
             }).catch(err => {
                 console.log(err);
                 sock.write(err.toString());
