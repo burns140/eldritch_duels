@@ -370,7 +370,7 @@ const getFriendRequestsSent = (data, sock) => {
 }
 
 const sendMessage = (data, sock) => {
-    const myEmail = data.myEmail;
+    const myEmail = data.email;
     const theirEmail = data.friend;
     const message = data.message;
     const errString = 'failed to send message';
@@ -387,10 +387,10 @@ const sendMessage = (data, sock) => {
                 if (result == null) {
                     throw new Error('user not found');
                 }
-                console.log(tcp.getList());
+                console.log(tcp.getPlayList());
                 if (players.isLoggedIn(result._id.toString()))
                 {
-                    console.log("sending message");
+                    console.log("sending message to id " + result._id.toString() + " from id " + _id.toString());
                     players.getSocketByKey(result._id.toString()).write('message:' + myEmail + "|" + message);
                     sock.write("message sent");
                 }

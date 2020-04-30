@@ -37,6 +37,7 @@ public class LobbyChat : MonoBehaviour
             const string expectedBeginning = "message: ";
             if (responseData.StartsWith(expectedBeginning))
             {
+                Debug.Log("Received Message: " + responseData);
                 try
                 {
                     string[] parsed = responseData.Split(':');
