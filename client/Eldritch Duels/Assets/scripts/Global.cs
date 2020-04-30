@@ -253,7 +253,7 @@ namespace eldritch {
     public enum MatchType {
         UNSET,
         CASUAL,
-        COMPETETIVE,
+        COMPETITIVE,
         AI
     }
 
@@ -289,6 +289,7 @@ namespace eldritch {
 
         public static bool DuelMyTurn = false;
         public static int numTurns = 0;
+        public static int cardsPlayedThisGame = 0;
         #endregion
 
 
