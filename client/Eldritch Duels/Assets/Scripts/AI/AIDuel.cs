@@ -748,6 +748,7 @@ namespace eldritch{
 
         #region endgame
             public void Surrender(){
+                Global.surrender = 1;
                 endGame(false);
             }
 

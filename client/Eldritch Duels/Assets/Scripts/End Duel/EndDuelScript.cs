@@ -57,6 +57,18 @@ public class EndDuelScript : MonoBehaviour
         }
     }
 
+    class LossRequest {
+        public string token, id, cmd;
+        public int surrender;
+
+        public LossRequest(int surrender, string cmd) {
+            this.surrender = surrender;
+            token = Global.getToken();
+            id = Global.getID();
+            this.cmd = cmd;
+        }
+    }
+
     void Start(){
         int baseCredit = Global.numTurns * 5 /2 + 50;
         int myCred = baseCredit;
@@ -75,9 +87,14 @@ public class EndDuelScript : MonoBehaviour
             xpAmount = 50;
         }
         
-
-        Request req = new Request(Global.getID(), Global.getToken(), winString);
-        Global.NetworkRequest(req);
+        if (winString == "addLoss") {
+            LossRequest lreq = new LossRequest(Global.surrender, "addLoss");
+            Global.NetworkRequest(lreq);
+        } else {
+            Request req = new Request(Global.getID(), Global.getToken(), winString);
+            Global.NetworkRequest(req);
+        }
+        
 
         XPRequest xpReq = new XPRequest(Global.getID(), Global.getToken(), "addXP", xpAmount);
         Global.NetworkRequest(xpReq);

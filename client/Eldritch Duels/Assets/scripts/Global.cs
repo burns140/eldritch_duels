@@ -290,6 +290,7 @@ namespace eldritch {
         public static bool DuelMyTurn = false;
         public static int numTurns = 0;
         public static int cardsPlayedThisGame = 0;
+        public static int surrender = 0; 
         #endregion
 
 

@@ -814,6 +814,7 @@ public class DuelScript : MonoBehaviour
                 oppAttack();
                 break;
             case "surrender":
+                Global.surrender = 1;
                 endGame(true);
                 break;
             case "chat":

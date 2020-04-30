@@ -198,6 +198,9 @@ function dataHandler(data) {
                 case 'getStats':
                     Stats.getStats(obj, sock);
                     break;
+                case 'getChallengeNames':
+                    MatchEnd.getChallengeNames(obj, sock);
+                    break;
                 default:                            // Command was invalid
                     sock.write('Not a valid command');
                     console.log('Not a valid command');

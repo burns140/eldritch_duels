@@ -18,8 +18,15 @@ const banDefault = 10;
 const LEVEL_XP = 500;
 
 var dailyChallenge = 4;
+var dailyChallengeName = "Play 5 games";
 var weeklyChallenge = 0;
+var weeklyChallengeName = "Win 10 games";
 var monthlyChallenge = 0;
+var monthlyChallengeName = "Win 40 games";
+
+const getChallengeNames = (data, sock) => {
+    sock.write(`${dailyChallengeName};${weeklyChallengeName};${monthlyChallengeName}`);
+}
 
 const addWin = (data, sock) => {
     const id = data.id;
@@ -79,7 +86,7 @@ const addWin = (data, sock) => {
 
 const addLoss = (data, sock) => {
     const id = data.id;
-    const surrender = data.surrender;
+    surrender = data.surrender;
 
     try {
         MongoClient.get().then(client => {
@@ -104,7 +111,7 @@ const addLoss = (data, sock) => {
 
                 var banLength = 0;
                 if (surrender == 1) {
-                    surrender = result.consecSurrenders++;
+                    surrender = result.consecSurrenders + 1;
                     if (surrender >= 5) {
                         banLength = Date.now() + banDefault * 60 * 1000 * (surrender - 4);
                     }
@@ -481,3 +488,4 @@ exports.addLoss = addLoss;
 exports.addWin = addWin;
 exports.addXP = addXP;
 exports.resolveAchievements = resolveAchievements;
+exports.getChallengeNames = getChallengeNames;
