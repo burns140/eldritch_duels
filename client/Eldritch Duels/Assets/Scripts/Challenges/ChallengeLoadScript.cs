@@ -14,6 +14,8 @@ public class ChallengeLoadScript : MonoBehaviour
         Request req = new Request(Global.getID(), Global.getToken(), "getChallengeNames");
         string res = Global.NetworkRequest(req);
 
+        Debug.Log(res);
+
         string[] names = res.Split(';');
         string daily = "Daily: " + names[0];
         string weekly = "Weekly: " + names[1];
