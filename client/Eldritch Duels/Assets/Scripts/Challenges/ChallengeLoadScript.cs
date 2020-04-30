@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class ChallengeLoadScript : MonoBehaviour
 {
+    
+    public GameObject dailyChallengeText, weeklyChallengeText, monthlyChallengeText;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +19,9 @@ public class ChallengeLoadScript : MonoBehaviour
         string weekly = "Weekly: " + names[1];
         string monthly = "Monthly: " + names[2];
 
+        dailyChallengeText.GetComponent<Text>().text = daily;
+        weeklyChallengeText.GetComponent<Text>().text = weekly;
+        monthlyChallengeText.GetComponent<Text>().text = monthly;
     }
 
     // Update is called once per frame
