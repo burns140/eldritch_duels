@@ -49,6 +49,8 @@ namespace eldritch{
         public GameObject buttonPrefab;
         public CardSounds cardsoundsScript;
 
+        public GameObject soundCard; // object with audio source
+
         void Start(){
             //init myState
             myState.hp = DuelFunctions.START_HEALTH;
@@ -509,7 +511,7 @@ namespace eldritch{
                         ab.blocker.GetComponent<Image>().color = Color.white;
                     ab.attacker.GetComponent<Image>().color = Color.white;
                     if(ab.blocker == null && ab.attackCard != null){
-                        cardsoundsScript.cardAttackSound(ab.attackCard);
+                        cardsoundsScript.cardAttackSound(soundCard);
                         updateOppHealth(ab.attackCard.AttackPower);
                     }else if(ab.attackCard != null){
                         Card blocker = Library.GetCard(ab.blocker.name);
@@ -578,7 +580,7 @@ namespace eldritch{
                     if(ab.blocker != null)
                         ab.blocker.GetComponent<Image>().color = Color.white;
                     if(ab.blocker == null){
-                        cardsoundsScript.cardAttackSound(ab.attackCard);
+                        cardsoundsScript.cardAttackSound(soundCard);
                         updateMyHealth(ab.attackCard.AttackPower);
                     }else{
                         Card blocker = Library.GetCard(ab.blocker.name);
@@ -601,7 +603,7 @@ namespace eldritch{
                     if(myState.onField[i].CardName.Equals(card.name)){
                         myState.onField.RemoveAt(i);
                         //TODO death animation
-                        cardsoundsScript.cardDestroySound(card);
+                        cardsoundsScript.cardDestroySound(soundCard);
                         Destroy(card);
                         logWithoutDetail.Add("YOUR card "+card.name+" is destroyed");
                         logWithDetail.Add("YOUR card "+card.name+" is destroyed");
@@ -616,7 +618,7 @@ namespace eldritch{
                     if(oppState.onField[i].CardName.Equals(card.name)){
                         oppState.onField.RemoveAt(i);
                         //TODO death animation
-                        cardsoundsScript.cardDestroySound(card);
+                        cardsoundsScript.cardDestroySound(soundCard);
                         Destroy(card);
                         logWithoutDetail.Add("AI card "+card.name+" is destroyed");
                         logWithDetail.Add("AI card "+card.name+" is destroyed");
@@ -628,7 +630,8 @@ namespace eldritch{
 
             private void updateOppHealth(int hit){
                 oppState.hp -= hit; // Decrease attack from HP
-                oppHPImage.fillAmount = oppState.hp/DuelFunctions.START_HEALTH; // Update opponent's HP on UI
+                oppHPImage.fillAmount = (float)oppState.hp/DuelFunctions.START_HEALTH; // Update opponent's HP on UI
+                Debug.Log("fillamount: "+oppHPImage.fillAmount);
                 logWithoutDetail.Add("YOU successfully hit AI");
                 logWithDetail.Add("AI's health decreased by "+hit+" AI's health is now "+oppState.hp);
                 loadLog();
@@ -637,7 +640,7 @@ namespace eldritch{
             private void updateMyHealth(int hit){
                 // @TODO get attack value from server (@KEVIN M)
                 myState.hp -= hit; // Decrease attack from HP
-                myHPImage.fillAmount = myState.hp/DuelFunctions.START_HEALTH; // Update my HP on UI
+                myHPImage.fillAmount = (float)myState.hp/DuelFunctions.START_HEALTH; // Update my HP on UI
                 logWithoutDetail.Add("YOU were hit");
                 logWithDetail.Add("YOUR health decreased by "+hit+" YOUR health is now "+myState.hp);
                 loadLog();
