@@ -6,6 +6,8 @@ const myEmail = 'eldritch.duels@gmail.com';
 const dbconfig = require('../dbconfig.json');
 const nodemailer = require('nodemailer');
 const Binary = require('mongodb').Binary;
+const fs = require('fs').promises;
+const LinkedList = require('../classes/LinkedList');
 
 
 const TEMP_BAN_MARKS = [1, 3, 5, 10, 12] 
@@ -487,7 +489,7 @@ const submitFeedback = (data, sock) => {
     try {
         MongoClient.get().then(client => {
             const db = client.db('eldritch_data');
-
+            
             db.collection('users').findOne(
                 { email: email },
                 { $addToSet: { feedback: feedback } }
@@ -497,17 +499,67 @@ const submitFeedback = (data, sock) => {
                 }
                 console.log('wrote feedback');
                 sock.write('feedback accepted');
-                
+
+                // for user story 72
+                logFeedbackToFile(feedback, result, new Date());
             }).catch(err => {
                 console.log(err);
                 sock.write(err.toString());
             });
-        })
+        });
     } catch (err) {
         sock.write(err.toString());
         console.log(err);
     }
 }
+
+// for user story 72
+const feedbackLogFileName = "feedback.log";
+let logFeedbackLock = false;
+
+/** @type{LinkedList<string>} */
+let queued = new LinkedList();
+/**
+ * 
+ * @param {string} feedback
+ * @param {any} user
+ * @param {Date} time
+ */
+async function logFeedbackToFile(feedback, user, time) {
+    const line = `${user.username} (${user._id.toString()}) @${time.toUTCString()}: ${feedback}\n\n`
+
+    // node can have race conditions during I/O, so use a lock and queue
+    if (logFeedbackLock) {
+        queued.enqueue(line);
+        return;
+    }
+    
+    try {
+        logFeedbackLock = true;
+
+        // open the file every time to allow other programs to access it when it is not being used
+        let file = await fs.open(feedbackLogFileName, "a");
+        let res = await file.write(line);
+
+        while (!queued.isEmpty()) {
+            res = await file.write(queued.dequeue());
+        }
+
+        file.close();
+
+    } catch (e) {
+        console.log(e);
+    } finally {
+        logFeedbackLock = false;
+    }
+}
+/*
+const ObjectId = require("mongodb").ObjectId;
+logFeedbackToFile("test1", { username: "test1", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
+logFeedbackToFile("test2", { username: "test2", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
+logFeedbackToFile("test3", { username: "test3", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());
+
+setTimeout(logFeedbackToFile, 1000, "test unlock", { username: "after", _id: ObjectId("deadbeefdeadbeefdeadbeef") }, new Date());*/
 
 exports.reportPlayer = reportPlayer;
 exports.getMyReportedPlayers = getMyReportedPlayers;
