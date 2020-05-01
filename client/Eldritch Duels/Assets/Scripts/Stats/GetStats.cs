@@ -9,7 +9,7 @@ using eldritch;
 
 public class GetStats : MonoBehaviour
 {
-    public GameObject statLabels, winLabels, lossLabels, totalLabels, eloLabel;
+    public GameObject statLabels, winLabels, lossLabels, totalLabels, eloLabel, levelLabels;
     
     class GetStatsReq
     {
@@ -42,6 +42,7 @@ public class GetStats : MonoBehaviour
         string[] losses = new string[len];
         string[] totals = new string[len];
         string elo = "not found";
+        string level = "not found";
 
         int index = 0;
         
@@ -69,6 +70,9 @@ public class GetStats : MonoBehaviour
                 if (label == "Elo")
                 {
                     elo = values;
+                    continue;
+                } else if (label == "Level") {
+                    level = values;
                     continue;
                 }
 
@@ -99,6 +103,8 @@ public class GetStats : MonoBehaviour
         lossLabels.GetComponent<Text>().text = String.Join("\n", losses);
         totalLabels.GetComponent<Text>().text = String.Join("\n", totals);
         eloLabel.GetComponent<Text>().text = "Elo: " + elo;
+        levelLabels.GetComponent<Text>().text = "Level: " + level;
+
     }
 
     // Update is called once per frame
