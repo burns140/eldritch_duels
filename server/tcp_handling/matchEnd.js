@@ -25,7 +25,54 @@ var monthlyChallenge = 0;
 var monthlyChallengeName = "Win 40 games";
 
 const getChallengeNames = (data, sock) => {
-    sock.write(`${dailyChallengeName};${weeklyChallengeName};${monthlyChallengeName}`);
+    const id = data.id;
+    const compStr = "completed";
+    const incompStr = "incomplete"
+
+    try {
+        MongoClient.get().then(client => {
+            const db = client.db('eldritch_data');
+
+            db.collection('users').findOne(
+                { _id: ObjectID(id) }
+            ).then(result => {
+                if (result == null) {
+                    throw new Error('user does not exist');
+                }
+                var dayCompStr;
+                var weekCompStr;    
+                var monCompStr;
+
+                if (result.dailyChallenge == 1) {
+                    dayCompStr = compStr;
+                } else {
+                    dayCompStr = incompStr
+                }
+
+                if (result.weeklyChallenge == 1) {
+                    weekCompStr = compStr;
+                } else {
+                    weekCompStr = incompStr;
+                }
+
+                if (result.monthlyChallenge == 1) {
+                    monCompStr = compStr;
+                } else {
+                    monCompStr = incompStr;
+                }
+
+                sock.write(`${dailyChallengeName} - ${dayCompStr};${weeklyChallengeName} - ${weekCompStr};${monthlyChallengeName} - ${monCompStr}`);
+
+            }).catch(err => {
+                console.log(err);
+                sock.write(err.toString());
+            });
+        })
+
+    } catch (err) {
+        console.log(err);
+        sock.write(err.toString());
+    }
 }
 
 const addWin = (data, sock) => {
