@@ -147,7 +147,7 @@ public class EndDuelScript : MonoBehaviour
                 break;
 
             case MatchType.COMPETITIVE:
-                statsReq = new UpdateStats("competetive" + vicStatus);
+                statsReq = new UpdateStats("competitive" + vicStatus);
                 break;
 
             default:
