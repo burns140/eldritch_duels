@@ -170,7 +170,7 @@ public class DuelScript : MonoBehaviour
 
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
             Debug.Log($"Trimmed: {trimmed}");
-            if (trimmed.Contains("MATCH END") || Global.matchID == null) {
+            if (trimmed.Contains("MATCH END") || Global.inMatch == false) {
                 Debug.Log("Killing async");
                 break;
             }
@@ -1120,6 +1120,7 @@ public class DuelScript : MonoBehaviour
         Global.DuelMyTurn = false;
         Global.inQueue = false;
         Global.matchID = null;
+        Global.inMatch = false;
         Global.numTurns = currentTurn;
         sendDataToOpp("MATCH END");
         if(iWin){

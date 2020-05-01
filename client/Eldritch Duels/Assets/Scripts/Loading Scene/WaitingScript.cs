@@ -95,11 +95,9 @@ public class WaitingScript : MonoBehaviour
                 
                 if (Global.matchID != null) {
                     Debug.Log("Entering match!");
+                    Global.inMatch = true;
                     SceneManager.LoadScene(nextSceneName);
                     Global.inQueue = false;
-                }
-                if(Global.matchID == null){
-                    Debug.Log("No Match");
                 }
             }
             catch (Exception e)
