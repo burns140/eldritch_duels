@@ -71,7 +71,7 @@ const getOneAchievement = (data, sock) => {
                 { _id: id }
             ).then(result => {
                 if (result == null) {
-                    throw new Error('no achievement with that id exists');
+                    throw new Error(`no achievement with that id ${id} exists`);
                 }
 
                 sock.write(`name-${result.name};desc-${result.description}`);

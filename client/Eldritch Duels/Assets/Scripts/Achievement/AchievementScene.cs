@@ -59,9 +59,12 @@ public class AchievementScene : MonoBehaviour
         AchievementRequest req = new AchievementRequest(Global.getID(), Global.getToken(), "getAchievements", "array");
         string res = Global.NetworkRequest(req);
 
+        if (res.Contains("no achievements")) {
+            return;
+        }
+
         string[] vals = res.Split(','); // Array of numerical values that represent the index of that achievement in the total list of achievements
         earnedNumArray = vals;
-        Debug.Log(vals);
 
         for (int i = 0; i < vals.Length; i++)
         {
