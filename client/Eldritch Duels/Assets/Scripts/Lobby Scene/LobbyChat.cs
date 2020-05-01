@@ -131,12 +131,17 @@ public class LobbyChat : MonoBehaviour
             }
             else
             {
-                chatText.text += Global.username + ": " + TextEntryText + "\n";
+                String temp = TextEntryText;
+                if (Global.profanityFilter)
+                {
+                    temp = Global.filterText(temp);
+                }
+                chatText.text += Global.username + ": " + temp + "\n";
                 foreach (ChatLog t in chatlogs)
                 {
                     if (t.getUser().Equals(currentChat))
                     {
-                        t.addMessage(Global.username + ": " + TextEntryText + "\n");
+                        t.addMessage(Global.username + ": " + temp + "\n");
                     }
                 }
             }
