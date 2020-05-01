@@ -108,6 +108,7 @@ public class DuelScript : MonoBehaviour
     public GameObject logPanel;
     public GameObject logPanelHolder;
     public GameObject buttonPrefab;
+    public bool ended = false;
     #endregion
 
     #region Awake
@@ -235,13 +236,18 @@ public class DuelScript : MonoBehaviour
         oppHPText.text = oppState.hp + " HP";
         oppManaText.text = oppState.mana + " MANA";
 
-        if(oppState.hp <= 0){
-            //endGame(true);
-            sendDataToOpp("MATCH END");
-        } else if(myState.hp <= 0){
-            //endGame(false);
-            sendDataToOpp("MATCH END");
+        if (!ended) {
+            if(oppState.hp <= 0){
+                //endGame(true);
+                ended = true;
+                sendDataToOpp("MATCH END");
+            } else if(myState.hp <= 0){
+                //endGame(false);
+                ended = true;
+                sendDataToOpp("MATCH END");
+            }
         }
+        
 
         /*if (Global.listener == false && Global.inMatch == 1) {
             Debug.Log("new listener");
@@ -1196,7 +1202,7 @@ public class DuelScript : MonoBehaviour
         int cred = Global.addDuelCredits(iWin, myTurnsNum, false);
         PlayerPrefs.SetInt(CREDIT_PREF_KEY, cred);
         //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
-        await Task.Delay(2000);
+        //await Task.Delay(2000);
         SceneManager.LoadScene("EndDuel");
     }
     #endregion
