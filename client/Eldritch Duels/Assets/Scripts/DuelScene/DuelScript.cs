@@ -123,6 +123,7 @@ public class DuelScript : MonoBehaviour
          * Game Object: MatchTypeScript, which is an empty game object with a script called Set Match Type
          * SetMatchType.setMatchType[TYPE](), where [TYPE] is one of { AI, Competetive, Casual }.
         */
+        Global.inMatch = true;
         if (Global.matchType == MatchType.UNSET)
         {
             Debug.Log("Match Type is unset.");
