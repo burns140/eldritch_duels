@@ -53,17 +53,23 @@ module.exports = class Match {
 
         this.dataFuncs[id] = data => {
             if (data == "MATCH END") {
+                /*for (var i = 0; i < 2; i++) {
+                    this.sockets[i].write("MATCH END");
+                }*/
+
                 this.endMatch(data, id);
                 return;
+            } else {
+                this.forEachPlayer((cid, sock) => {
+                    if (cid == id) {
+                        return;
+                    }
+                    
+                    sock.write(data);
+                });
             }
             
-            this.forEachPlayer((cid, sock) => {
-                if (cid == id) {
-                    return;
-                }
-                
-                sock.write(data);
-            });
+            
         }
 
         socket.on('data', this.dataFuncs[id]);

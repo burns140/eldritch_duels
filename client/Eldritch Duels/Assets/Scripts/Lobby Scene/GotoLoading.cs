@@ -8,6 +8,7 @@ public class GotoLoading : MonoBehaviour
 {
     public void MovetoLoading()
     {
+        Global.inMatch = 1;
         SceneManager.LoadScene(8);
     }
 

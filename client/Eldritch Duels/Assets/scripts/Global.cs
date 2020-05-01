@@ -292,7 +292,8 @@ namespace eldritch {
         public static int numTurns = 0;
         public static int cardsPlayedThisGame = 0;
         public static int surrender = 0; 
-        public static bool inMatch = false;
+        public static int inMatch = 0;
+        public static bool listener = false;
         #endregion
 
 

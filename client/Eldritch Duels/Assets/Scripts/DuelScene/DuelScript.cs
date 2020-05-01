@@ -123,7 +123,8 @@ public class DuelScript : MonoBehaviour
          * Game Object: MatchTypeScript, which is an empty game object with a script called Set Match Type
          * SetMatchType.setMatchType[TYPE](), where [TYPE] is one of { AI, Competetive, Casual }.
         */
-        Global.inMatch = true;
+        
+        Global.inMatch = 1;
         if (Global.matchType == MatchType.UNSET)
         {
             Debug.Log("Match Type is unset.");
@@ -135,9 +136,9 @@ public class DuelScript : MonoBehaviour
         //setUpProfilePics(); // Set up profile pics for both users
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
-
-        Global.inMatch = true;
-        readStreamAsync();
+        if (!Global.listener) {
+            readStreamAsync();
+        }
         this.isMyTurn = Global.DuelMyTurn;
         this.currentTurn = 1;
         this.myTurnsNum = 0;
@@ -154,10 +155,15 @@ public class DuelScript : MonoBehaviour
     }
 
     public async void readStreamAsync() {
+        string trimmed = "";
+        Debug.Log("new async");
+        Global.listener = true;
         while (true) {
             Debug.Log("ready to receive");
+            
             Byte[] data = new byte[128];
             int read_bytes = await Global.stream.ReadAsync(data, 0, 128);
+            Debug.Log("------RECEIVED-------");
 
             int len = 128;
             while (len > 0 && data[len - 1] == 0) {
@@ -170,17 +176,47 @@ public class DuelScript : MonoBehaviour
             }
             data = cropped;
 
-            string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            //string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+            trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
+
             Debug.Log($"Trimmed: {trimmed}");
             /*if (trimmed.Contains("MATCH END") || Global.inMatch == false) {
                 Debug.Log("Killing async");
                 break;
             }*/
-            if (Global.inMatch == false) {
+            /*if (Global.inMatch == -1 || Global.inMatch == 0 || trimmed.Contains("MATCH END")) {
+                if (Global.inMatch == -1 || Global.inMatch == 0) {
+                    Debug.Log("killed cuz inMatch was wrong: " + Global.inMatch);
+                } else if (trimmed.Contains("MATCH END")) {
+                    Debug.Log("MATCH END REACHED");
+                } else {
+                    Debug.Log("WHAT");
+                }
+                Debug.Log("kill async");
+                Global.listener = false;
+                break;
+            }*/
+
+
+            if (Global.inMatch == -1 || Global.inMatch == 0 || trimmed.Contains("MATCH END")) {
+                if (Global.inMatch == -1 || Global.inMatch == 0) {
+                    Debug.Log("killed cuz inMatch was wrong: " + Global.inMatch);
+                } else if (trimmed.Contains("MATCH END")) {
+                    Debug.Log("MATCH END REACHED");
+                    Debug.Log("kill async");
+                    Global.listener = false;
+                    break;
+                } else {
+                    Debug.Log("WHAT");
+                }
                 break;
             }
             receivedDataFromOpp(trimmed);
+
         }
+
+        receivedDataFromOpp(trimmed);
+
 
     }
     #endregion
@@ -189,6 +225,7 @@ public class DuelScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Global.inMatch = 1;
         checkDeckCount(); // Check & update card back quantity on deck UI
         //update hp and mana
         setMyHealth(myState.hp);
@@ -199,10 +236,17 @@ public class DuelScript : MonoBehaviour
         oppManaText.text = oppState.mana + " MANA";
 
         if(oppState.hp <= 0){
-            endGame(true);
-        }else if(myState.hp <= 0){
-            endGame(false);
+            //endGame(true);
+            sendDataToOpp("MATCH END");
+        } else if(myState.hp <= 0){
+            //endGame(false);
+            sendDataToOpp("MATCH END");
         }
+
+        /*if (Global.listener == false && Global.inMatch == 1) {
+            Debug.Log("new listener");
+            readStreamAsync();
+        }*/
 
     }
 
@@ -821,7 +865,20 @@ public class DuelScript : MonoBehaviour
                 break;
             case "surrender":
                 Global.surrender = 1;
-                endGame(true);
+                //endGame(true);
+                break;
+            case "MATCH END":
+                Debug.Log("Received Match End");
+                if (Global.surrender == 1) {
+                    endGame(false);
+                } else if (oppState.hp <= 0) {
+                    endGame(true);
+                } else if (myState.hp <= 0) {
+                    endGame(false);
+                } else {
+                    endGame(true);
+                }
+                //endGame(true);
                 break;
             case "chat":
                 if(chatScript != null && firstPass.Length > 1){
@@ -1115,19 +1172,21 @@ public class DuelScript : MonoBehaviour
     #region End Game
 
     public void Surrender(){
-        sendDataToOpp("surrender");
-        endGame(false);
+        //sendDataToOpp("surrender");
+        Global.surrender = 1;
+        sendDataToOpp("MATCH END");
+        //endGame(false);
     }
     // End game
-    private void endGame(bool iWin){
+    async private void endGame(bool iWin){
         // Calculate credits
         // Change scene
         Global.DuelMyTurn = false;
         Global.inQueue = false;
         Global.matchID = null;
-        Global.inMatch = false;
+        Global.inMatch = -1;
         Global.numTurns = currentTurn;
-        sendDataToOpp("MATCH END");
+        //sendDataToOpp("MATCH END");
         if(iWin){
             PlayerPrefs.SetString(WON_PREF_KEY, "you");
         }
@@ -1137,6 +1196,7 @@ public class DuelScript : MonoBehaviour
         int cred = Global.addDuelCredits(iWin, myTurnsNum, false);
         PlayerPrefs.SetInt(CREDIT_PREF_KEY, cred);
         //PlayerPrefs.SetString(OPP_PROFILE_PREF_KEY, );
+        await Task.Delay(2000);
         SceneManager.LoadScene("EndDuel");
     }
     #endregion

@@ -70,7 +70,6 @@ public class EndDuelScript : MonoBehaviour
     }
 
     void Start(){
-        Global.inMatch = false;
         int baseCredit = Global.numTurns * 5 /2 + 50;
         int myCred = baseCredit;
         string who = PlayerPrefs.GetString(WON_PREF_KEY);
@@ -95,6 +94,8 @@ public class EndDuelScript : MonoBehaviour
             Request req = new Request(Global.getID(), Global.getToken(), winString);
             Global.NetworkRequest(req);
         }
+
+        Global.surrender = 0;
         
 
         XPRequest xpReq = new XPRequest(Global.getID(), Global.getToken(), "addXP", xpAmount);
