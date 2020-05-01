@@ -52,8 +52,8 @@ async function getStats(data, sock) {
 
         const user = await collection.findOne({ _id: ObjectId(data.id) });
 
-        //const response = `Elo=${user.elo}\nAI=${getRatio(user, "ai")}\nCompetetive=${getRatio(user, "competetive")}\nCasual=${getRatio(user, "casual")}\nLevel=${user.level}`;
-        const response = `Elo=${user.elo}\nAI=${getRatio(user, "ai")}\nCompetitive=${getRatio(user, "competetive")}\nCasual=${getRatio(user, "casual")}\nLevel=${user.level}`;
+        const response = `Elo=${user.elo}\nAI=${getRatio(user, "ai")}\nCompetetive=${getRatio(user, "competetive")}\nCasual=${getRatio(user, "casual")}\nLevel=${user.level}`;
+        //const response = `Elo=${user.elo}\nAI=${getRatio(user, "ai")}\nCompetitive=${getRatio(user, "competetive")}\nCasual=${getRatio(user, "casual")}\nLevel=${user.level}`;
         sock.write(response);
     } catch (e) {
         sock.write(e.message);
