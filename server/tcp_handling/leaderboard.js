@@ -18,10 +18,7 @@ const fetchLeaderboardData = (data, sock) => {
 
                 var toReturn = [];
 
-                for (var i = 0; i < 100; i++) {
-                    if (i == temp.length) {
-                        break;
-                    }
+                for (var i = 0; i < temp.length; i++) {
                     toReturn.push(`${temp[i].username}_${temp[i].elo}`);
                 }
 
