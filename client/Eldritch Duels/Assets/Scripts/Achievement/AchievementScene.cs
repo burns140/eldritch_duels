@@ -61,6 +61,7 @@ public class AchievementScene : MonoBehaviour
 
         string[] vals = res.Split(','); // Array of numerical values that represent the index of that achievement in the total list of achievements
         earnedNumArray = vals;
+        Debug.Log(vals);
 
         for (int i = 0; i < vals.Length; i++)
         {
@@ -69,7 +70,6 @@ public class AchievementScene : MonoBehaviour
             string[] format = res2.Split(';');  // Array with format [name, description] of each achievement that matched a value queried above.
             Achievement temp = new Achievement(format[0], format[1]);
             earned.Add(temp);
-            i++;
         }
     }
 

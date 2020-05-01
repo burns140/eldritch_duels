@@ -86,6 +86,7 @@ namespace eldritch{
 
         private bool prevHalt;
         void Update(){
+            loadLog();
             checkDeckCount(); // Check & update card back quantity on deck UI
             //update hp and mana
             setMyHealth(myState.hp);
