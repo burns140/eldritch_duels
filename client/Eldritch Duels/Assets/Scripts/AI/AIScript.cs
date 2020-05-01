@@ -35,7 +35,7 @@ namespace eldritch{
             public Card card;
         }
 
-        public static AIDifficulty Difficulty = AIDifficulty.NORMAL;
+        public static AIDifficulty Difficulty = AIDifficulty.EXTREME;
         private static int AIRandomAdjust = 10; //higher the value, the less random; recommended range (-50, 50)
 
         #region general AI 
