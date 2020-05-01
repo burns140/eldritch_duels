@@ -11,6 +11,7 @@ using UnityEngine;
 using eldritch.cards;
 using System.IO;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace eldritch {
 #region SpecialClasses
@@ -981,7 +982,7 @@ namespace eldritch {
             String result = text;
             foreach (String b in banned)
             {
-                result = result.Replace(b, "****");
+                result = Regex.Replace(result, b, "****", RegexOptions.IgnoreCase);
             }
             return result;
         }
