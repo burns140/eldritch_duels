@@ -103,7 +103,7 @@ const addWin = (data, sock) => {
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
-                        $inc: { wins: 1, winsToday: 1, winsThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1 },
+                        $inc: { wins: 1, winsToday: 1, winsThisWeek: 1, winsThisMonth: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1, gamesThisMonth: 1 },
                         $set: { achievements: achievements, consecSurrenders: 0, matchmakeBan: 0 }
                     }
                 ).then(result => {
@@ -168,7 +168,7 @@ const addLoss = (data, sock) => {
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
-                        $inc: { losses: 1, lossesToday: 1, lossesThisWeek: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1 },
+                        $inc: { losses: 1, lossesToday: 1, lossesThisWeek: 1, lossesThisMonth: 1, totalGames: 1, gamesToday: 1, gamesThisWeek: 1, gamesThisMonth: 1},
                         $set: { achievements: achievements, consecSurrenders: surrender, matchmakeBan: banLength }
                     }
                 ).then(result => {
@@ -236,7 +236,7 @@ const addCardsPlayed = (data, sock) => {
                 db.collection('users').updateOne(
                     { _id: ObjectID(id) },
                     {
-                        $inc: { cardsPlayedTotal: amount, cardsPlayedToday: amount, cardsPlayedThisWeek: amount },
+                        $inc: { cardsPlayedTotal: amount, cardsPlayedToday: amount, cardsPlayedThisWeek: amount, cardsPlayedThisMonth: 1 },
                         $set: { achievements: achievements }
                     }
                 ).then(result => {
