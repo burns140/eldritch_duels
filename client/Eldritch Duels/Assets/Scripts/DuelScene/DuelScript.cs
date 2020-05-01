@@ -136,6 +136,7 @@ public class DuelScript : MonoBehaviour
         setUpHealthMana(); // Set up health & mana to full for both users
         StartCoroutine(initCoroutines());
 
+        Global.inMatch = true;
         readStreamAsync();
         this.isMyTurn = Global.DuelMyTurn;
         this.currentTurn = 1;
@@ -171,8 +172,11 @@ public class DuelScript : MonoBehaviour
 
             string trimmed = System.Text.Encoding.ASCII.GetString(data).Trim();
             Debug.Log($"Trimmed: {trimmed}");
-            if (trimmed.Contains("MATCH END") || Global.inMatch == false) {
+            /*if (trimmed.Contains("MATCH END") || Global.inMatch == false) {
                 Debug.Log("Killing async");
+                break;
+            }*/
+            if (Global.inMatch == false) {
                 break;
             }
             receivedDataFromOpp(trimmed);

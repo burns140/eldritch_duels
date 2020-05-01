@@ -70,6 +70,7 @@ public class EndDuelScript : MonoBehaviour
     }
 
     void Start(){
+        Global.inMatch = false;
         int baseCredit = Global.numTurns * 5 /2 + 50;
         int myCred = baseCredit;
         string who = PlayerPrefs.GetString(WON_PREF_KEY);
